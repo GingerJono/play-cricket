@@ -1,10 +1,20 @@
-# Simple workflow for deploying static content to GitHub Pages
+# Simple workflow for deploying static content to GitHub Pages.
+#
+# IMPORTANT: this fires on **every push to every branch**, not just main.
+# Whatever's at the head of the branch you just pushed becomes the live
+# Pages deployment. There's a single "pages" concurrency slot, so
+# whichever branch pushed most recently wins.
+#
+# Why: the user (and Claude) iterate on scouting reports / index.html on
+# feature branches and want the changes immediately visible at the
+# published URL — there's no staging environment, no separate preview.
+# Treat every `git push` as a production publish.
 name: Deploy static content to Pages
 
 on:
-  # Runs on pushes targeting the default branch
+  # Runs on every push, regardless of branch.
   push:
-    branches: ["main"]
+    branches: ["**"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
