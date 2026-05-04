@@ -237,20 +237,26 @@ def fetch_nv_scorecard(match_id: int) -> dict | None:
     """
     Fetch the NV Play scorecard for a match. Returns None on 404 / empty.
 
-    Endpoint shape (extracted from widgets.nvplay.scorecard.js):
-      GET {apiBaseUrl}/api/scorecard/<match_id>
-          ?idType=play-cricket
-          &customerId=<cid>
-          &loadFullData=true
-          &playerids=true
+    Endpoint + params come from `widgets.nvplay.scorecard.js`:
+
+      const url = apiBaseUrl + "/api/scorecard/" + matchId
+                 + "?idType=" + matchIdType
+                 + "&customerId=" + customerId
+                 + (playerLinks ? "&playerids=true" : "")
+                 + (loadFullData ? "&stats=true&commentary=true" : "")
+
+    `commentary=true` is the magic switch — without it, each ball's
+    `C` field comes back null. We need it to extract per-ball "X to Y"
+    text instead of reconstructing striker/non-striker from scratch.
     """
     base = _nv_resolve_api_base()
     url = (f"{base}/api/scorecard/{match_id}?"
            + urlencode({
                "idType": "play-cricket",
                "customerId": NV_CUSTOMER_ID,
-               "loadFullData": "true",
                "playerids": "true",
+               "stats": "true",
+               "commentary": "true",
            }))
     try:
         body = http_get(url, headers={
@@ -299,6 +305,34 @@ def summarise_innings(rv_match: dict) -> list[dict]:
     return out
 
 
+def summarise_team_members(rv_match: dict) -> list[dict]:
+    """
+    Per-team rosters from RV's `MatchTeams[].TeamMembers[]`.
+
+    These are the ROSTER-LEVEL records (one per player on the
+    teamsheet), and they're the only place RV exposes its internal
+    `player_id` (11M-range) alongside the parsed names. We use them at
+    DB-load time to build an RV->PC player_id translation table —
+    avoids the ambiguity of per-ball name parsing.
+    """
+    out: list[dict] = []
+    for team in rv_match.get("MatchTeams", []) or []:
+        for m in team.get("TeamMembers", []) or []:
+            out.append({
+                "team_name":   team.get("team_name"),
+                "club_name":   team.get("club_name"),
+                "is_home":     team.get("is_home"),
+                "rv_player_id": m.get("player_id"),
+                "f_name":      m.get("f_name"),
+                "l_name":      m.get("l_name"),
+                "player_name": m.get("player_name"),    # "Last, First"
+                "player_name2": m.get("player_name2"),  # "First Last"
+                "player_name3": m.get("player_name3"),  # "F Last"
+                "sel_number":  m.get("sel_number"),
+            })
+    return out
+
+
 def cache_match(match_id: int, force: bool, headers: dict) -> tuple[int, str]:
     """Returns (n_balls, status). status in {'cached','fetched','no-mapping','no-data'}."""
     rv_path = RV_MATCH_DIR / f"{match_id}.json"
@@ -320,6 +354,7 @@ def cache_match(match_id: int, force: bool, headers: dict) -> tuple[int, str]:
             "scores_updated":     rv_match.get("scores_updated"),
             "match_format_id":    rv_match.get("match_format_id"),
             "innings":            summarise_innings(rv_match),
+            "team_members":       summarise_team_members(rv_match),
         }
         rv_path.parent.mkdir(parents=True, exist_ok=True)
         rv_path.write_text(json.dumps(meta, indent=2))

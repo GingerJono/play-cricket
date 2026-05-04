@@ -541,12 +541,12 @@ def insert_balls(
     except Exception:
         return (0, 0, 0)
 
-    # Build per-team name indices once.
+    # Build a single rv_player_id -> pc_player_id mapping for the
+    # whole match, using the cached TeamMembers roster.
     pc_match_players = pc_match_players or []
-    home_p = [p for p in pc_match_players if p["team_side"] == "home"]
-    away_p = [p for p in pc_match_players if p["team_side"] == "away"]
-    home_idx = _rv.build_name_index(home_p)
-    away_idx = _rv.build_name_index(away_p)
+    rv_to_pc = _rv.build_rv_to_pc_map(
+        rv.get("team_members") or [], pc_match_players
+    )
     is_home_for_seq: dict[int, bool] = {}
     for inn in rv.get("innings", []) or []:
         seq = _to_int(inn.get("innings_order"))
@@ -573,36 +573,18 @@ def insert_balls(
         if not isinstance(balls, list) or not balls:
             continue
         n_innings += 1
-        bat_idx = home_idx if is_home_batting else away_idx
-        bowl_idx = away_idx if is_home_batting else home_idx
         for b in balls:
-            l_desc = b.get("l_desc") or ""
-            parsed = _rv.parse_l_desc(l_desc)
-
-            # Prefer parsed l_desc for everything (runs / extras / wicket
-            # / players). Fall back to the raw RV fields when the parse
-            # fails or names don't resolve.
-            if parsed:
-                runs_bat = parsed["runs_bat"]
-                runs_extra = parsed["runs_extra"]
-                ext_int = parsed["extras_type"]
-                is_legal = parsed["is_legal_ball"]
-                batter_pc = _rv.resolve_name(parsed["batter_name"], bat_idx)
-                bowler_pc = _rv.resolve_name(parsed["bowler_name"], bowl_idx)
-                if parsed["is_wicket"] and parsed["dismissed_name"]:
-                    dismissed_pc = _rv.resolve_name(
-                        parsed["dismissed_name"], bat_idx
-                    )
-                else:
-                    dismissed_pc = None
-            else:
-                runs_bat = _to_int(b.get("runs_bat")) or 0
-                runs_extra = _to_int(b.get("runs_extra")) or 0
-                ext_raw = b.get("extras_type")
-                ext_int = _to_int(ext_raw)
-                is_legal = 0 if ext_int in (1, 2) else 1
-                batter_pc = bowler_pc = dismissed_pc = None
-
+            ext = b.get("extras_type")
+            ext_int = _to_int(ext)
+            is_legal = 0 if ext_int in (1, 2) else 1
+            # RV's per-ball IDs are precise but in RV's namespace —
+            # translate to PC via the roster map. Falls back to NULL
+            # when a player isn't on the cached roster (very rare;
+            # typically substitutes / late additions).
+            rv_bat = _to_int(b.get("batter_id"))
+            rv_ns  = _to_int(b.get("batter_id_ns"))
+            rv_bowl = _to_int(b.get("bowler_id"))
+            rv_dis = _to_int(b.get("dismissed_batter_id"))
             cur.execute(
                 """INSERT OR REPLACE INTO balls VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                 (
@@ -611,16 +593,16 @@ def insert_balls(
                     _to_int(b.get("over_no")),
                     _to_int(b.get("ball_no")),
                     _to_int(b.get("ball_no_disp")),
-                    batter_pc,
-                    None,             # non_striker_id — not derivable from l_desc
-                    bowler_pc,
+                    rv_to_pc.get(rv_bat) if rv_bat else None,
+                    rv_to_pc.get(rv_ns)  if rv_ns  else None,
+                    rv_to_pc.get(rv_bowl) if rv_bowl else None,
                     bat_club,
                     bowl_club,
-                    runs_bat,
-                    runs_extra,
+                    _to_int(b.get("runs_bat")) or 0,
+                    _to_int(b.get("runs_extra")) or 0,
                     ext_int,
                     is_legal,
-                    dismissed_pc,
+                    rv_to_pc.get(rv_dis) if rv_dis else None,
                     _to_str(b.get("s_desc")),
                     _to_str(b.get("l_desc")),
                 ),
@@ -663,55 +645,18 @@ def insert_balls_nvplay(
     if not innings:
         return (0, 0, 0)
 
-    home_players = [r for r in pc_match_players if r["team_side"] == "home"]
-    away_players = [r for r in pc_match_players if r["team_side"] == "away"]
-
-    # Decide which NV `TeamN` corresponds to which PC side, matching by
-    # club name (NV's `Match.Team{1,2}Club`). Build once for the match.
+    # Match NV `Team1` / `Team2` to PC home/away by counting how many
+    # of each NV team's `ExternalId`s overlap with the PC roster.
     m = scorecard.get("Match") or {}
-    nv_id_map = _nv.build_nv_id_map(scorecard)
-
-    def side_of_team(team_no: int) -> str:
-        """Return 'home' / 'away' / None for NV team1 / team2."""
-        nv_club = (m.get(f"Team{team_no}Club") or "").strip().lower()
-        if not nv_club:
-            return None
-        # Match against PC home/away club names through match_players club_id
-        # would require a clubs lookup; instead compare against player_name's
-        # club indirectly. Simpler: match the NV club against home/away club
-        # via a passed-in mapping from caller (we have home/away_club_id but
-        # not name here). Fall through to first-letter heuristic if needed.
-        # The caller provides home_club_id/away_club_id — we accept whichever
-        # team1 happens to be (by convention NV team1 = home in PC's eyes;
-        # if mismatched, IsTeam2BattingFirst still tells us batting order).
-        return None
-
-    # Heuristic: NV `Team1` corresponds to whichever of home/away matches
-    # by name. We compare normalised club names.
-    def _norm(s):
-        return (s or "").strip().lower()
-
-    pc_home_clubname = ""
-    pc_away_clubname = ""
-    if home_players:
-        # We don't have club_name here, but match_players doesn't carry it.
-        # Use the first player's name to look up... actually we can't.
-        # Fall back to NV Team1Club always = home; flip if Team2Club matches
-        # a substring known to be home.
-        pass
-
-    # Without club_name lookups, use a more direct approach: NV publishes
-    # ExternalId for every player. Pick a few PC player_ids on the home
-    # side and check which NV team contains them.
-    home_pids = {r["player_id"] for r in home_players if r["player_id"]}
-    away_pids = {r["player_id"] for r in away_players if r["player_id"]}
-    team1_externals = {int(p.get("ExternalId")) for p in (m.get("Team1Players") or [])
-                       if p.get("ExternalId") and str(p.get("ExternalId")).isdigit()}
-    team2_externals = {int(p.get("ExternalId")) for p in (m.get("Team2Players") or [])
-                       if p.get("ExternalId") and str(p.get("ExternalId")).isdigit()}
-    team1_overlap_home = len(team1_externals & home_pids)
-    team1_overlap_away = len(team1_externals & away_pids)
-    team1_is_home = team1_overlap_home >= team1_overlap_away
+    home_pids = {r["player_id"] for r in pc_match_players
+                 if r["team_side"] == "home" and r["player_id"]}
+    away_pids = {r["player_id"] for r in pc_match_players
+                 if r["team_side"] == "away" and r["player_id"]}
+    t1_ext = {int(p.get("ExternalId")) for p in (m.get("Team1Players") or [])
+              if str(p.get("ExternalId") or "").isdigit()}
+    team1_is_home = len(t1_ext & home_pids) >= len(t1_ext & away_pids)
+    team1_players = m.get("Team1Players") or []
+    team2_players = m.get("Team2Players") or []
 
     n_innings = 0
     n_balls = 0
@@ -724,18 +669,20 @@ def insert_balls_nvplay(
         elif batting_side == "team2":
             is_home_batting = not team1_is_home
         else:
-            # Fall back to the BattingTeamName / first-innings-home heuristic.
             is_home_batting = (inn_idx == 0)
 
         bat_club  = home_club_id if is_home_batting else away_club_id
         bowl_club = away_club_id if is_home_batting else home_club_id
-        bat_players  = home_players if is_home_batting else away_players
-        bowl_players = away_players if is_home_batting else home_players
+        # NV Team1/Team2 -> PC home/away mapping decides which roster
+        # is the batting side this innings.
+        if (batting_side == "team1") or (batting_side is None and inn_idx == 0):
+            bat_team_players, bowl_team_players = team1_players, team2_players
+        else:
+            bat_team_players, bowl_team_players = team2_players, team1_players
 
         inn["innings_seq"] = inn_seq
         rows = _nv.reconstruct_innings(
-            inn, bat_players, bowl_players, bat_club, bowl_club,
-            nv_id_map=nv_id_map,
+            inn, bat_team_players, bowl_team_players, bat_club, bowl_club,
         )
         if not rows:
             continue
