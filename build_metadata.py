@@ -35,8 +35,13 @@ from html import escape
 import _app_lib as L
 
 
-SUBMIT_EMAIL = os.environ.get("RCC_SUBMIT_EMAIL", "")
-SUBMIT_WHATSAPP = os.environ.get("RCC_SUBMIT_WHATSAPP", "")
+# Submission destinations. Defaults are Jono's contact details — env
+# vars override at build time when needed (e.g. testing).
+SUBMIT_EMAIL = os.environ.get("RCC_SUBMIT_EMAIL", "jjoneill4@gmail.com")
+# wa.me wants the international form without the leading 0; UK 07... is
+# 447... Internally we store the wa.me-friendly form and display it
+# with a leading + on the player page.
+SUBMIT_WHATSAPP = os.environ.get("RCC_SUBMIT_WHATSAPP", "447908474929")
 
 
 # ---------------------------------------------------------------- helpers --
@@ -440,10 +445,16 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
                 "ymd_club":     L.date_yyyymmdd(last_club),
                 "has_video":    has_video,
             })
-        # Sort: apps-vs-us first, fall back to total club apps + recency.
+        # Sort: most-recent first (combined "any sighting" date), then
+        # apps-vs-us, then total club apps as tie-breakers. This keeps
+        # current squad members at the top regardless of whether
+        # they've personally played us.
         pid_stats.sort(
-            key=lambda x: (x["n_vs_us"], x["ymd_vs"],
-                           x["n_on_club"], x["ymd_club"]),
+            key=lambda x: (
+                max(x["ymd_vs"] or "", x["ymd_club"] or ""),
+                x["n_vs_us"],
+                x["n_on_club"],
+            ),
             reverse=True,
         )
 
@@ -458,19 +469,15 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
             else: n_n += 1
 
         # Differentiate played-against vs upcoming-only opponents in
-        # the lead text and roster note.
+        # the lead text.
         any_apps_vs_us = any(s["n_vs_us"] for s in pid_stats)
         if any_apps_vs_us:
             lead = (f"Players seen on {escape(cname)} when they faced "
                     f"our 1st XI in League or non-T20 Cup fixtures.")
-            note = ("Sorted by appearances against our 1st XI. Tap a "
-                    "name to view metadata or submit additions.")
         else:
             lead = (f"We haven't played {escape(cname)} yet in the "
                     f"1st-XI universe — these are players seen on their "
-                    f"roster from any context, sorted most-active first.")
-            note = ("Sorted by appearances on this club's roster. Tap "
-                    "a name to view metadata or submit additions.")
+                    f"roster from any context.")
 
         body = [
             L.hero(
@@ -490,8 +497,13 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
             ),
             '<div class="card">',
             '<h2>Roster</h2>',
-            f'<p class="note">{note}</p>',
-            '<div class="row-list">',
+            '<p class="note">Sorted by most recent appearance. '
+            'Type to filter.</p>',
+            '<input type="search" id="player-filter" '
+            'placeholder="Filter by name..." autocomplete="off" '
+            'autocapitalize="none" autocorrect="off" spellcheck="false" '
+            'style="margin-bottom:8px">',
+            '<div class="row-list" id="roster-list">',
         ]
 
         for s in pid_stats:
@@ -508,7 +520,8 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
             else:
                 meta_line = "no record"
             body.append(
-                f'<a class="row-link" href="../player.html?id={s["pid"]}">'
+                f'<a class="row-link" href="../player.html?id={s["pid"]}" '
+                f'data-name="{escape(s["name"].lower())}">'
                 f'<div class="name">{escape(s["name"])}'
                 f'<div class="meta" style="font-size:10.5px;color:var(--muted);'
                 f'margin-top:2px">{meta_line}</div></div>'
@@ -516,6 +529,22 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
                 f'</a>'
             )
         body.append("</div></div>")
+        # Tiny inline filter script — vanilla, no fetch, instantaneous.
+        body.append("""<script>
+(function(){
+  var inp = document.getElementById('player-filter');
+  var list = document.getElementById('roster-list');
+  if (!inp || !list) return;
+  var rows = list.querySelectorAll('.row-link');
+  inp.addEventListener('input', function(){
+    var q = inp.value.trim().toLowerCase();
+    for (var i = 0; i < rows.length; i++) {
+      var name = rows[i].getAttribute('data-name') || '';
+      rows[i].style.display = (!q || name.indexOf(q) >= 0) ? '' : 'none';
+    }
+  });
+})();
+</script>""")
 
         out = L.APP_DIR / "metadata" / "club" / f"{cid}.html"
         out.parent.mkdir(parents=True, exist_ok=True)
