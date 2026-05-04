@@ -179,30 +179,55 @@ table.players tbody tr.p-stat + tr.p-name td{border-top:1px solid var(--line)}
 .r-row .perf .who a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 .r-row .perf .x{color:var(--muted);font-size:10.5px}
 
-/* First-innings matrix (bat/bowl × home/away) */
+/* First-innings matrix + chase matrix share the same scaffolding */
 table.fi-matrix{width:100%;margin:6px 0 4px;border-collapse:separate;
-  border-spacing:6px}
-table.fi-matrix thead th{padding:4px 6px;font-size:10.5px;
+  border-spacing:5px;table-layout:fixed}
+table.fi-matrix col.rh-col{width:82px}
+table.fi-matrix thead th{padding:3px 4px;font-size:10.5px;
   text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
   background:none;border:none;text-align:center}
 table.fi-matrix thead th.corner{background:transparent}
-table.fi-matrix th.rh{text-align:left;font-weight:700;font-size:11.5px;
-  color:var(--ink);background:#f7f8fc;padding:8px 10px;border-radius:8px;
-  border:1px solid var(--line);width:36%}
-table.fi-matrix th.rh .subh{display:block;font-size:10px;font-weight:600;
-  color:var(--muted);text-transform:none;letter-spacing:0;margin-top:2px}
+table.fi-matrix th.rh{text-align:left;font-weight:800;font-size:12.5px;
+  color:var(--ink);background:#f7f8fc;padding:8px 8px;border-radius:8px;
+  border:1px solid var(--line);line-height:1.15;vertical-align:middle}
+table.fi-matrix th.rh .subh{display:block;font-size:9.5px;font-weight:600;
+  color:var(--muted);text-transform:none;letter-spacing:0;margin-top:3px;
+  white-space:normal}
 table.fi-matrix td{padding:0;background:transparent;border:none}
+
+/* Cells — base + own (blue tint) and opp (red tint) variants so the
+   "whose runs is this?" question is legible at a glance. */
 .fi-cell{background:#fff;border:1px solid var(--line);border-radius:9px;
-  padding:8px 10px;text-align:center;box-shadow:var(--shadow);
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  min-height:78px;justify-content:center}
-.fi-cell.empty{background:#fafbfd;color:var(--muted)}
-.fi-cell .avg{font-size:22px;font-weight:800;color:var(--ink);line-height:1;
+  padding:8px 6px 7px;text-align:center;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  min-height:88px;justify-content:center;position:relative}
+tr.own .fi-cell{background:#eef3fb;border-color:#cfdbf2}
+tr.opp .fi-cell{background:#fbeded;border-color:#f1cdcd}
+tr.won .fi-cell{background:#e9f4ec;border-color:#c6e2cd}
+tr.lost .fi-cell{background:#fbeded;border-color:#f1cdcd}
+.fi-cell.empty{background:#fafbfd !important;color:var(--muted);
+  border-color:var(--line) !important}
+.fi-cell .avg{font-size:24px;font-weight:800;color:var(--ink);line-height:1;
   font-variant-numeric:tabular-nums}
+tr.own .fi-cell .avg{color:#193e94}
+tr.opp .fi-cell .avg, tr.lost .fi-cell .avg{color:#8b1c1c}
+tr.won .fi-cell .avg{color:#0f5b29}
 .fi-cell .med{font-size:11px;color:var(--muted);font-weight:600;
-  font-variant-numeric:tabular-nums}
+  font-variant-numeric:tabular-nums;margin-top:2px}
 .fi-cell .sub{font-size:9.5px;color:var(--muted);font-weight:600;
-  margin-top:2px;letter-spacing:.02em}
+  letter-spacing:.02em;line-height:1.25}
+.fi-cell .tag{display:inline-block;padding:1px 6px;border-radius:5px;
+  font-size:8.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:3px;line-height:1.15}
+.fi-cell .tag.own{background:#1d4ed8;color:#fff}
+.fi-cell .tag.opp{background:#b91c1c;color:#fff}
+
+/* Chasing-matrix specifics — narrow row-header so two cells fit comfortably */
+table.chase-matrix th.rh .subh{font-size:9px}
+.fi-cell .vs{font-size:11px;color:var(--muted);font-weight:600;
+  font-variant-numeric:tabular-nums;line-height:1.2}
+.fi-cell .vs b{color:var(--ink);font-weight:800}
+.fi-cell .gap{font-size:10px;color:var(--muted);margin-top:2px;font-weight:600}
 
 /* Toss split bar */
 .choice-bar{height:22px;background:#eef0f6;border-radius:6px;
@@ -250,7 +275,7 @@ a:hover{text-decoration:underline}
 </style></head><body>
 <script>window.addEventListener('load',function(){requestAnimationFrame(function(){document.documentElement.dataset.renderH=document.body.scrollHeight;});});</script>
 <div class='hero'>
-<div class='eyebrow'>Scouting report · v3</div>
+<div class='eyebrow'>Scouting report · v4</div>
 <h1>Wickford CC 1st XI</h1>
 <p class='meta'>vs Rainham CC, Essex · League + Cup · 2026-05-04</p>
 <div class='stats'>
@@ -426,8 +451,11 @@ a:hover{text-decoration:underline}
 <div class='card'>
 <h2><span class='num'>6</span>Patterns</h2>
 <h3>First-innings totals · last 10 in each quadrant</h3>
-<p class='subtle'>The runs the team batting first put up. Bigger number = stronger signal for <b>chase / defend</b> at the toss.</p>
-<table class='fi-matrix'><thead><tr><th class='corner'></th><th>at <b>Home</b></th><th><b>Away</b></th></tr></thead><tbody><tr><th class='rh'>Wickford CC bat 1st<br><span class='subh'>own first innings</span></th><td><div class='fi-cell'><div class='avg'>243</div><div class='med'>med 229</div><div class='sub'>n=10 · Jun '24 → Sep '25</div></div></td><td><div class='fi-cell'><div class='avg'>216</div><div class='med'>med 204.5</div><div class='sub'>n=10 · Jun '24 → Aug '25</div></div></td></tr><tr><th class='rh'>Wickford CC bowl 1st<br><span class='subh'>opponent's first innings</span></th><td><div class='fi-cell'><div class='avg'>203</div><div class='med'>med 214</div><div class='sub'>n=10 · May '23 → May '26</div></div></td><td><div class='fi-cell'><div class='avg'>215</div><div class='med'>med 219</div><div class='sub'>n=10 · Aug '23 → Apr '26</div></div></td></tr></tbody></table>
+<p class='subtle'>The runs the team batting first put up. <b style='color:#193e94'>Blue</b> = Wickford CC's own innings; <b style='color:#8b1c1c'>red</b> = opposition's innings when Wickford CC bowls first.</p>
+<table class='fi-matrix'><colgroup><col class='rh-col'><col><col></colgroup><thead><tr><th class='corner'></th><th>Home</th><th>Away</th></tr></thead><tbody><tr class='own'><th class='rh'>Bat 1st<span class='subh'>our innings</span></th><td><div class='fi-cell'><span class='tag own'>own</span><div class='avg'>243</div><div class='med'>med 229</div><div class='sub'>n=10</div><div class='sub'>Jun '24 → Sep '25</div></div></td><td><div class='fi-cell'><span class='tag own'>own</span><div class='avg'>216</div><div class='med'>med 204.5</div><div class='sub'>n=10</div><div class='sub'>Jun '24 → Aug '25</div></div></td></tr><tr class='opp'><th class='rh'>Bowl 1st<span class='subh'>opp. innings</span></th><td><div class='fi-cell'><span class='tag opp'>opp</span><div class='avg'>203</div><div class='med'>med 214</div><div class='sub'>n=10</div><div class='sub'>May '23 → May '26</div></div></td><td><div class='fi-cell'><span class='tag opp'>opp</span><div class='avg'>215</div><div class='med'>med 219</div><div class='sub'>n=10</div><div class='sub'>Aug '23 → Apr '26</div></div></td></tr></tbody></table>
+<h3>Run chases · last 10 in each quadrant</h3>
+<p class='subtle'><b style='color:#0f5b29'>Green</b> = chase succeeded (the headline number is the target chased); <b style='color:#8b1c1c'>red</b> = chase failed (scored X vs target Y).</p>
+<p class='subtle' style='margin-top:8px'><b>Wickford CC chasing</b> &middot; <span class='small'>they batted second</span></p><table class='fi-matrix chase-matrix'><colgroup><col class='rh-col'><col><col></colgroup><thead><tr><th class='corner'></th><th>Home</th><th>Away</th></tr></thead><tbody><tr class='won'><th class='rh'>Made<span class='subh'>chased it</span></th><td><div class='fi-cell'><div class='avg'>175</div><div class='med'>chased</div><div class='sub'>n=10</div><div class='sub'>May '21 → May '26</div></div></td><td><div class='fi-cell'><div class='avg'>173</div><div class='med'>chased</div><div class='sub'>n=9</div><div class='sub'>Jun '19 → Apr '26</div></div></td></tr><tr class='lost'><th class='rh'>Failed<span class='subh'>fell short</span></th><td><div class='fi-cell'><div class='vs'><b>172</b> vs <b>246</b></div><div class='gap'>fell 75 short</div><div class='sub'>n=10</div><div class='sub'>Jul '20 → Jul '25</div></div></td><td><div class='fi-cell'><div class='vs'><b>169</b> vs <b>270</b></div><div class='gap'>fell 101 short</div><div class='sub'>n=10</div><div class='sub'>Jul '22 → Aug '25</div></div></td></tr></tbody></table><p class='subtle' style='margin-top:8px'><b>Opposition chasing</b> &middot; <span class='small'>Wickford CC batted first, opp chasing the target</span></p><table class='fi-matrix chase-matrix'><colgroup><col class='rh-col'><col><col></colgroup><thead><tr><th class='corner'></th><th>Home</th><th>Away</th></tr></thead><tbody><tr class='won'><th class='rh'>Made<span class='subh'>chased it</span></th><td><div class='fi-cell'><div class='avg'>198</div><div class='med'>chased</div><div class='sub'>n=10</div><div class='sub'>Aug '22 → Jun '25</div></div></td><td><div class='fi-cell'><div class='avg'>167</div><div class='med'>chased</div><div class='sub'>n=10</div><div class='sub'>Jul '22 → Aug '25</div></div></td></tr><tr class='lost'><th class='rh'>Failed<span class='subh'>fell short</span></th><td><div class='fi-cell'><div class='vs'><b>174</b> vs <b>265</b></div><div class='gap'>fell 92 short</div><div class='sub'>n=8</div><div class='sub'>Aug '20 → Sep '25</div></div></td><td><div class='fi-cell'><div class='vs'><b>155</b> vs <b>224</b></div><div class='gap'>fell 69 short</div><div class='sub'>n=9</div><div class='sub'>Jun '19 → Aug '25</div></div></td></tr></tbody></table>
 <h3>Bat 1st vs Bat 2nd · last 3 seasons</h3>
 <div class='chart'><div class='bar-row'><div class='lbl'>Wickford CC bat 1st</div><div class='bar'><div class='seg W' style='width:28.6%' title='W: 6'>6</div><div class='seg D' style='width:14.3%' title='D: 3'>3</div><div class='seg L' style='width:47.6%' title='L: 10'>10</div><div class='seg T' style='width:4.8%' title='T: 1'></div><div class='seg A' style='width:4.8%' title='A: 1'></div></div><div class='num'>6–10 · 29%</div></div><div class='bar-row'><div class='lbl'>Wickford CC bat 2nd</div><div class='bar'><div class='seg W' style='width:43.8%' title='W: 7'>7</div><div class='seg L' style='width:50.0%' title='L: 8'>8</div><div class='seg A' style='width:6.2%' title='A: 1'></div></div><div class='num'>7–8 · 44%</div></div><div class='bar-row'><div class='lbl'>Rainham CC, Essex bat 1st</div><div class='bar'><div class='seg W' style='width:47.1%' title='W: 8'>8</div><div class='seg D' style='width:5.9%' title='D: 1'></div><div class='seg L' style='width:41.2%' title='L: 7'>7</div><div class='seg NR' style='width:5.9%' title='NR: 1'></div></div><div class='num'>8–7 · 47%</div></div><div class='bar-row'><div class='lbl'>Rainham CC, Essex bat 2nd</div><div class='bar'><div class='seg W' style='width:36.8%' title='W: 7'>7</div><div class='seg D' style='width:5.3%' title='D: 1'></div><div class='seg L' style='width:52.6%' title='L: 10'>10</div><div class='seg A' style='width:5.3%' title='A: 1'></div></div><div class='num'>7–10 · 37%</div></div></div>
 <h3>Home vs Away · last 3 seasons</h3>
@@ -455,5 +483,5 @@ a:hover{text-decoration:underline}
 <div class='link-row'><span class='kind video'>Video</span><a href='https://www.youtube.com/watch?v=EltwYIp1e6o'>Bentley CC 1st XI v Wickford CC Saturday 1st XI (Div 3 Round 18, 7 Sep 2024)</a></div>
 </div>
 </div>
-<p class='footer'>Generated 2026-05-04 · v3 from <code>data/rainham.db</code> · Source: Play-Cricket public API</p>
+<p class='footer'>Generated 2026-05-04 · v4 from <code>data/rainham.db</code> · Source: Play-Cricket public API</p>
 </body></html>

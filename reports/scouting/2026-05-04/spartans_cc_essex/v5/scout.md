@@ -1,4 +1,4 @@
-# Scout — Spartans CC, Essex 1st XI (v4)
+# Scout — Spartans CC, Essex 1st XI (v5)
 
 _All sections: 1st XI only, League + Cup unless noted. Compared vs Rainham CC, Essex 1st XI. Today 2026-05-04._
 
@@ -139,28 +139,46 @@ _No played 1st XI head-to-head matches in the cache._
 
 ### 6a. First-innings totals — last 10 of each quadrant
 
-_The runs the team batting first put up. Avg shown prominently, median in brackets._
+_The runs the team batting first put up — own innings on the **Bat 1st** row, opposition's on the **Bowl 1st** row. Avg shown prominently, median in brackets._
 
 | | at Home | Away |
 |---|---|---|
-| **Bat 1st**<br>_our innings_ | **217** (med 247) <br><sub>n=10 · Jun '24 → Sep '25</sub> | **220** (med 207) <br><sub>n=10 · Aug '24 → Apr '26</sub> |
-| **Bowl 1st**<br>_opp. innings_ | **178** (med 151.5) <br><sub>n=10 · May '24 → Jul '25</sub> | **175** (med 177) <br><sub>n=10 · Sep '23 → Aug '25</sub> |
+| **Bat 1st**<br>_own runs_ | **217** (med 247) <br><sub>n=10 · Jun '24 → Sep '25</sub> | **220** (med 207) <br><sub>n=10 · Aug '24 → Apr '26</sub> |
+| **Bowl 1st**<br>_opp. runs_ | **178** (med 151.5) <br><sub>n=10 · May '24 → Jul '25</sub> | **175** (med 177) <br><sub>n=10 · Sep '23 → Aug '25</sub> |
 
-### 6b. When batting first vs second (last 3 seasons L+C)
+### 6b. Run chases — last 10 of each quadrant
+
+_Successful: the avg target the chaser knocked off. Unsuccessful: scored X vs target Y._
+
+#### **Spartans CC, Essex chasing** _(they batted second)_
+
+| | at Home | Away |
+|---|---|---|
+| **Made**<br>_chased it_ | chased **164**<br><sub>n=10 · Jun '22 → Jul '25</sub> | chased **151**<br><sub>n=10 · Jun '21 → Aug '25</sub> |
+| **Failed**<br>_fell short_ | **114** vs **218** _(104 short)_<br><sub>n=8 · Jul '20 → May '24</sub> | **154** vs **209** _(55 short)_<br><sub>n=10 · Jun '22 → May '25</sub> |
+
+#### **Opposition chasing** _(Spartans CC, Essex batted first)_
+
+| | at Home | Away |
+|---|---|---|
+| **Made**<br>_chased it_ | chased **142**<br><sub>n=5 · May '22 → May '25</sub> | chased **126**<br><sub>n=10 · May '22 → Apr '26</sub> |
+| **Failed**<br>_fell short_ | **143** vs **232** _(89 short)_<br><sub>n=10 · Jun '23 → Sep '25</sub> | **111** vs **231** _(120 short)_<br><sub>n=10 · Jun '24 → Aug '25</sub> |
+
+### 6c. When batting first vs second (last 3 seasons L+C)
 
 - Spartans CC, Essex batting 1st: 27 played, 16W / 6L / 3D / 2NR — win rate 59%
 - Spartans CC, Essex batting 2nd: 19 played, 12W / 5L / 2D — win rate 63%
 - Rainham CC, Essex batting 1st: 17 played, 8W / 7L / 1D / 1NR — win rate 47%
 - Rainham CC, Essex batting 2nd: 19 played, 7W / 10L / 1D / 1NR — win rate 37%
 
-### 6c. Home vs away (last 3 seasons L+C)
+### 6d. Home vs away (last 3 seasons L+C)
 
 - Spartans CC, Essex at home: 23 played, 14W / 2L / 5D / 2NR — win rate 61%
 - Spartans CC, Essex away: 26 played, 16W / 10L — win rate 62%
 - Rainham CC, Essex at home: 19 played, 9W / 6L / 1D / 3NR — win rate 47%
 - Rainham CC, Essex away: 19 played, 6W / 11L / 1D / 1NR — win rate 32%
 
-### 6d. When they win the toss
+### 6e. When they win the toss
 
 **Won toss in 27 matches** — chose to bat 25 (93%), chose to field 2 (7%).
 
@@ -169,7 +187,7 @@ _The runs the team batting first put up. Avg shown prominently, median in bracke
 
 _Reference: lost toss → outcome: 19 played, 12W / 4L / 3D — win rate 63%._
 
-### 6e. Team batting & bowling avg per season (1st XI, L+C)
+### 6f. Team batting & bowling avg per season (1st XI, L+C)
 
 | Season | Spartans CC, Essex bat | Rainham CC, Essex bat | Spartans CC, Essex bowl | Rainham CC, Essex bowl |
 |--:|--:|--:|--:|--:|

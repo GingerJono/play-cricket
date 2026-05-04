@@ -735,6 +735,97 @@ def first_innings_matrix(conn, club_id, team_ids, today_iso, comp_types=("League
     return out
 
 
+def chase_matrix(conn, club_id, team_ids, today_iso,
+                 comp_types=("League","Cup"), last=10):
+    """For each played match where the result is W or L (decisive), bucket
+    by who was chasing (us / opp) × Spartans' venue (home / away) ×
+    outcome (won / lost), then keep the last `last` of each.
+
+    Returns dict keyed by (chaser, venue, outcome) where:
+      - chaser: 'us' if our 1st XI batted second, 'opp' otherwise
+      - venue:  'home' / 'away' (always Spartans' venue)
+      - outcome: 'won' if the chaser succeeded, 'lost' if they failed
+
+    Each entry:
+      - won  → {n, avg_target, first, last}        (target chased down)
+      - lost → {n, avg_score, avg_target, first, last}
+               (chaser fell short — scored avg_score vs avg_target)
+    """
+    if not team_ids:
+        return None
+    t_ph = ",".join("?" * len(team_ids))
+    c_ph = ",".join("?" * len(comp_types))
+    rows = conn.execute(f"""
+        SELECT m.match_id, m.match_date, m.home_club_id, m.batted_first,
+               m.result, m.result_applied_to,
+               (SELECT i.runs FROM innings i
+                 WHERE i.match_id=m.match_id AND i.innings_seq=1) AS r1,
+               (SELECT i.runs FROM innings i
+                 WHERE i.match_id=m.match_id AND i.innings_seq=2) AS r2
+        FROM matches m
+        WHERE (m.home_team_id IN ({t_ph}) OR m.away_team_id IN ({t_ph}))
+          AND m.competition_type IN ({c_ph})
+          AND m.match_date <> '' AND m.result <> ''
+          AND substr(m.match_date,7,4)||substr(m.match_date,4,2)||
+              substr(m.match_date,1,2) <= ?
+        ORDER BY substr(m.match_date,7,4)||substr(m.match_date,4,2)||
+                 substr(m.match_date,1,2) DESC
+    """, (*team_ids, *team_ids, *comp_types, today_iso)).fetchall()
+
+    target = set(team_ids)
+    buckets = {(c, v, o): []
+               for c in ("us", "opp")
+               for v in ("home", "away")
+               for o in ("won", "lost")}
+
+    for mid, mdate, hcid, bf, res, rat, r1, r2 in rows:
+        if r1 is None or r2 is None:
+            continue
+        bf = (bf or "").strip()
+        if not bf or res not in ("W", "L"):
+            continue
+        venue = "home" if hcid == club_id else "away"
+        we_batted_first = bf in target
+        we_won = (res == "W" and rat in target) or \
+                 (res == "L" and rat and rat not in target)
+        we_lost = not we_won
+
+        if we_batted_first:
+            # Opposition was chasing our R1
+            chaser = "opp"
+            target_runs, chaser_score = r1, r2
+            chaser_won = we_lost
+        else:
+            # We were chasing their R1
+            chaser = "us"
+            target_runs, chaser_score = r1, r2
+            chaser_won = we_won
+
+        outcome = "won" if chaser_won else "lost"
+        buckets[(chaser, venue, outcome)].append((mdate, target_runs, chaser_score))
+
+    out = {}
+    for k, items in buckets.items():
+        sample = items[:last]
+        if not sample:
+            out[k] = None
+            continue
+        n = len(sample)
+        dates = sorted((d for d, _, _ in sample), key=to_iso)
+        if k[2] == "won":
+            tgts = [t for _, t, _ in sample]
+            out[k] = {"n": n, "avg_target": sum(tgts) / n,
+                      "first": dates[0], "last": dates[-1]}
+        else:
+            tgts = [t for _, t, _ in sample]
+            scores = [s for _, _, s in sample]
+            out[k] = {"n": n,
+                      "avg_target": sum(tgts) / n,
+                      "avg_score": sum(scores) / n,
+                      "first": dates[0], "last": dates[-1]}
+    return out
+
+
 # ---------------------------------------------------------------- main ----
 
 def play_cricket_match_url(match_id):
@@ -1006,6 +1097,8 @@ def main():
 
     # 6e. First-innings matrix (bat/bowl first × home/away, last 10 each)
     fi_matrix = first_innings_matrix(conn, club_id, target_team_ids, today_iso)
+    # 6f. Chase matrix (us/opp chasing × home/away × won/lost, last 10 each)
+    ch_matrix = chase_matrix(conn, club_id, target_team_ids, today_iso)
 
     # Play-Cricket subdomain for player profile links (used in §2/§3/§5)
     pc_subdomain = (CLUB_LINKS.get(str(club_id), {}) or {}).get("pc_subdomain")
@@ -1036,6 +1129,7 @@ def main():
         "us_avgs": us_avgs,
         "vs_avgs": vs_avgs,
         "fi_matrix": fi_matrix,
+        "ch_matrix": ch_matrix,
         "video_links": video_links_for(club_id, club_name, recent_matches=recent),
     }
 
@@ -1421,14 +1515,15 @@ def render_md(d):
     if fi:
         md.append("### 6a. First-innings totals — last 10 of each quadrant")
         md.append("")
-        md.append("_The runs the team batting first put up. Avg shown "
-                  "prominently, median in brackets._")
+        md.append("_The runs the team batting first put up — own innings on "
+                  "the **Bat 1st** row, opposition's on the **Bowl 1st** row. "
+                  "Avg shown prominently, median in brackets._")
         md.append("")
         md.append("| | at Home | Away |")
         md.append("|---|---|---|")
         for side, label, sub_label in (
-            ("bat",  "**Bat 1st**",  "our innings"),
-            ("bowl", "**Bowl 1st**", "opp. innings"),
+            ("bat",  "**Bat 1st**",  "own runs"),
+            ("bowl", "**Bowl 1st**", "opp. runs"),
         ):
             row = [f"{label}<br>_{sub_label}_"]
             for venue in ("home", "away"):
@@ -1446,7 +1541,43 @@ def render_md(d):
             md.append("| " + " | ".join(row) + " |")
         md.append("")
 
-    md.append("### 6b. When batting first vs second (last 3 seasons L+C)")
+    ch = d.get("ch_matrix")
+    if ch:
+        md.append("### 6b. Run chases — last 10 of each quadrant")
+        md.append("")
+        md.append("_Successful: the avg target the chaser knocked off. "
+                  "Unsuccessful: scored X vs target Y._")
+        md.append("")
+
+        def chase_cell(chaser, venue, outcome):
+            c = ch.get((chaser, venue, outcome))
+            if not c:
+                return "—"
+            sub = (f"<br><sub>n={c['n']} · {_date_short(c['first'])} → "
+                   f"{_date_short(c['last'])}</sub>")
+            if outcome == "won":
+                return f"chased **{c['avg_target']:.0f}**{sub}"
+            gap = c['avg_target'] - c['avg_score']
+            return (f"**{c['avg_score']:.0f}** vs **{c['avg_target']:.0f}** "
+                    f"_({gap:.0f} short)_{sub}")
+
+        for chaser, header in (
+            ("us",  f"**{d['club_name']} chasing** _(they batted second)_"),
+            ("opp", f"**Opposition chasing** _({d['club_name']} batted first)_"),
+        ):
+            md.append(f"#### {header}")
+            md.append("")
+            md.append("| | at Home | Away |")
+            md.append("|---|---|---|")
+            md.append(f"| **Made**<br>_chased it_ "
+                      f"| {chase_cell(chaser, 'home', 'won')} "
+                      f"| {chase_cell(chaser, 'away', 'won')} |")
+            md.append(f"| **Failed**<br>_fell short_ "
+                      f"| {chase_cell(chaser, 'home', 'lost')} "
+                      f"| {chase_cell(chaser, 'away', 'lost')} |")
+            md.append("")
+
+    md.append("### 6c. When batting first vs second (last 3 seasons L+C)")
     md.append("")
     md.append(f"- {d['club_name']} batting 1st: " + wld_str(d["chart_bat"]["us_bat1"]))
     md.append(f"- {d['club_name']} batting 2nd: " + wld_str(d["chart_bat"]["us_bat2"]))
@@ -1454,7 +1585,7 @@ def render_md(d):
     md.append(f"- {d['vs_club_name']} batting 2nd: " + wld_str(d["chart_bat"]["vs_bat2"]))
     md.append("")
 
-    md.append("### 6c. Home vs away (last 3 seasons L+C)")
+    md.append("### 6d. Home vs away (last 3 seasons L+C)")
     md.append("")
     md.append(f"- {d['club_name']} at home: " + wld_str(d["chart_ha"]["us_home"]))
     md.append(f"- {d['club_name']} away: " + wld_str(d["chart_ha"]["us_away"]))
@@ -1462,7 +1593,7 @@ def render_md(d):
     md.append(f"- {d['vs_club_name']} away: " + wld_str(d["chart_ha"]["vs_away"]))
     md.append("")
 
-    md.append("### 6d. When they win the toss")
+    md.append("### 6e. When they win the toss")
     md.append("")
     t = d["chart_toss"]
     won_n = t["won_n"]
@@ -1481,7 +1612,7 @@ def render_md(d):
         md.append("_No matches with toss data in scope._")
     md.append("")
 
-    md.append("### 6e. Team batting & bowling avg per season (1st XI, L+C)")
+    md.append("### 6f. Team batting & bowling avg per season (1st XI, L+C)")
     md.append("")
     md.append("| Season | "
               f"{d['club_name']} bat | {d['vs_club_name']} bat | "
@@ -1742,10 +1873,10 @@ table.players tbody tr.p-stat + tr.p-name td{border-top:1px solid var(--line)}
 .r-row .perf .who a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 .r-row .perf .x{color:var(--muted);font-size:10.5px}
 
-/* First-innings matrix (bat/bowl × home/away) */
+/* First-innings matrix + chase matrix share the same scaffolding */
 table.fi-matrix{width:100%;margin:6px 0 4px;border-collapse:separate;
   border-spacing:5px;table-layout:fixed}
-table.fi-matrix col.rh-col{width:78px}
+table.fi-matrix col.rh-col{width:82px}
 table.fi-matrix thead th{padding:3px 4px;font-size:10.5px;
   text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
   background:none;border:none;text-align:center}
@@ -1757,17 +1888,40 @@ table.fi-matrix th.rh .subh{display:block;font-size:9.5px;font-weight:600;
   color:var(--muted);text-transform:none;letter-spacing:0;margin-top:3px;
   white-space:normal}
 table.fi-matrix td{padding:0;background:transparent;border:none}
+
+/* Cells — base + own (blue tint) and opp (red tint) variants so the
+   "whose runs is this?" question is legible at a glance. */
 .fi-cell{background:#fff;border:1px solid var(--line);border-radius:9px;
-  padding:8px 6px;text-align:center;box-shadow:var(--shadow);
+  padding:8px 6px 7px;text-align:center;box-shadow:var(--shadow);
   display:flex;flex-direction:column;align-items:center;gap:1px;
-  min-height:88px;justify-content:center}
-.fi-cell.empty{background:#fafbfd;color:var(--muted)}
+  min-height:88px;justify-content:center;position:relative}
+tr.own .fi-cell{background:#eef3fb;border-color:#cfdbf2}
+tr.opp .fi-cell{background:#fbeded;border-color:#f1cdcd}
+tr.won .fi-cell{background:#e9f4ec;border-color:#c6e2cd}
+tr.lost .fi-cell{background:#fbeded;border-color:#f1cdcd}
+.fi-cell.empty{background:#fafbfd !important;color:var(--muted);
+  border-color:var(--line) !important}
 .fi-cell .avg{font-size:24px;font-weight:800;color:var(--ink);line-height:1;
   font-variant-numeric:tabular-nums}
+tr.own .fi-cell .avg{color:#193e94}
+tr.opp .fi-cell .avg, tr.lost .fi-cell .avg{color:#8b1c1c}
+tr.won .fi-cell .avg{color:#0f5b29}
 .fi-cell .med{font-size:11px;color:var(--muted);font-weight:600;
   font-variant-numeric:tabular-nums;margin-top:2px}
 .fi-cell .sub{font-size:9.5px;color:var(--muted);font-weight:600;
   letter-spacing:.02em;line-height:1.25}
+.fi-cell .tag{display:inline-block;padding:1px 6px;border-radius:5px;
+  font-size:8.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:3px;line-height:1.15}
+.fi-cell .tag.own{background:#1d4ed8;color:#fff}
+.fi-cell .tag.opp{background:#b91c1c;color:#fff}
+
+/* Chasing-matrix specifics — narrow row-header so two cells fit comfortably */
+table.chase-matrix th.rh .subh{font-size:9px}
+.fi-cell .vs{font-size:11px;color:var(--muted);font-weight:600;
+  font-variant-numeric:tabular-nums;line-height:1.2}
+.fi-cell .vs b{color:var(--ink);font-weight:800}
+.fi-cell .gap{font-size:10px;color:var(--muted);margin-top:2px;font-weight:600}
 
 /* Toss split bar */
 .choice-bar{height:22px;background:#eef0f6;border-radius:6px;
@@ -2059,9 +2213,21 @@ def render_html(d):
     if d.get("fi_matrix"):
         parts.append("<h3>First-innings totals · last 10 in each quadrant</h3>")
         parts.append("<p class='subtle'>The runs the team batting first put "
-                     "up. Bigger number = stronger signal for "
-                     "<b>chase / defend</b> at the toss.</p>")
+                     "up. <b style='color:#193e94'>Blue</b> = "
+                     f"{_esc(d['club_name'])}'s own innings; "
+                     "<b style='color:#8b1c1c'>red</b> = opposition's innings "
+                     f"when {_esc(d['club_name'])} bowls first.</p>")
         parts.append(_render_fi_matrix(d["fi_matrix"], d["club_name"]))
+
+    # 6b. Chase matrix.
+    if d.get("ch_matrix"):
+        parts.append("<h3>Run chases · last 10 in each quadrant</h3>")
+        parts.append("<p class='subtle'>"
+                     "<b style='color:#0f5b29'>Green</b> = chase succeeded "
+                     "(the headline number is the target chased); "
+                     "<b style='color:#8b1c1c'>red</b> = chase failed "
+                     "(scored X vs target Y).</p>")
+        parts.append(_render_chase_matrix(d["ch_matrix"], d["club_name"]))
 
     parts.append("<h3>Bat 1st vs Bat 2nd · last 3 seasons</h3>")
     parts.append(wld_chart_block([
@@ -2288,8 +2454,11 @@ def _render_fi_matrix(matrix, club_name):
     """
     def cell(side, venue):
         c = matrix.get((side, venue))
+        tag = ("<span class='tag own'>own</span>" if side == "bat"
+               else "<span class='tag opp'>opp</span>")
         if not c:
             return ("<div class='fi-cell empty'>"
+                    f"{tag}"
                     "<div class='avg'>—</div>"
                     "<div class='sub'>no data</div></div>")
         first = _date_short(c["first"])
@@ -2300,6 +2469,7 @@ def _render_fi_matrix(matrix, club_name):
         else:
             med_s = str(med)
         return (f"<div class='fi-cell'>"
+                f"{tag}"
                 f"<div class='avg'>{c['avg']:.0f}</div>"
                 f"<div class='med'>med {med_s}</div>"
                 f"<div class='sub'>n={c['n']}</div>"
@@ -2317,13 +2487,70 @@ def _render_fi_matrix(matrix, club_name):
         "<th>Away</th>"
         "</tr></thead>"
         "<tbody>"
-        "<tr><th class='rh'>Bat 1st"
+        "<tr class='own'><th class='rh'>Bat 1st"
         "<span class='subh'>our innings</span></th>"
         f"<td>{cell('bat','home')}</td><td>{cell('bat','away')}</td></tr>"
-        "<tr><th class='rh'>Bowl 1st"
+        "<tr class='opp'><th class='rh'>Bowl 1st"
         "<span class='subh'>opp. innings</span></th>"
         f"<td>{cell('bowl','home')}</td><td>{cell('bowl','away')}</td></tr>"
         "</tbody></table>"
+    )
+
+
+def _render_chase_matrix(matrix, club_name):
+    """Two stacked 2×2 grids, one for "we chase" and one for "opp chases".
+    Rows are won/lost (chaser perspective); columns are home/away
+    (always Spartans' venue)."""
+
+    def cell(chaser, venue, outcome):
+        c = matrix.get((chaser, venue, outcome))
+        if not c:
+            return ("<div class='fi-cell empty'>"
+                    "<div class='avg'>—</div>"
+                    "<div class='sub'>no data</div></div>")
+        first = _date_short(c["first"])
+        last = _date_short(c["last"])
+        if outcome == "won":
+            body = (f"<div class='avg'>{c['avg_target']:.0f}</div>"
+                    f"<div class='med'>chased</div>")
+        else:
+            gap = c['avg_target'] - c['avg_score']
+            body = (f"<div class='vs'><b>{c['avg_score']:.0f}</b> "
+                    f"vs <b>{c['avg_target']:.0f}</b></div>"
+                    f"<div class='gap'>fell {gap:.0f} short</div>")
+        return (f"<div class='fi-cell'>"
+                f"{body}"
+                f"<div class='sub'>n={c['n']}</div>"
+                f"<div class='sub'>{_esc(first)} → {_esc(last)}</div>"
+                f"</div>")
+
+    def block(chaser, title, sub_title):
+        return (
+            f"<p class='subtle' style='margin-top:8px'><b>{_esc(title)}</b> "
+            f"&middot; <span class='small'>{_esc(sub_title)}</span></p>"
+            "<table class='fi-matrix chase-matrix'>"
+            "<colgroup><col class='rh-col'><col><col></colgroup>"
+            "<thead><tr>"
+            "<th class='corner'></th>"
+            "<th>Home</th><th>Away</th>"
+            "</tr></thead>"
+            "<tbody>"
+            "<tr class='won'><th class='rh'>Made"
+            "<span class='subh'>chased it</span></th>"
+            f"<td>{cell(chaser,'home','won')}</td>"
+            f"<td>{cell(chaser,'away','won')}</td></tr>"
+            "<tr class='lost'><th class='rh'>Failed"
+            "<span class='subh'>fell short</span></th>"
+            f"<td>{cell(chaser,'home','lost')}</td>"
+            f"<td>{cell(chaser,'away','lost')}</td></tr>"
+            "</tbody></table>"
+        )
+
+    return (
+        block("us",  f"{club_name} chasing",
+              "they batted second")
+        + block("opp", "Opposition chasing",
+                f"{club_name} batted first, opp chasing the target")
     )
 
 

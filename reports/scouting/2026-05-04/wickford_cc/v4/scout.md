@@ -1,4 +1,4 @@
-# Scout — Wickford CC 1st XI (v3)
+# Scout — Wickford CC 1st XI (v4)
 
 _All sections: 1st XI only, League + Cup unless noted. Compared vs Rainham CC, Essex 1st XI. Today 2026-05-04._
 
@@ -141,28 +141,46 @@ _Essex League — Division 05 - 1st XI Division Four_
 
 ### 6a. First-innings totals — last 10 of each quadrant
 
-_The runs the team batting first put up. Avg shown prominently, median in brackets._
+_The runs the team batting first put up — own innings on the **Bat 1st** row, opposition's on the **Bowl 1st** row. Avg shown prominently, median in brackets._
 
 | | at Home | Away |
 |---|---|---|
-| Wickford CC **bat 1st**<br>_own first innings_ | **243** (med 229) <br><sub>n=10 · Jun '24 → Sep '25</sub> | **216** (med 204.5) <br><sub>n=10 · Jun '24 → Aug '25</sub> |
-| Wickford CC **bowl 1st**<br>_opponent's first innings_ | **203** (med 214) <br><sub>n=10 · May '23 → May '26</sub> | **215** (med 219) <br><sub>n=10 · Aug '23 → Apr '26</sub> |
+| **Bat 1st**<br>_own runs_ | **243** (med 229) <br><sub>n=10 · Jun '24 → Sep '25</sub> | **216** (med 204.5) <br><sub>n=10 · Jun '24 → Aug '25</sub> |
+| **Bowl 1st**<br>_opp. runs_ | **203** (med 214) <br><sub>n=10 · May '23 → May '26</sub> | **215** (med 219) <br><sub>n=10 · Aug '23 → Apr '26</sub> |
 
-### 6b. When batting first vs second (last 3 seasons L+C)
+### 6b. Run chases — last 10 of each quadrant
+
+_Successful: the avg target the chaser knocked off. Unsuccessful: scored X vs target Y._
+
+#### **Wickford CC chasing** _(they batted second)_
+
+| | at Home | Away |
+|---|---|---|
+| **Made**<br>_chased it_ | chased **175**<br><sub>n=10 · May '21 → May '26</sub> | chased **173**<br><sub>n=9 · Jun '19 → Apr '26</sub> |
+| **Failed**<br>_fell short_ | **172** vs **246** _(75 short)_<br><sub>n=10 · Jul '20 → Jul '25</sub> | **169** vs **270** _(101 short)_<br><sub>n=10 · Jul '22 → Aug '25</sub> |
+
+#### **Opposition chasing** _(Wickford CC batted first)_
+
+| | at Home | Away |
+|---|---|---|
+| **Made**<br>_chased it_ | chased **198**<br><sub>n=10 · Aug '22 → Jun '25</sub> | chased **167**<br><sub>n=10 · Jul '22 → Aug '25</sub> |
+| **Failed**<br>_fell short_ | **174** vs **265** _(92 short)_<br><sub>n=8 · Aug '20 → Sep '25</sub> | **155** vs **224** _(69 short)_<br><sub>n=9 · Jun '19 → Aug '25</sub> |
+
+### 6c. When batting first vs second (last 3 seasons L+C)
 
 - Wickford CC batting 1st: 21 played, 6W / 10L / 4D / 1NR — win rate 29%
 - Wickford CC batting 2nd: 16 played, 7W / 8L / 1NR — win rate 44%
 - Rainham CC, Essex batting 1st: 17 played, 8W / 7L / 1D / 1NR — win rate 47%
 - Rainham CC, Essex batting 2nd: 19 played, 7W / 10L / 1D / 1NR — win rate 37%
 
-### 6c. Home vs away (last 3 seasons L+C)
+### 6d. Home vs away (last 3 seasons L+C)
 
 - Wickford CC at home: 19 played, 7W / 8L / 1D / 3NR — win rate 37%
 - Wickford CC away: 20 played, 6W / 10L / 3D / 1NR — win rate 30%
 - Rainham CC, Essex at home: 19 played, 9W / 6L / 1D / 3NR — win rate 47%
 - Rainham CC, Essex away: 19 played, 6W / 11L / 1D / 1NR — win rate 32%
 
-### 6d. When they win the toss
+### 6e. When they win the toss
 
 **Won toss in 24 matches** — chose to bat 14 (58%), chose to field 10 (42%).
 
@@ -171,7 +189,7 @@ _The runs the team batting first put up. Avg shown prominently, median in bracke
 
 _Reference: lost toss → outcome: 13 played, 5W / 5L / 2D / 1NR — win rate 38%._
 
-### 6e. Team batting & bowling avg per season (1st XI, L+C)
+### 6f. Team batting & bowling avg per season (1st XI, L+C)
 
 | Season | Wickford CC bat | Rainham CC, Essex bat | Wickford CC bowl | Rainham CC, Essex bowl |
 |--:|--:|--:|--:|--:|
