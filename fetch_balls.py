@@ -71,6 +71,7 @@ RAW_DIR = ROOT / "data" / "raw"
 MATCHES_DIR = RAW_DIR / "matches"
 RV_MATCH_DIR = RAW_DIR / "rv_match"
 BALLS_DIR = RAW_DIR / "balls"
+NV_MATCH_DIR = RAW_DIR / "nv_match"   # NV Play scorecard (fallback when RV is empty)
 
 # Auto-generated; regenerated whenever the upstream JS bundle hash changes.
 TOKEN_JS = ROOT / "_rv_token.js"
@@ -81,6 +82,16 @@ RV_MAPPING_INSTANCE = 4         # constant for ECB/Play-Cricket
 RV_OBJECT_TYPE_MATCH = 12       # constant for "match" objects
 RV_MASTER_ENTITY_ID = 130000    # ECB top-level org
 RV_APIID = 1003                 # public, ships in the JS bundle
+
+# NV Play (separate scoring product). Match-centre/RV does NOT have ball
+# data for matches scored on NV Play; we have to hit a different backend.
+# All Play-Cricket pages embed the same `<nvplay customer-id=...>` widget,
+# so the customer id is fixed.
+NV_CUSTOMER_ID = "5e401d65-10ec-4a28-a0f6-1c084ce30445"
+NV_AUTH_URL = "https://w-auth.nvplay.com/api/widgetauthorisation/{cid}"
+# After auth, the widget calls `{ApiBaseUrl}/api/scorecard/<match_id>` —
+# ApiBaseUrl is fixed per Play-Cricket so we can cache it after first call.
+_nv_api_base: str | None = None
 
 USER_AGENT = "rainham-cc-stats/1.0 (+https://github.com/gingerjono/rcc-2020-site)"
 
@@ -209,6 +220,69 @@ def fetch_rv_balls(rv_match_id: int, result_id: int, innings_number: int,
     return http_get_json(url, headers=headers)
 
 
+# ---------- NV Play fallback -------------------------------------------------
+
+def _nv_resolve_api_base() -> str:
+    """First call hits widgetauthorisation to discover ApiBaseUrl; cached."""
+    global _nv_api_base
+    if _nv_api_base:
+        return _nv_api_base
+    auth = http_get_json(NV_AUTH_URL.format(cid=NV_CUSTOMER_ID))
+    base = auth.get("ApiBaseUrl") or "https://w-api2.ecb.nvplay.net"
+    _nv_api_base = base.rstrip("/")
+    return _nv_api_base
+
+
+def fetch_nv_scorecard(match_id: int) -> dict | None:
+    """
+    Fetch the NV Play scorecard for a match. Returns None on 404 / empty.
+
+    Endpoint + params come from `widgets.nvplay.scorecard.js`:
+
+      const url = apiBaseUrl + "/api/scorecard/" + matchId
+                 + "?idType=" + matchIdType
+                 + "&customerId=" + customerId
+                 + (playerLinks ? "&playerids=true" : "")
+                 + (loadFullData ? "&stats=true&commentary=true" : "")
+
+    `commentary=true` is the magic switch — without it, each ball's
+    `C` field comes back null. We need it to extract per-ball "X to Y"
+    text instead of reconstructing striker/non-striker from scratch.
+    """
+    base = _nv_resolve_api_base()
+    url = (f"{base}/api/scorecard/{match_id}?"
+           + urlencode({
+               "idType": "play-cricket",
+               "customerId": NV_CUSTOMER_ID,
+               "playerids": "true",
+               "stats": "true",
+               "commentary": "true",
+           }))
+    try:
+        body = http_get(url, headers={
+            "Referer": "https://rainhamcc.play-cricket.com/",
+        })
+    except HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
+    if not body:
+        return None
+    try:
+        return json.loads(body)
+    except Exception:
+        return None
+
+
+def nv_innings_balls_count(scorecard: dict) -> int:
+    """Sum of all balls across all innings — used as the 'is there data' check."""
+    n = 0
+    for inn in scorecard.get("Innings", []) or []:
+        for over in inn.get("Overs", []) or []:
+            n += len(over.get("Balls", []) or [])
+    return n
+
+
 # ---------- Per-match orchestration ------------------------------------------
 
 def summarise_innings(rv_match: dict) -> list[dict]:
@@ -228,6 +302,34 @@ def summarise_innings(rv_match: dict) -> list[dict]:
                 "overs_bowled":   inn.get("overs_bowled"),
             })
     out.sort(key=lambda d: d.get("innings_order") or 0)
+    return out
+
+
+def summarise_team_members(rv_match: dict) -> list[dict]:
+    """
+    Per-team rosters from RV's `MatchTeams[].TeamMembers[]`.
+
+    These are the ROSTER-LEVEL records (one per player on the
+    teamsheet), and they're the only place RV exposes its internal
+    `player_id` (11M-range) alongside the parsed names. We use them at
+    DB-load time to build an RV->PC player_id translation table —
+    avoids the ambiguity of per-ball name parsing.
+    """
+    out: list[dict] = []
+    for team in rv_match.get("MatchTeams", []) or []:
+        for m in team.get("TeamMembers", []) or []:
+            out.append({
+                "team_name":   team.get("team_name"),
+                "club_name":   team.get("club_name"),
+                "is_home":     team.get("is_home"),
+                "rv_player_id": m.get("player_id"),
+                "f_name":      m.get("f_name"),
+                "l_name":      m.get("l_name"),
+                "player_name": m.get("player_name"),    # "Last, First"
+                "player_name2": m.get("player_name2"),  # "First Last"
+                "player_name3": m.get("player_name3"),  # "F Last"
+                "sel_number":  m.get("sel_number"),
+            })
     return out
 
 
@@ -252,6 +354,7 @@ def cache_match(match_id: int, force: bool, headers: dict) -> tuple[int, str]:
             "scores_updated":     rv_match.get("scores_updated"),
             "match_format_id":    rv_match.get("match_format_id"),
             "innings":            summarise_innings(rv_match),
+            "team_members":       summarise_team_members(rv_match),
         }
         rv_path.parent.mkdir(parents=True, exist_ok=True)
         rv_path.write_text(json.dumps(meta, indent=2))
@@ -281,6 +384,25 @@ def cache_match(match_id: int, force: bool, headers: dict) -> tuple[int, str]:
         fetched_any = True
 
     if total_balls == 0:
+        # ResultsVault has nothing — try NV Play, the other scoring backend
+        # used by Play-Cricket (matches scored on PCS Pro Live / NV-streamed
+        # games show up here even when `was_live_scored` is False on RV).
+        nv_path = NV_MATCH_DIR / f"{match_id}.json"
+        if nv_path.exists() and not force:
+            try:
+                nv = json.loads(nv_path.read_text())
+            except Exception:
+                nv = None
+        else:
+            nv = fetch_nv_scorecard(match_id)
+            if nv is not None:
+                nv_path.parent.mkdir(parents=True, exist_ok=True)
+                nv_path.write_text(json.dumps(nv))
+                fetched_any = True
+        if nv:
+            n_nv = nv_innings_balls_count(nv)
+            if n_nv > 0:
+                return (n_nv, "nv-fetched" if fetched_any else "nv-cached")
         return (0, "no-data")
     return (total_balls, "fetched" if fetched_any else "cached")
 

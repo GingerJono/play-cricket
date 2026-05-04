@@ -126,31 +126,69 @@ SEASONS_BACK = 10
 
 
 def relevant_match_ids(conn) -> set[int]:
-    """1st XI / League + non-T20 Cup, last 10 seasons, played-only."""
+    """
+    1st XI / League + non-T20 Cup, last 10 seasons.
+
+    Includes BOTH played and scheduled-but-unplayed fixtures so that a
+    club we'll face this season (e.g. Spartans CC's two 2026 League
+    games) shows up even before we've played them.
+    """
     import datetime as dt
     season_min = dt.date.today().year - SEASONS_BACK + 1
-    return set(L.first_xi_match_ids(conn, season_min=season_min))
+    return set(L.first_xi_match_ids(
+        conn, season_min=season_min, include_unplayed=True,
+    ))
 
 
 def relevant_club_player_pairs(
     conn, match_ids: set[int]
 ) -> dict[str, set[int]]:
-    """For each non-Rainham club, the set of player_ids seen on a relevant fixture."""
+    """
+    For each non-Rainham club we have a relevant fixture against
+    (past OR upcoming), the set of every `player_id` we've ever seen
+    on that club's `match_players` rows.
+
+    Rationale: a club like Spartans CC, who we'll play for the first
+    time this season, has no past Rainham fixtures — but we have 350+
+    of their players cached from their own scouting fetches. Showing
+    their full roster lets Jono start submitting metadata before we
+    play them.
+    """
     if not match_ids:
         return {}
     cur = conn.cursor()
     qmarks = ",".join("?" * len(match_ids))
-    rows = cur.execute(f"""
-        SELECT mp.club_id, mp.player_id
-        FROM match_players mp
-        WHERE mp.match_id IN ({qmarks})
-          AND mp.club_id <> '{L.RAINHAM_CLUB_ID}'
-          AND mp.club_id <> ''
-          AND mp.player_id IS NOT NULL
-    """, list(match_ids)).fetchall()
+
+    # Step 1: opposition club_ids that show up on any side of a
+    # relevant fixture (using the matches table directly so we don't
+    # need rosters cached on those matches).
+    opp_clubs: set[str] = set()
+    for r in cur.execute(f"""
+        SELECT home_club_id, away_club_id
+        FROM matches WHERE match_id IN ({qmarks})
+    """, list(match_ids)).fetchall():
+        for cid in r:
+            if cid and cid != L.RAINHAM_CLUB_ID:
+                opp_clubs.add(cid)
+    if not opp_clubs:
+        return {}
+
+    # Step 2: every player_id ever seen on those clubs' rosters.
+    cmarks = ",".join("?" * len(opp_clubs))
     out: dict[str, set[int]] = {}
-    for r in rows:
-        out.setdefault(r["club_id"], set()).add(int(r["player_id"]))
+    for r in cur.execute(f"""
+        SELECT club_id, player_id
+        FROM match_players
+        WHERE club_id IN ({cmarks})
+          AND player_id IS NOT NULL
+    """, list(opp_clubs)).fetchall():
+        out.setdefault(r[0], set()).add(int(r[1]))
+
+    # Make sure clubs with zero cached roster still appear (e.g. a
+    # 2026 fixture vs a club we've never seen players from).
+    for cid in opp_clubs:
+        out.setdefault(cid, set())
+
     return out
 
 
@@ -224,14 +262,36 @@ def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
                       match_ids: set[int],
                       players_by_club: dict[str, set[int]]) -> int:
     cur = conn.cursor()
-    # Sort clubs by total players (desc) so the busiest opposition is first.
+
+    # Fixtures-vs-us per club, across the relevant 1st-XI universe.
+    # Counts both played and upcoming-this-season — same as the player
+    # universe — so a brand-new opponent (Spartans, in 2026) shows up
+    # even before we've played them.
+    fixtures_by_club: dict[str, int] = {}
+    if match_ids:
+        qm = ",".join("?" * len(match_ids))
+        for r in cur.execute(f"""
+            SELECT CASE WHEN home_club_id = ? THEN away_club_id
+                        ELSE home_club_id END AS opp_cid,
+                   COUNT(*) AS n
+            FROM matches
+            WHERE match_id IN ({qm})
+            GROUP BY opp_cid
+        """, (L.RAINHAM_CLUB_ID, *match_ids)).fetchall():
+            fixtures_by_club[r[0]] = r[1]
+
+    # Some opposition clubs (e.g. a club we have a 2026 fixture against
+    # but no roster cached because the fixture is unplayed) won't have
+    # a row in `players_by_club`. Make sure they still appear.
+    all_cids = set(players_by_club) | set(fixtures_by_club)
+
     rows = []
-    for cid, pids in players_by_club.items():
+    for cid in all_cids:
+        pids = players_by_club.get(cid, set())
         cname_row = cur.execute(
             "SELECT club_name FROM clubs WHERE club_id = ?", (cid,)
         ).fetchone()
-        cname = (cname_row["club_name"] if cname_row else cid) or cid
-        # Status counts for this club's relevant players
+        cname = (cname_row[0] if cname_row else cid) or cid
         n_complete = n_partial = n_notcap = n_review = 0
         for pid in pids:
             base = L.metadata_status((all_meta.get(pid) or {}).get("metadata"))
@@ -245,11 +305,14 @@ def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
             else:
                 n_notcap += 1
         rows.append({
-            "cid": cid, "cname": cname, "n": len(pids),
+            "cid": cid, "cname": cname,
+            "n": len(pids),
+            "n_fixtures": fixtures_by_club.get(cid, 0),
             "n_complete": n_complete, "n_partial": n_partial,
             "n_notcap": n_notcap, "n_review": n_review,
         })
-    rows.sort(key=lambda r: r["n"], reverse=True)
+    # Sort by fixtures-vs-us (desc), then by squad size as tie-breaker.
+    rows.sort(key=lambda r: (r["n_fixtures"], r["n"]), reverse=True)
 
     # Hero stats
     n_clubs = len(rows)
@@ -299,12 +362,17 @@ def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
             + (f'<span class="chip r">{r["n_review"]}!</span>'
                if r["n_review"] else "")
         )
+        nf = r["n_fixtures"]
+        f_label = f'{nf} fix' if nf else 'no fixtures'
         body.append(
             f'<a class="row-link" href="club/{escape(r["cid"])}.html">'
             f'<div class="name">{escape(r["cname"])}'
             f'<div class="rollup" style="margin-top:4px">{chips_html}</div>'
             f'</div>'
-            f'<div class="right"><span class="count">{r["n"]} players</span></div>'
+            f'<div class="right">'
+            f'<span class="count">{f_label}</span>'
+            f'<span class="count" style="opacity:.65">· {r["n"]} pl</span>'
+            f'</div>'
             f'</a>'
         )
     body.append('</div></div>')
@@ -333,10 +401,12 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
         cname = (cname_row["club_name"] if cname_row else cid) or cid
 
         # Per-player stats: # of relevant fixtures vs Rainham + last seen
-        # + does any of their relevant fixtures have video evidence?
+        # vs us (when applicable), plus a fallback "last seen on this
+        # club" so fresh opponents (Spartans 2026) sort by squad
+        # recency rather than by alphabetical accident.
         pid_stats: list[dict] = []
         for pid in pids:
-            stat_row = cur.execute(f"""
+            vs_us = cur.execute(f"""
                 SELECT COUNT(*) AS n, MAX(m.match_date) AS last_seen
                 FROM match_players mp
                 JOIN matches m ON m.match_id = mp.match_id
@@ -344,29 +414,38 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
                   AND mp.club_id = ?
                   AND mp.match_id IN ({qmark_matches})
             """, (pid, cid, *match_ids)).fetchone()
-            has_video = False
-            if videos:
-                has_video = bool(cur.execute("""
-                    SELECT 1 FROM match_players
-                    WHERE player_id = ? AND match_id IN (
-                        SELECT value FROM (SELECT ?))
-                    LIMIT 1
-                """, (pid, 0)).fetchone()) and any(
-                    int(m["match_id"]) in videos for m in cur.execute(
-                        "SELECT match_id FROM match_players WHERE player_id = ?",
-                        (pid,)
-                    ).fetchall()
-                )
+            n_vs = vs_us[0] or 0
+            last_vs = vs_us[1] or ""
+            on_club = cur.execute("""
+                SELECT COUNT(*) AS n, MAX(m.match_date) AS last_seen
+                FROM match_players mp
+                JOIN matches m ON m.match_id = mp.match_id
+                WHERE mp.player_id = ? AND mp.club_id = ?
+            """, (pid, cid)).fetchone()
+            n_club = on_club[0] or 0
+            last_club = on_club[1] or ""
+            has_video = bool(videos) and any(
+                int(m[0]) in videos for m in cur.execute(
+                    "SELECT match_id FROM match_players WHERE player_id = ?",
+                    (pid,)).fetchall()
+            )
             pid_stats.append({
                 "pid": pid,
                 "name": (aliases.get(pid) or [f"#{pid}"])[0],
-                "n": stat_row["n"] or 0,
-                "last_seen": stat_row["last_seen"] or "",
-                "ymd": L.date_yyyymmdd(stat_row["last_seen"] or ""),
-                "has_video": has_video,
+                "n_vs_us":      n_vs,
+                "last_seen_vs": last_vs,
+                "ymd_vs":       L.date_yyyymmdd(last_vs),
+                "n_on_club":    n_club,
+                "last_on_club": last_club,
+                "ymd_club":     L.date_yyyymmdd(last_club),
+                "has_video":    has_video,
             })
-        # Sort by appearances vs us (desc), then most-recent.
-        pid_stats.sort(key=lambda x: (x["n"], x["ymd"]), reverse=True)
+        # Sort: apps-vs-us first, fall back to total club apps + recency.
+        pid_stats.sort(
+            key=lambda x: (x["n_vs_us"], x["ymd_vs"],
+                           x["n_on_club"], x["ymd_club"]),
+            reverse=True,
+        )
 
         # Status rollup (re-using the same logic as the index)
         n_c = n_p = n_n = n_r = 0
@@ -378,6 +457,21 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
             elif s in ("needs review", "conflicting"): n_r += 1
             else: n_n += 1
 
+        # Differentiate played-against vs upcoming-only opponents in
+        # the lead text and roster note.
+        any_apps_vs_us = any(s["n_vs_us"] for s in pid_stats)
+        if any_apps_vs_us:
+            lead = (f"Players seen on {escape(cname)} when they faced "
+                    f"our 1st XI in League or non-T20 Cup fixtures.")
+            note = ("Sorted by appearances against our 1st XI. Tap a "
+                    "name to view metadata or submit additions.")
+        else:
+            lead = (f"We haven't played {escape(cname)} yet in the "
+                    f"1st-XI universe — these are players seen on their "
+                    f"roster from any context, sorted most-active first.")
+            note = ("Sorted by appearances on this club's roster. Tap "
+                    "a name to view metadata or submit additions.")
+
         body = [
             L.hero(
                 cname,
@@ -386,8 +480,7 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
                     ("Clubs", "../clubs.html"),
                     (cname, ""),
                 ],
-                lead=(f"Players seen on {escape(cname)} when they faced our "
-                      f"1st XI in League or non-T20 Cup fixtures."),
+                lead=lead,
                 stats=[
                     (str(len(pids)), "players"),
                     (str(n_c), "complete"),
@@ -397,8 +490,7 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
             ),
             '<div class="card">',
             '<h2>Roster</h2>',
-            '<p class="note">Sorted by number of appearances against our '
-            '1st XI. Tap a name to view metadata or submit additions.</p>',
+            f'<p class="note">{note}</p>',
             '<div class="row-list">',
         ]
 
@@ -407,12 +499,19 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
             status = overlay_status(s["pid"], base, pending)
             video_chip = ('<span class="tag yes">🎬</span>' if s["has_video"]
                           else "")
+            if s["n_vs_us"]:
+                meta_line = (f'{s["n_vs_us"]} app vs us · '
+                             f'last seen {escape(s["last_seen_vs"])}')
+            elif s["n_on_club"]:
+                meta_line = (f'{s["n_on_club"]} app for {escape(cname)} · '
+                             f'last seen {escape(s["last_on_club"])}')
+            else:
+                meta_line = "no record"
             body.append(
                 f'<a class="row-link" href="../player.html?id={s["pid"]}">'
                 f'<div class="name">{escape(s["name"])}'
                 f'<div class="meta" style="font-size:10.5px;color:var(--muted);'
-                f'margin-top:2px">{s["n"]} app vs us · '
-                f'last seen {escape(s["last_seen"])}</div></div>'
+                f'margin-top:2px">{meta_line}</div></div>'
                 f'<div class="right">{video_chip}{L.status_pill(status)}</div>'
                 f'</a>'
             )
