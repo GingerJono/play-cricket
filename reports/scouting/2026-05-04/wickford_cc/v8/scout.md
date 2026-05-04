@@ -1,4 +1,4 @@
-# Scout — Wickford CC 1st XI (v7)
+# Scout — Wickford CC 1st XI (v8)
 
 _All sections: 1st XI only, League + Cup unless noted. Compared vs Rainham CC, Essex 1st XI. Today 2026-05-04._
 
@@ -183,21 +183,32 @@ _Rating uses wickets remaining + overs remaining. 5/5 comfortable · 4/5 solid �
 | [May '24](https://play-cricket.com/website/results/6525560) | Barking CC | 149 | **2/5** Fell short | 141 vs 149 — 8 short |
 | [Aug '23](https://play-cricket.com/website/results/5791454) | Benfleet CC | 244 | **2/5** Fell short | 147 vs 244 — 97 short |
 
-### 6c. When batting first vs second (last 3 seasons L+C)
+### 6c. Bowling style mix
+
+- Pace: **0%** · Spin: **0%** · Unknown: 100% _(coverage 0%, 8893 balls across 37 matches)_
+
+### 6d. Lineup style profile
+
+- **0.0** left-handers in the XI on average · _(coverage 0% across 36 matches)_
+- Opens batting with ≥1 LHB in **0%** of games · _(coverage 0% across 0 games)_
+- Opens bowling with ≥1 left-armer in **0%** of games · _(coverage 0% across 0 games)_
+- Opens bowling with ≥1 spinner in **0%** of games · _(same coverage as above)_
+
+### 6e. When batting first vs second (last 3 seasons L+C)
 
 - Wickford CC batting 1st: 21 played, 6W / 10L / 4D / 1NR — win rate 29%
 - Wickford CC batting 2nd: 15 played, 7W / 8L — win rate 47%
 - Rainham CC, Essex batting 1st: 16 played, 8W / 7L / 1D — win rate 50%
 - Rainham CC, Essex batting 2nd: 18 played, 6W / 10L / 1D / 1NR — win rate 33%
 
-### 6d. Home vs away (last 3 seasons L+C)
+### 6f. Home vs away (last 3 seasons L+C)
 
 - Wickford CC at home: 17 played, 7W / 8L / 1D / 1NR — win rate 41%
 - Wickford CC away: 20 played, 6W / 10L / 3D / 1NR — win rate 30%
 - Rainham CC, Essex at home: 17 played, 9W / 6L / 1D / 1NR — win rate 53%
 - Rainham CC, Essex away: 18 played, 5W / 11L / 1D / 1NR — win rate 28%
 
-### 6e. When they win the toss
+### 6g. When they win the toss
 
 **Won toss in 23 matches** — chose to bat 14 (61%), chose to field 9 (39%).
 
@@ -206,7 +217,7 @@ _Rating uses wickets remaining + overs remaining. 5/5 comfortable · 4/5 solid �
 
 _Reference: lost toss → outcome: 13 played, 5W / 5L / 2D / 1NR — win rate 38%._
 
-### 6f. Team batting & bowling avg per season (1st XI, L+C)
+### 6h. Team batting & bowling avg per season (1st XI, L+C)
 
 | Season | Wickford CC bat | Rainham CC, Essex bat | Wickford CC bowl | Rainham CC, Essex bowl |
 |--:|--:|--:|--:|--:|
