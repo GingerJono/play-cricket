@@ -6,8 +6,8 @@
 // the player up by id. The submit form has NO backend; it composes a
 // structured plain-text body and opens either a mailto: or wa.me/ link.
 (function() {
-  const SUBMIT_EMAIL = "jono@example.com";
-  const SUBMIT_WHATSAPP = "447700900123";
+  const SUBMIT_EMAIL = "jjoneill4@gmail.com";
+  const SUBMIT_WHATSAPP = "447908474929";
 
   const params = new URLSearchParams(location.search);
   const pid = parseInt(params.get('id'), 10);
