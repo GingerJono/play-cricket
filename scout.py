@@ -7,9 +7,12 @@ Usage:
   python3 stats/scout.py --club-id 14366 --season 2026
   python3 stats/scout.py --club-name "Wickford" --vs-club-id 5251
 
-Writes:
-  stats/reports/<YYYY-MM-DD>/<slug>/scout.md
-  stats/reports/<YYYY-MM-DD>/<slug>/scout.html
+Writes (versioned — each rebuild on the same day creates a new vN folder
+unless --version is passed explicitly):
+  stats/reports/<YYYY-MM-DD>/<slug>/v<N>/scout.md
+  stats/reports/<YYYY-MM-DD>/<slug>/v<N>/scout.html
+  stats/reports/<YYYY-MM-DD>/<slug>/v<N>/scout.png   ← long mobile PNG
+  stats/reports/<YYYY-MM-DD>/<slug>/latest           → v<N>  (symlink)
 
 Sections (1st XI only, League + Cup unless otherwise noted):
   0. Current league table (with form)
@@ -17,13 +20,18 @@ Sections (1st XI only, League + Cup unless otherwise noted):
   2. Top run scorers (last 3 seasons)
   3. Top wicket takers (last 3 seasons)
   4. Head-to-head vs RCC 1st XI (any era in cache)
-  5. Last 10 1st XI played matches (with scores + Play-Cricket links)
+  5. Last 20 1st XI played matches (with scores + Play-Cricket links)
   6. Charts:
        - W/L/D when batting first vs second  (vs RCC 1st XI baseline)
        - W/L/D home vs away                  (vs RCC 1st XI baseline)
        - W/L/D when winning the toss
        - Team batting & bowling averages per season vs RCC
-  7. Web links (Play-Cricket, club site, video search)
+  7. Web links (Play-Cricket, club site, video search probes)
+
+Long PNG:
+  Rendered from the generated scout.html via headless Chromium so the
+  report can be shared as a single mobile-friendly image (e.g. WhatsApp).
+  Pass --no-png to skip if Chromium isn't available.
 """
 
 from __future__ import annotations
@@ -31,8 +39,11 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import os
 import re
+import shutil
 import sqlite3
+import subprocess
 import sys
 from pathlib import Path
 
@@ -41,6 +52,16 @@ DB = ROOT / "data" / "rainham.db"
 RAW_DIR = ROOT / "data" / "raw"
 LEAGUE_TABLE_DIR = RAW_DIR / "league_table"
 REPORTS_DIR = ROOT / "reports"
+
+# Headless-Chromium binary — used for rendering scout.html → scout.png.
+# We look at the env var first, then a couple of well-known paths.
+CHROMIUM_CANDIDATES = [
+    os.environ.get("CHROMIUM_BINARY") or "",
+    "/opt/pw-browsers/chromium",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+    "/usr/bin/google-chrome",
+]
 
 RAINHAM_CLUB_ID = "5251"
 RAINHAM_FIRST_XI_TEAM_ID = "51207"   # Rainham CC, Essex - 1st XI
@@ -517,11 +538,18 @@ def parse_args():
     ap.add_argument("--club-name")
     ap.add_argument("--season", type=int, default=2026)
     ap.add_argument("--seasons-back", type=int, default=3)
-    ap.add_argument("--last-recent", type=int, default=10)
+    ap.add_argument("--last-recent", type=int, default=20,
+                    help="How many recent matches to list (also drives the "
+                    "per-match video search probes). Default: 20.")
     ap.add_argument("--vs-club-id", default=RAINHAM_CLUB_ID,
                     help="Comparison club (default: Rainham 5251).")
     ap.add_argument("--today", default=None,
                     help="Override today's date (yyyy-mm-dd).")
+    ap.add_argument("--version", type=int, default=None,
+                    help="Force this version number (overwrites). Default: "
+                    "auto-increment within the day.")
+    ap.add_argument("--no-png", action="store_true",
+                    help="Skip the long-PNG render (faster, no Chromium).")
     return ap.parse_args()
 
 
@@ -779,16 +807,126 @@ def main():
         "video_links": video_links_for(club_id, club_name, recent_matches=recent),
     }
 
-    # ---- Output paths ----
-    out_dir = REPORTS_DIR / today / slugify(club_name)
+    # ---- Output paths (versioned per-day) ----
+    club_dir = REPORTS_DIR / today / slugify(club_name)
+    club_dir.mkdir(parents=True, exist_ok=True)
+    version = args.version if args.version is not None else next_version(club_dir)
+    out_dir = club_dir / f"v{version}"
     out_dir.mkdir(parents=True, exist_ok=True)
+    data["version"] = version
+
     md_path = out_dir / "scout.md"
     html_path = out_dir / "scout.html"
+    png_path = out_dir / "scout.png"
+
     md_path.write_text(render_md(data))
     html_path.write_text(render_html(data))
     print(f"Wrote {md_path}")
     print(f"Wrote {html_path}")
+
+    # Long-PNG render (mobile-friendly screenshot of the whole page).
+    if not args.no_png:
+        try:
+            render_long_png(html_path, png_path)
+            print(f"Wrote {png_path}")
+        except Exception as e:
+            print(f"PNG render skipped: {e}", file=sys.stderr)
+
+    # Update `latest` symlink so consumers can find the most recent version.
+    update_latest_symlink(club_dir, f"v{version}")
     return 0
+
+
+# --------------------------------------------------------------- versioning --
+
+def next_version(club_dir: Path) -> int:
+    """Return the next vN integer not already present in `club_dir`."""
+    used = []
+    if club_dir.exists():
+        for p in club_dir.iterdir():
+            if p.is_dir() and re.fullmatch(r"v\d+", p.name):
+                try:
+                    used.append(int(p.name[1:]))
+                except ValueError:
+                    pass
+    return (max(used) + 1) if used else 1
+
+
+def update_latest_symlink(club_dir: Path, target: str):
+    """(Re)create `<club_dir>/latest` pointing at `target` (e.g. 'v3').
+
+    On filesystems that don't support symlinks we silently fall back to a
+    plain text file naming the latest version."""
+    link = club_dir / "latest"
+    try:
+        if link.is_symlink() or link.exists():
+            try:
+                link.unlink()
+            except IsADirectoryError:
+                shutil.rmtree(link)
+        link.symlink_to(target, target_is_directory=True)
+    except (OSError, NotImplementedError):
+        try:
+            link.write_text(target + "\n")
+        except Exception:
+            pass
+
+
+# ---------------------------------------------------------------- PNG render --
+
+def find_chromium() -> str | None:
+    for c in CHROMIUM_CANDIDATES:
+        if c and Path(c).exists():
+            return c
+    found = shutil.which("chromium") or shutil.which("chromium-browser") \
+        or shutil.which("google-chrome")
+    return found
+
+
+def _measure_page_height(chromium: str, html_url: str) -> int:
+    """Run a quick `--dump-dom` pass to read document.body.scrollHeight that
+    the report writes into <html data-render-h="…"> on load."""
+    try:
+        out = subprocess.run(
+            [chromium, "--headless=new", "--no-sandbox", "--disable-gpu",
+             "--hide-scrollbars", "--window-size=540,200",
+             "--virtual-time-budget=3000", "--dump-dom", html_url],
+            capture_output=True, text=True, timeout=60, check=False,
+        )
+        m = re.search(r'data-render-h="(\d+)"', out.stdout)
+        if m:
+            return int(m.group(1))
+    except Exception:
+        pass
+    # Fallback: a generous default. Chromium will fill any unused space
+    # with the body background — not ideal but at least the report is
+    # captured in full.
+    return 12000
+
+
+def render_long_png(html_path: Path, png_path: Path):
+    """Render `html_path` to `png_path` as a single tall PNG via headless
+    Chromium. Width is fixed at 540 px (matches the HTML's max-width)."""
+    chromium = find_chromium()
+    if not chromium:
+        raise RuntimeError(
+            "no chromium binary found (set $CHROMIUM_BINARY or install "
+            "playwright's chromium)"
+        )
+    url = f"file://{html_path.resolve()}"
+    height = _measure_page_height(chromium, url)
+    # +30 px breathing room.
+    height = max(800, height + 30)
+    width = 540
+    subprocess.run(
+        [chromium, "--headless=new", "--no-sandbox", "--disable-gpu",
+         "--hide-scrollbars", f"--window-size={width},{height}",
+         "--virtual-time-budget=4000",
+         f"--screenshot={png_path}", url],
+        check=True, capture_output=True, timeout=120,
+    )
+    if not png_path.exists() or png_path.stat().st_size < 200:
+        raise RuntimeError("chromium produced no usable PNG output")
 
 
 # ---------------------------------------------------------------- video links --
@@ -851,12 +989,13 @@ def video_links_for(club_id, club_name, recent_matches=None):
     for label, url in info.get("verified_videos", []):
         out.append((label, url, "video"))
 
-    # Per-match YouTube search probes — build one for each recent played
-    # match so the user can click through to the search-results page.
-    # YouTube doesn't expose a searchable API publicly, so we can't
-    # automatically pick out the right video; this gives a one-click probe.
+    # Per-match YouTube search probes — one per recent fixture. The search
+    # results page is the start of a manual verification loop: scan the
+    # top 2-3 hits, the right hit is a multi-hour livestream posted within
+    # a day or two of `match_date`, almost always by the home club's
+    # channel.
     if recent_matches:
-        for m in recent_matches[:10]:
+        for m in recent_matches[:20]:
             opp = (m["away_club_name"] if m["home_club_id"] == str(club_id)
                    else m["home_club_name"])
             opp_short = re.sub(r",.*$", "", opp).strip()
@@ -885,7 +1024,8 @@ def video_links_for(club_id, club_name, recent_matches=None):
 
 def render_md(d):
     md = []
-    md.append(f"# Scout — {d['club_name']} 1st XI")
+    version_str = (f" (v{d['version']})" if d.get("version") is not None else "")
+    md.append(f"# Scout — {d['club_name']} 1st XI{version_str}")
     md.append("")
     md.append(f"_All sections: 1st XI only, League + Cup unless noted. "
               f"Compared vs {d['vs_club_name']} 1st XI. Today {d['today']}._")
@@ -1055,14 +1195,15 @@ def render_md(d):
     # 7. Links
     md.append("## 7. Web / video links")
     md.append("")
-    md.append("> ⚠️ **Speculative.** The Play-Cricket API doesn't expose match "
-              "video URLs, and there's no API for finding the right YouTube "
-              "channel for a given club. Anything tagged _(speculative)_ is a "
-              "name-based guess and may be the wrong entity entirely. **Verify "
-              "the channel/post matches this club before sharing.** Per-match "
-              "search probes are one-click YouTube searches scoped to the "
-              "fixture — typical hits are full-match livestreams hosted by the "
-              "home club's channel (often a few hours long).")
+    md.append("> ⚠️ **How to verify a match video.** The Play-Cricket API "
+              "doesn't expose match video URLs. To find one, **loop the last "
+              "20 fixtures** above, run a YouTube search for each "
+              "`(club + opponent + date)`, then for any plausible hit "
+              "**open the top 2-3 results** and judge whether it really is "
+              "the match — full-day livestreams are typically **2-7 hours "
+              "long** and posted within a day or two of the fixture, almost "
+              "always by the home club's channel. Anything that hasn't been "
+              "eyeballed stays tagged _(speculative)_.")
     md.append("")
     by_kind = {"official": [], "video": [], "probe": [], "speculative": []}
     for label, url, kind in d["video_links"]:
@@ -1126,71 +1267,199 @@ def wld_str(counts):
 # ---------------------------------------------------------------- HTML ---
 
 CSS = """
+:root{
+  --bg:#f3f4f8;
+  --card:#ffffff;
+  --ink:#10172a;
+  --muted:#5a657a;
+  --line:#e6e9f0;
+  --line-2:#d4d9e4;
+  --accent:#1d4ed8;
+  --accent-2:#0ea5a5;
+  --us:#1d4ed8;
+  --them:#b91c1c;
+  --w:#15803d;
+  --l:#b91c1c;
+  --d:#6b7280;
+  --nr:#b08a2e;
+  --hi:#fff7d6;
+  --shadow:0 1px 2px rgba(16,23,42,.04),0 4px 14px rgba(16,23,42,.06);
+}
 *{box-sizing:border-box}
-body{margin:0;padding:14px;font-family:-apple-system,BlinkMacSystemFont,
-     'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-     font-size:14px;line-height:1.35;color:#111;background:#fafafa;
-     max-width:540px;margin:0 auto}
-h1{font-size:21px;margin:0 0 6px}
-h2{font-size:16px;margin:20px 0 6px;padding-top:10px;border-top:1px solid #ddd;
-   font-weight:700}
-h2:first-of-type{border-top:none;padding-top:0}
-h3{font-size:13px;margin:12px 0 4px;color:#333}
+html,body{margin:0;padding:0}
+body{padding:12px 12px 24px;font-family:-apple-system,BlinkMacSystemFont,
+     'Segoe UI',Inter,Roboto,'Helvetica Neue',Arial,sans-serif;
+     font-size:14px;line-height:1.4;color:var(--ink);
+     background:linear-gradient(180deg,#eef1f7 0,#f3f4f8 240px);
+     max-width:540px;margin:0 auto;
+     -webkit-font-smoothing:antialiased}
+
+/* Hero header */
+.hero{background:linear-gradient(135deg,#0f1f4a 0%,#1d4ed8 100%);
+      color:#fff;border-radius:14px;padding:14px 16px 16px;
+      box-shadow:var(--shadow);margin-bottom:14px;position:relative;
+      overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;background:
+   radial-gradient(circle at 90% -10%,rgba(255,255,255,.18),transparent 50%);
+   pointer-events:none}
+.hero .eyebrow{font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;
+               opacity:.75;font-weight:600}
+.hero h1{font-size:22px;margin:2px 0 4px;font-weight:800;line-height:1.15;
+         letter-spacing:-.01em}
+.hero .meta{font-size:11.5px;opacity:.85;margin:0}
+.hero .stats{display:flex;gap:10px;margin-top:11px;flex-wrap:wrap}
+.hero .stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+            border-radius:9px;padding:6px 10px;backdrop-filter:blur(2px);
+            min-width:74px;flex:1}
+.hero .stat .n{font-size:16px;font-weight:700;line-height:1}
+.hero .stat .lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;
+                 opacity:.78;margin-top:3px}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+      padding:12px 14px;margin:0 0 12px;box-shadow:var(--shadow)}
+.card > h2{margin-top:0}
+
+h2{font-size:15px;margin:0 0 8px;padding:0 0 7px;
+   border-bottom:1px solid var(--line);font-weight:700;letter-spacing:-.005em;
+   color:var(--ink);display:flex;align-items:center;gap:8px}
+h2 .num{display:inline-flex;align-items:center;justify-content:center;
+        background:var(--accent);color:#fff;font-size:11px;font-weight:700;
+        width:20px;height:20px;border-radius:6px;flex:0 0 20px}
+h3{font-size:12.5px;margin:14px 0 6px;color:var(--muted);
+   text-transform:uppercase;letter-spacing:.06em;font-weight:700}
 p{font-size:13px;margin:4px 0 8px}
-p.meta{color:#555;margin:0 0 12px;font-size:12px}
-table{width:100%;border-collapse:collapse;margin:6px 0 10px;
+p.meta{color:var(--muted);margin:0 0 12px;font-size:12px}
+.subtle{color:var(--muted);font-size:11.5px;margin:-2px 0 8px}
+
+table{width:100%;border-collapse:collapse;margin:4px 0 4px;
       font-size:11.5px;font-variant-numeric:tabular-nums}
-th,td{padding:4px 5px;border-bottom:1px solid #e6e6e6;text-align:right;
+th,td{padding:5px 5px;border-bottom:1px solid var(--line);text-align:right;
       white-space:nowrap}
-th{background:#f0f0f0;font-weight:600;color:#444;text-align:right;
-   border-bottom:2px solid #d0d0d0}
+th{background:#f7f8fc;font-weight:600;color:var(--muted);text-align:right;
+   border-bottom:1px solid var(--line-2);font-size:10.5px;
+   text-transform:uppercase;letter-spacing:.05em}
 th.l,td.l{text-align:left;white-space:normal;word-break:break-word}
-tr.us{background:#fff5cc}
-tr.us td{font-weight:600}
-.pill{display:inline-block;padding:1px 6px;border-radius:10px;
-      font-size:11px;font-weight:600;color:#fff;min-width:14px;
-      text-align:center;line-height:14px}
-.pill.W{background:#2c8a2c}
-.pill.L{background:#c03030}
-.pill.D{background:#888}
-.pill.T{background:#888}
-.pill.NR,.pill.A{background:#caa84e}
-.form-pill{display:inline-block;width:14px;height:14px;border-radius:3px;
-           margin:0 1px;font-size:10px;line-height:14px;text-align:center;
+tr:nth-child(even) td{background:#fafbfd}
+tr.us{background:var(--hi) !important}
+tr.us td{font-weight:700;background:var(--hi) !important}
+tr:last-child td{border-bottom:none}
+
+/* Result pill (used in tables) */
+.pill{display:inline-block;padding:1px 7px;border-radius:9px;
+      font-size:10.5px;font-weight:700;color:#fff;min-width:18px;
+      text-align:center;line-height:15px;letter-spacing:.02em}
+.pill.W{background:var(--w)}
+.pill.L{background:var(--l)}
+.pill.D,.pill.T{background:var(--d)}
+.pill.NR,.pill.A{background:var(--nr)}
+
+.form-pill{display:inline-block;width:15px;height:15px;border-radius:4px;
+           margin:0 1px;font-size:9px;line-height:15px;text-align:center;
            color:#fff;font-weight:700}
-.form-pill.W{background:#2c8a2c}
-.form-pill.L{background:#c03030}
-.form-pill.D,.form-pill.T,.form-pill.NR,.form-pill.A{background:#888}
+.form-pill.W{background:var(--w)}
+.form-pill.L{background:var(--l)}
+.form-pill.D,.form-pill.T,.form-pill.NR,.form-pill.A{background:var(--d)}
 
-.bar-row{display:flex;align-items:center;margin:5px 0;gap:8px;font-size:12px}
-.bar-row .lbl{flex:0 0 110px;color:#444}
-.bar-row .bar{flex:1;height:22px;background:#eee;display:flex;
-              border-radius:3px;overflow:hidden;border:1px solid #d6d6d6}
+/* Bar charts (W/L/D segments) */
+.bar-row{display:flex;align-items:center;margin:6px 0;gap:8px;font-size:12px}
+.bar-row .lbl{flex:0 0 108px;color:var(--ink);font-weight:600;font-size:11.5px}
+.bar-row .bar{flex:1;height:22px;background:#eef0f6;display:flex;
+              border-radius:6px;overflow:hidden;
+              box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
 .bar-row .bar .seg{display:flex;align-items:center;justify-content:center;
-                   color:#fff;font-weight:600;font-size:11px;line-height:1}
-.seg.W{background:#2c8a2c}
-.seg.L{background:#c03030}
-.seg.D{background:#888}
-.seg.T{background:#888}
-.seg.NR,.seg.A{background:#caa84e}
-.bar-row .num{flex:0 0 110px;text-align:right;color:#666;font-size:11px}
+                   color:#fff;font-weight:700;font-size:10.5px;line-height:1}
+.seg.W{background:linear-gradient(180deg,#1c9b46,#157235)}
+.seg.L{background:linear-gradient(180deg,#dc2626,#a01818)}
+.seg.D,.seg.T{background:linear-gradient(180deg,#7b8493,#535a68)}
+.seg.NR,.seg.A{background:linear-gradient(180deg,#d4a83a,#a47d20)}
+.bar-row .num{flex:0 0 96px;text-align:right;color:var(--muted);
+              font-size:10.5px;font-weight:600}
 
-.avg-grid{display:grid;grid-template-columns:48px repeat(4, 1fr) 50px;
-          gap:3px 6px;font-size:11px;align-items:center;margin:6px 0}
-.avg-grid .gh{font-weight:600;color:#555;font-size:10.5px;text-align:center}
-.avg-grid .gv{text-align:right;font-variant-numeric:tabular-nums}
-.avg-grid .bar2{height:14px;background:#dde;border-radius:2px;position:relative}
-.avg-grid .bar2 span{position:absolute;left:0;top:0;bottom:0;display:block;
-                     border-radius:2px}
-.avg-grid .bar2 .us{background:#2563b8}
-.avg-grid .bar2 .vs{background:#c03030}
+/* Per-season avg comparison bars */
+.avg-tbl td.bar2-cell{padding:2px 6px;width:46%}
+.bar2{height:11px;background:#eef0f6;border-radius:5px;position:relative;
+      margin:2px 0}
+.bar2 span{position:absolute;left:0;top:0;bottom:0;border-radius:5px;
+           display:flex;align-items:center;justify-content:flex-end;
+           padding-right:5px;color:#fff;font-size:9.5px;font-weight:700}
+.bar2 span.us{background:linear-gradient(180deg,#3b82f6,#1d4ed8)}
+.bar2 span.them{background:linear-gradient(180deg,#ef4444,#b91c1c)}
 
-a{color:#0a58ca;text-decoration:none;word-break:break-all}
+/* Top-N stat lists (batter / bowler highlight cards) */
+.top-list{display:flex;flex-direction:column;gap:6px;margin:8px 0 4px}
+.top-row{display:flex;align-items:center;gap:10px;padding:6px 8px;
+         background:#fafbfd;border:1px solid var(--line);border-radius:8px}
+.top-row .rank{flex:0 0 22px;height:22px;border-radius:6px;background:#e6ecf9;
+               color:var(--accent);font-weight:800;font-size:11px;
+               display:flex;align-items:center;justify-content:center}
+.top-row .rank.gold{background:#fff4cc;color:#a07300}
+.top-row .rank.silver{background:#eef1f5;color:#4b5566}
+.top-row .rank.bronze{background:#f3e0ce;color:#8b5b1c}
+.top-row .name{flex:1;font-weight:700;font-size:12.5px;
+               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-row .big{font-size:14px;font-weight:800;color:var(--ink);
+              font-variant-numeric:tabular-nums}
+.top-row .sub{font-size:10.5px;color:var(--muted);
+              font-variant-numeric:tabular-nums}
+
+/* Recent-match list */
+.recent-list{margin:6px 0 2px;display:flex;flex-direction:column;gap:5px}
+.r-row{display:flex;align-items:center;gap:8px;padding:7px 9px;
+       border:1px solid var(--line);border-radius:8px;background:#fff}
+.r-row .date{flex:0 0 64px;font-size:10.5px;color:var(--muted);font-weight:600}
+.r-row .opp{flex:1;font-size:12px;font-weight:600;
+            white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r-row .scores{font-size:10.5px;color:var(--muted);
+               font-variant-numeric:tabular-nums;text-align:right;
+               white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+               max-width:170px}
+.r-row .venue{flex:0 0 18px;font-size:10px;font-weight:700;
+              text-align:center;color:var(--muted)}
+
+/* Toss split bar */
+.choice-bar{height:22px;background:#eef0f6;border-radius:6px;
+            display:flex;overflow:hidden;margin:6px 0;
+            box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+.choice-bar .seg{color:#fff;display:flex;align-items:center;
+                 justify-content:center;font-weight:700;font-size:11px}
+.choice-bar .seg.bat{background:linear-gradient(180deg,#3b82f6,#1d4ed8)}
+.choice-bar .seg.fld{background:linear-gradient(180deg,#d4a83a,#a47d20)}
+
+/* Headline strip */
+.headline{display:flex;gap:8px;margin:0 0 10px}
+.h-tile{flex:1;padding:8px 10px;border-radius:9px;background:#fff;
+        border:1px solid var(--line);box-shadow:var(--shadow);
+        text-align:center}
+.h-tile .n{font-size:18px;font-weight:800;color:var(--ink);line-height:1}
+.h-tile .lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;
+             color:var(--muted);margin-top:3px;font-weight:700}
+.h-tile.win .n{color:var(--w)}
+.h-tile.loss .n{color:var(--l)}
+
+a{color:var(--accent);text-decoration:none;word-break:break-all}
+a:hover{text-decoration:underline}
 .bullets{padding-left:18px;margin:6px 0}
-.bullets li{margin:3px 0;font-size:12px}
-.small{font-size:11px;color:#666}
-.footer{margin-top:18px;font-size:11px;color:#666}
-.score-cell{font-size:11px}
+.bullets li{margin:4px 0;font-size:12px}
+.small{font-size:11px;color:var(--muted)}
+.footer{margin:18px 4px 0;font-size:10.5px;color:var(--muted);text-align:center}
+.score-cell{font-size:10.5px;color:var(--muted)}
+.warn{background:#fff7e0;border:1px solid #ecd075;border-radius:8px;
+      padding:9px 11px;font-size:11.5px;color:#704a00;line-height:1.4}
+.warn b{color:#5a3700}
+
+/* Link kind chips for the video section */
+.link-list{display:flex;flex-direction:column;gap:5px;margin:6px 0}
+.link-row{display:flex;gap:8px;align-items:center;padding:6px 8px;
+          border:1px solid var(--line);border-radius:8px;background:#fff;
+          font-size:11.5px}
+.kind{flex:0 0 auto;padding:1px 7px;border-radius:6px;font-size:9.5px;
+      font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+      background:#eef0f6;color:var(--muted)}
+.kind.official{background:#e6f1e6;color:#15803d}
+.kind.video{background:#e6ecfb;color:var(--accent)}
+.kind.probe{background:#f1ecfb;color:#5b21b6}
+.kind.speculative{background:#fdecec;color:#b91c1c}
 """
 
 
@@ -1201,17 +1470,42 @@ def render_html(d):
     parts.append('<meta name="viewport" content="width=device-width,initial-scale=1">')
     parts.append(f"<title>Scout — {_esc(d['club_name'])} 1st XI</title>")
     parts.append(f"<style>{CSS}</style></head><body>")
-    parts.append(f"<h1>Scout: {_esc(d['club_name'])} 1st XI</h1>")
-    parts.append(f"<p class='meta'>Compared vs {_esc(d['vs_club_name'])} 1st XI. "
-                 f"League + Cup unless noted. Today {_esc(d['today'])}.</p>")
 
-    # 0. League table
-    parts.append("<h2>League table — current</h2>")
+    # Render-height marker for the long-PNG renderer (sets data-render-h on
+    # <html> so render_long_png() can read it via --dump-dom).
+    parts.append("<script>"
+                 "window.addEventListener('load',function(){"
+                 "requestAnimationFrame(function(){"
+                 "document.documentElement.dataset.renderH="
+                 "document.body.scrollHeight;});});"
+                 "</script>")
+
+    # ------- Hero header (club, version, headline numbers) ----------------
+    target_set = set(d["target_team_ids"])
+    hero_tiles = _hero_stats(d, target_set)
+    version_str = (f" · v{d['version']}" if d.get("version") is not None else "")
+    parts.append("<div class='hero'>")
+    parts.append(f"<div class='eyebrow'>Scouting report{_esc(version_str)}</div>")
+    parts.append(f"<h1>{_esc(d['club_name'])} 1st XI</h1>")
+    parts.append(f"<p class='meta'>vs {_esc(d['vs_club_name'])} · "
+                 f"League + Cup · {_esc(d['today'])}</p>")
+    if hero_tiles:
+        parts.append("<div class='stats'>")
+        for n, lbl in hero_tiles:
+            parts.append(f"<div class='stat'><div class='n'>{_esc(n)}</div>"
+                         f"<div class='lbl'>{_esc(lbl)}</div></div>")
+        parts.append("</div>")
+    parts.append("</div>")
+
+    # ------- 0. League table ----------------------------------------------
+    parts.append("<div class='card'>")
+    parts.append("<h2><span class='num'>0</span>Current league table</h2>")
     if d["league_table"]:
-        parts.append(f"<p class='small'>{_esc(d['league_div_label'] or '')}</p>")
+        parts.append(f"<p class='subtle'>{_esc(d['league_div_label'] or '')}</p>")
         parts.append("<table><tr>"
                      "<th>Pos</th><th class='l'>Team</th>"
-                     "<th>P</th><th>W</th><th>Pts</th><th>Form</th></tr>")
+                     "<th>P</th><th>W</th><th>Pts</th>"
+                     "<th class='l'>Form</th></tr>")
         for r in d["league_table"]:
             cls = " class='us'" if r["team_id"] in d["target_team_ids"] else ""
             form_html = "".join(
@@ -1227,9 +1521,11 @@ def render_html(d):
         parts.append("</table>")
     else:
         parts.append("<p class='small'>No cached table for this season.</p>")
+    parts.append("</div>")
 
-    # 1. Last N seasons finishing positions
-    parts.append("<h2>Last 3 seasons — finishing positions</h2>")
+    # ------- 1. Last N seasons finishing positions ------------------------
+    parts.append("<div class='card'>")
+    parts.append("<h2><span class='num'>1</span>Last 3 seasons — finishing positions</h2>")
     parts.append("<table><tr><th>Yr</th><th class='l'>League / Division</th>"
                  "<th>Pos</th><th>P</th><th>W</th><th>L</th><th>D</th>"
                  "<th>NR</th><th>Win%</th></tr>")
@@ -1241,43 +1537,53 @@ def render_html(d):
                      f"<td>{s['D']}</td><td>{s['NR']}</td>"
                      f"<td>{s['win_pct']:.0f}%</td></tr>")
     parts.append("</table>")
+    parts.append("</div>")
 
-    # 2. Top batters
-    parts.append(f"<h2>Top run scorers ({len(d['last_n_seasons'])} seasons)</h2>")
-    parts.append("<table><tr><th>#</th><th class='l'>Player</th>"
-                 "<th>M</th><th>I</th><th>NO</th><th>Runs</th>"
-                 "<th>HS</th><th>Avg</th><th>SR</th><th>50</th><th>100</th><th>Pos</th></tr>")
-    for i, r in enumerate(d["top_batters"], 1):
+    # ------- 2. Top batters -----------------------------------------------
+    parts.append("<div class='card'>")
+    parts.append(f"<h2><span class='num'>2</span>Top run scorers · "
+                 f"{len(d['last_n_seasons'])} seasons</h2>")
+    parts.append("<div class='top-list'>")
+    rank_classes = {1: "gold", 2: "silver", 3: "bronze"}
+    for i, r in enumerate(d["top_batters"][:8], 1):
         (bid, name, innings, no_, runs, hs, fifties, hundreds, balls_known,
          runs_when_balls, matches_, mode_pos) = r
-        avg = f"{runs/(innings-no_):.2f}" if (innings-no_) > 0 else "—"
-        sr = f"{100*runs_when_balls/balls_known:.1f}" if balls_known else "—"
-        parts.append(f"<tr><td>{i}</td><td class='l'>{_esc(name)}</td>"
-                     f"<td>{matches_}</td><td>{innings}</td><td>{no_}</td>"
-                     f"<td><b>{runs}</b></td><td>{hs}</td><td>{avg}</td>"
-                     f"<td>{sr}</td><td>{fifties}</td><td>{hundreds}</td>"
-                     f"<td>{mode_pos}</td></tr>")
-    parts.append("</table>")
+        avg = f"{runs/(innings-no_):.1f}" if (innings-no_) > 0 else "—"
+        rc = rank_classes.get(i, "")
+        parts.append(f"<div class='top-row'>"
+                     f"<div class='rank {rc}'>{i}</div>"
+                     f"<div class='name'>{_esc(name)}</div>"
+                     f"<div class='big'>{runs}</div>"
+                     f"<div class='sub'>runs · {matches_}M · "
+                     f"avg {avg} · HS {hs} · {fifties}×50 · {hundreds}×100</div>"
+                     f"</div>")
+    parts.append("</div>")
+    parts.append("</div>")
 
-    # 3. Top bowlers
-    parts.append(f"<h2>Top wicket takers ({len(d['last_n_seasons'])} seasons)</h2>")
-    parts.append("<table><tr><th>#</th><th class='l'>Bowler</th>"
-                 "<th>M</th><th>Ov</th><th>Md</th><th>R</th>"
-                 "<th>W</th><th>Avg</th><th>Econ</th><th>Best</th>"
-                 "<th>5wi</th><th>4wi</th></tr>")
-    for i, r in enumerate(d["top_bowlers"], 1):
-        avg = f"{r['avg']:.2f}" if r["avg"] is not None else "—"
+    # ------- 3. Top bowlers -----------------------------------------------
+    parts.append("<div class='card'>")
+    parts.append(f"<h2><span class='num'>3</span>Top wicket takers · "
+                 f"{len(d['last_n_seasons'])} seasons</h2>")
+    parts.append("<div class='top-list'>")
+    for i, r in enumerate(d["top_bowlers"][:8], 1):
+        avg = f"{r['avg']:.1f}" if r["avg"] is not None else "—"
         econ = f"{r['econ']:.2f}" if r["econ"] is not None else "—"
-        parts.append(f"<tr><td>{i}</td><td class='l'>{_esc(r['name'])}</td>"
-                     f"<td>{r['matches']}</td><td>{r['overs']}</td>"
-                     f"<td>{r['maidens']}</td><td>{r['runs']}</td>"
-                     f"<td><b>{r['wickets']}</b></td><td>{avg}</td>"
-                     f"<td>{econ}</td><td>{r['best']}</td>"
-                     f"<td>{r['fivers']}</td><td>{r['fourers']}</td></tr>")
-    parts.append("</table>")
+        rc = rank_classes.get(i, "")
+        parts.append(f"<div class='top-row'>"
+                     f"<div class='rank {rc}'>{i}</div>"
+                     f"<div class='name'>{_esc(r['name'])}</div>"
+                     f"<div class='big'>{r['wickets']}</div>"
+                     f"<div class='sub'>wkts · {r['matches']}M · "
+                     f"avg {avg} · econ {econ} · BB {r['best']}"
+                     f"{(' · '+str(r['fivers'])+'×5wi') if r['fivers'] else ''}</div>"
+                     f"</div>")
+    parts.append("</div>")
+    parts.append("</div>")
 
-    # 4. H2H
-    parts.append(f"<h2>Head-to-head vs {_esc(d['vs_club_name'])} 1st XI</h2>")
+    # ------- 4. H2H -------------------------------------------------------
+    parts.append("<div class='card'>")
+    parts.append(f"<h2><span class='num'>4</span>Head-to-head vs "
+                 f"{_esc(d['vs_club_name'])} 1st XI</h2>")
     if d["h2h"]:
         target_set = set(d["target_team_ids"])
         tally = {"W":0, "L":0, "D":0}
@@ -1286,11 +1592,20 @@ def render_html(d):
             if r == "W": tally["W"] += 1
             elif r == "L": tally["L"] += 1
             else: tally["D"] += 1
-        parts.append(f"<p><b>{_esc(d['club_name'])} {tally['W']} — "
-                     f"{tally['L']} {_esc(d['vs_club_name'])}</b>"
-                     f", draws/abandoned {tally['D']} (n={len(d['h2h'])}).</p>")
+        them_short = re.sub(r",.*$", "", d["club_name"]).strip()[:14]
+        us_short = re.sub(r",.*$", "", d["vs_club_name"]).strip()[:14]
+        parts.append("<div class='headline'>")
+        parts.append(f"<div class='h-tile win'><div class='n'>{tally['W']}</div>"
+                     f"<div class='lbl'>{_esc(them_short)}</div></div>")
+        parts.append(f"<div class='h-tile'><div class='n'>{tally['D']}</div>"
+                     f"<div class='lbl'>D / NR</div></div>")
+        parts.append(f"<div class='h-tile loss'><div class='n'>{tally['L']}</div>"
+                     f"<div class='lbl'>{_esc(us_short)}</div></div>")
+        parts.append("</div>")
+        parts.append(f"<p class='subtle'>{len(d['h2h'])} played meetings in "
+                     f"the cache.</p>")
         parts.append("<table><tr><th>Date</th><th>Comp</th>"
-                     "<th>Venue</th><th>Result</th><th class='l'>Detail</th></tr>")
+                     "<th>V</th><th>Res</th><th class='l'>Detail</th></tr>")
         for m in d["h2h"][:15]:
             we_home = m["home_club_id"] == d["club_id"]
             venue = "H" if we_home else "A"
@@ -1303,9 +1618,10 @@ def render_html(d):
                          f"<td class='l'>{_esc(m['result_description'] or '')}</td></tr>")
         parts.append("</table>")
     else:
-        parts.append("<p class='small'>No played 1st XI head-to-head matches in the cache.</p>")
+        parts.append("<p class='small'>No played 1st XI head-to-head matches "
+                     "in the cache.</p>")
     if d.get("h2h_upcoming"):
-        parts.append("<p><b>Upcoming fixtures:</b></p>")
+        parts.append("<p><b>Upcoming fixtures</b></p>")
         parts.append("<ul class='bullets'>")
         for m in sorted(d["h2h_upcoming"], key=lambda x: to_iso(x["match_date"])):
             we_home = m["home_club_id"] == d["club_id"]
@@ -1313,30 +1629,38 @@ def render_html(d):
             parts.append(f"<li>{_esc(m['match_date'])} "
                          f"({_esc(m['competition_type'])}, {venue})</li>")
         parts.append("</ul>")
+    parts.append("</div>")
 
-    # 5. Recent
-    parts.append(f"<h2>Last {len(d['recent'])} 1st XI played matches (L+C)</h2>")
-    parts.append("<table><tr><th>Date</th><th>Comp</th><th>V</th>"
-                 "<th class='l'>Opponent</th><th>Res</th><th class='l'>Score</th></tr>")
+    # ------- 5. Recent matches -------------------------------------------
+    parts.append("<div class='card'>")
+    parts.append(f"<h2><span class='num'>5</span>Last {len(d['recent'])} "
+                 "1st XI matches (L+C)</h2>")
+    parts.append("<div class='recent-list'>")
     target_set = set(d["target_team_ids"])
     for m in d["recent"]:
         we_home = m["home_club_id"] == d["club_id"]
         venue = "H" if we_home else "A"
         opp = m["away_club_name"] if we_home else m["home_club_name"]
+        opp = re.sub(r",.*$", "", opp).strip()
         r = result_for(m["result"], m["result_applied_to"], target_set)
         url = play_cricket_match_url(m["match_id"])
-        parts.append(f"<tr><td><a href='{url}'>{_esc(m['match_date'])}</a></td>"
-                     f"<td>{_esc(m['competition_type'])}</td>"
-                     f"<td>{venue}</td>"
-                     f"<td class='l'>{_esc(opp)}</td>"
-                     f"<td><span class='pill {r}'>{r}</span></td>"
-                     f"<td class='l score-cell'>{_esc(innings_inline(m))}</td></tr>")
-    parts.append("</table>")
+        parts.append(
+            f"<div class='r-row'>"
+            f"<div class='date'><a href='{url}'>{_esc(m['match_date'])}</a></div>"
+            f"<span class='pill {r}'>{r}</span>"
+            f"<div class='venue'>{venue}</div>"
+            f"<div class='opp'>{_esc(opp)}</div>"
+            f"<div class='scores'>{_esc(innings_inline(m))}</div>"
+            f"</div>"
+        )
+    parts.append("</div>")
+    parts.append("</div>")
 
-    # 6. Charts
-    parts.append("<h2>Patterns</h2>")
+    # ------- 6. Patterns / charts ----------------------------------------
+    parts.append("<div class='card'>")
+    parts.append("<h2><span class='num'>6</span>Patterns</h2>")
 
-    parts.append("<h3>Bat 1st vs Bat 2nd (last 3 seasons L+C)</h3>")
+    parts.append("<h3>Bat 1st vs Bat 2nd · last 3 seasons</h3>")
     parts.append(wld_chart_block([
         (f"{d['club_name']} bat 1st", d["chart_bat"]["us_bat1"]),
         (f"{d['club_name']} bat 2nd", d["chart_bat"]["us_bat2"]),
@@ -1344,7 +1668,7 @@ def render_html(d):
         (f"{d['vs_club_name']} bat 2nd", d["chart_bat"]["vs_bat2"]),
     ]))
 
-    parts.append("<h3>Home vs Away (last 3 seasons L+C)</h3>")
+    parts.append("<h3>Home vs Away · last 3 seasons</h3>")
     parts.append(wld_chart_block([
         (f"{d['club_name']} home", d["chart_ha"]["us_home"]),
         (f"{d['club_name']} away", d["chart_ha"]["us_away"]),
@@ -1357,85 +1681,140 @@ def render_html(d):
     if t["won_n"]:
         bat_pct = 100 * t["chose_bat_n"] / t["won_n"]
         fld_pct = 100 * t["chose_field_n"] / t["won_n"]
-        parts.append(f"<p class='small'>Won toss in <b>{t['won_n']}</b> matches "
-                     f"&middot; chose to <b>bat</b> {t['chose_bat_n']} "
-                     f"({bat_pct:.0f}%), chose to <b>field</b> "
-                     f"{t['chose_field_n']} ({fld_pct:.0f}%).</p>")
-        # Choice split bar (just two segments)
+        parts.append(f"<p class='subtle'>Won toss in <b>{t['won_n']}</b> "
+                     f"matches · chose to <b>bat</b> {t['chose_bat_n']} "
+                     f"({bat_pct:.0f}%), <b>field</b> {t['chose_field_n']} "
+                     f"({fld_pct:.0f}%)</p>")
         parts.append(
-            "<div class='bar-row'>"
-            "<div class='lbl'>Toss-win choice</div>"
-            "<div class='bar'>"
-            f"<div class='seg' style='width:{bat_pct:.1f}%;background:#2563b8'>"
+            "<div class='choice-bar'>"
+            f"<div class='seg bat' style='width:{bat_pct:.1f}%'>"
             f"Bat {t['chose_bat_n']}</div>"
-            f"<div class='seg' style='width:{fld_pct:.1f}%;background:#caa84e'>"
+            f"<div class='seg fld' style='width:{fld_pct:.1f}%'>"
             f"Field {t['chose_field_n']}</div>"
             "</div>"
-            f"<div class='num'>n={t['won_n']}</div></div>"
         )
-        # Outcome by choice
         parts.append(wld_chart_block([
-            ("Won toss → batted", t["chose_bat_outcome"]),
-            ("Won toss → fielded", t["chose_field_outcome"]),
-            ("Lost toss (ref)", t["lost_outcome"]),
+            ("Won → batted", t["chose_bat_outcome"]),
+            ("Won → fielded", t["chose_field_outcome"]),
+            ("Lost toss", t["lost_outcome"]),
         ]))
     else:
         parts.append("<p class='small'>No toss data in scope.</p>")
 
-    parts.append("<h3>Team batting & bowling avg per season (1st XI L+C)</h3>")
+    parts.append("<h3>Team batting & bowling avg per season</h3>")
     parts.append(avg_chart_block(
         d["last_n_seasons"], d["us_avgs"], d["vs_avgs"],
         d["club_name"], d["vs_club_name"]))
+    parts.append("</div>")
 
-    # 7. Links
-    parts.append("<h2>Web / video links</h2>")
-    parts.append("<p class='small' style='background:#fff7d4;padding:8px 10px;"
-                 "border-radius:4px;border:1px solid #e0c46c'>"
-                 "⚠️ <b>Speculative.</b> The Play-Cricket API doesn't expose "
-                 "match video URLs, and there's no API for finding the right "
-                 "YouTube channel for a given club. Anything tagged "
-                 "<i>(speculative)</i> is a name-based guess and may be the "
-                 "wrong entity. <b>Verify before sharing.</b> Per-match search "
-                 "probes are one-click YouTube searches scoped to the fixture "
-                 "— typical hits are full-match livestreams (often a few hours "
-                 "long) hosted by the home club's channel.</p>")
+    # ------- 7. Web / video links ----------------------------------------
+    parts.append("<div class='card'>")
+    parts.append("<h2><span class='num'>7</span>Web &amp; video links</h2>")
+    parts.append(
+        "<p class='warn'>"
+        "<b>How to verify a match video.</b> The Play-Cricket API doesn't "
+        "expose match video URLs. The right way to find one: <b>loop the "
+        "last 20 fixtures</b> below, search YouTube for each "
+        "<i>(club + opponent + date)</i>, then for any plausible hit "
+        "<b>open the top 2-3 results</b> and judge whether it looks like "
+        "the match — full-day livestreams are typically <b>2-7 hours long</b> "
+        "and posted within a day or two of the fixture by the home club's "
+        "channel. Anything not eyeballed should stay tagged "
+        "<i>speculative</i>."
+        "</p>"
+    )
     by_kind = {"official": [], "video": [], "probe": [], "speculative": []}
     for label, url, kind in d["video_links"]:
         by_kind.setdefault(kind, []).append((label, url))
 
     if by_kind["official"]:
         parts.append("<h3>Official / club channels</h3>")
-        parts.append("<ul class='bullets'>")
+        parts.append("<div class='link-list'>")
         for lbl, url in by_kind["official"]:
-            parts.append(f"<li><a href='{_esc(url)}'>{_esc(lbl)}</a></li>")
-        parts.append("</ul>")
+            parts.append(f"<div class='link-row'>"
+                         f"<span class='kind official'>Official</span>"
+                         f"<a href='{_esc(url)}'>{_esc(lbl)}</a></div>")
+        parts.append("</div>")
     if by_kind["video"]:
         parts.append("<h3>Verified match videos</h3>")
-        parts.append("<ul class='bullets'>")
+        parts.append("<div class='link-list'>")
         for lbl, url in by_kind["video"]:
-            parts.append(f"<li><a href='{_esc(url)}'>{_esc(lbl)}</a></li>")
-        parts.append("</ul>")
+            parts.append(f"<div class='link-row'>"
+                         f"<span class='kind video'>Video</span>"
+                         f"<a href='{_esc(url)}'>{_esc(lbl)}</a></div>")
+        parts.append("</div>")
     if by_kind["probe"]:
-        parts.append("<h3>Per-match YouTube search probes</h3>")
-        parts.append("<p class='small'>One click per recent fixture — opens "
-                     "YouTube search results. Look for long videos (multi-hour "
-                     "livestreams) posted by the opposition's channel.</p>")
-        parts.append("<ul class='bullets'>")
+        parts.append("<h3>Per-match YouTube searches "
+                     f"({len(by_kind['probe'])} fixtures)</h3>")
+        parts.append("<p class='subtle'>One per recent match. Click each, "
+                     "scan the top 2-3 hits — match-length livestream from "
+                     "around the fixture date = candidate.</p>")
+        parts.append("<div class='link-list'>")
         for lbl, url in by_kind["probe"]:
-            parts.append(f"<li><a href='{_esc(url)}'>{_esc(lbl)}</a></li>")
-        parts.append("</ul>")
+            parts.append(f"<div class='link-row'>"
+                         f"<span class='kind probe'>Probe</span>"
+                         f"<a href='{_esc(url)}'>{_esc(lbl)}</a></div>")
+        parts.append("</div>")
     if by_kind["speculative"]:
         parts.append("<h3>Speculative — name match only, NOT verified</h3>")
-        parts.append("<ul class='bullets'>")
+        parts.append("<div class='link-list'>")
         for lbl, url in by_kind["speculative"]:
-            parts.append(f"<li><a href='{_esc(url)}'>{_esc(lbl)}</a> "
-                         f"<span class='small'>(speculative)</span></li>")
-        parts.append("</ul>")
+            parts.append(f"<div class='link-row'>"
+                         f"<span class='kind speculative'>Specul.</span>"
+                         f"<a href='{_esc(url)}'>{_esc(lbl)}</a></div>")
+        parts.append("</div>")
+    parts.append("</div>")
 
-    parts.append(f"<p class='footer'>Generated {_esc(d['today'])} from "
-                 f"<code>stats/data/rainham.db</code>. Source: Play-Cricket public API.</p>")
+    parts.append(f"<p class='footer'>Generated {_esc(d['today'])}"
+                 f"{_esc(version_str)} from <code>data/rainham.db</code> · "
+                 f"Source: Play-Cricket public API</p>")
     parts.append("</body></html>")
     return "\n".join(parts)
+
+
+def _hero_stats(d, target_set):
+    """Build [(value, label), ...] tiles for the top of the hero block.
+
+    Picks: current league position (if found), this-season W-L-D from the
+    current season's matches, and last-3-seasons total played count."""
+    tiles = []
+    # Current league pos
+    if d.get("league_table"):
+        for r in d["league_table"]:
+            if r["team_id"] in d["target_team_ids"]:
+                pos = r.get("position")
+                if pos:
+                    tiles.append((f"{pos}", "League pos"))
+                break
+
+    # This-season record (from season_summary, current season is the last entry).
+    # Fall back to the previous season's headline if the current season has no
+    # played league matches yet (e.g. early-May before opening day).
+    if d["season_summary"]:
+        cur = d["season_summary"][-1]
+        prev = d["season_summary"][-2] if len(d["season_summary"]) > 1 else None
+        if cur["P"] > 0:
+            tiles.append((f"{cur['W']}-{cur['L']}-{cur['D']}",
+                          f"{cur['season']} L W-L-D"))
+            tiles.append((f"{cur['win_pct']:.0f}%", f"{cur['season']} win rate"))
+        elif prev and prev["P"] > 0:
+            tiles.append((f"{prev['W']}-{prev['L']}-{prev['D']}",
+                          f"{prev['season']} L W-L-D"))
+            tiles.append((f"{prev['win_pct']:.0f}%",
+                          f"{prev['season']} win rate"))
+
+    # H2H tally — only show if there's a played meeting
+    if d.get("h2h"):
+        w = l_ = dr = 0
+        for m in d["h2h"]:
+            r = result_for(m["result"], m["result_applied_to"], target_set)
+            if r == "W": w += 1
+            elif r == "L": l_ += 1
+            else: dr += 1
+        if w + l_ + dr > 0:
+            short = re.sub(r",.*$", "", d["vs_club_name"]).strip()[:12]
+            tiles.append((f"{w}-{l_}-{dr}", f"vs {short} all-time"))
+    return tiles[:4]
 
 
 def wld_chart_block(rows):
@@ -1454,16 +1833,12 @@ def wld_chart_block(rows):
             n = counts.get(k, 0)
             if n <= 0: continue
             pct = 100 * n / p
-            display = k if pct > 12 else ""
-            segs.append(f"<div class='seg {k}' style='width:{pct:.1f}%'>{n}{display}</div>")
+            inner = f"{n}" if pct > 8 else ""
+            segs.append(f"<div class='seg {k}' style='width:{pct:.1f}%' "
+                        f"title='{k}: {n}'>{inner}</div>")
         w = counts.get("W", 0); l = counts.get("L", 0)
-        d = counts.get("D", 0) + counts.get("T", 0)
-        nr = counts.get("NR", 0) + counts.get("A", 0)
         win_pct = 100 * w / p if p else 0
-        nb = f"{w}W / {l}L"
-        if d: nb += f" / {d}D"
-        if nr: nb += f" / {nr}NR"
-        nb += f" · {win_pct:.0f}%"
+        nb = f"{w}–{l} · {win_pct:.0f}%"
         parts.append(f"<div class='bar-row'>"
                      f"<div class='lbl'>{_esc(label)}</div>"
                      f"<div class='bar'>{''.join(segs)}</div>"
@@ -1475,7 +1850,6 @@ def wld_chart_block(rows):
 def avg_chart_block(seasons, us_avgs, vs_avgs, us_name, vs_name):
     """Two side-by-side bars per season: Us bat-avg vs Vs bat-avg, Us bowl-avg
     vs Vs bowl-avg."""
-    # Find max for scaling
     all_vals = []
     for s in seasons:
         for d_ in (us_avgs.get(s, {}), vs_avgs.get(s, {})):
@@ -1486,10 +1860,9 @@ def avg_chart_block(seasons, us_avgs, vs_avgs, us_name, vs_name):
     max_val = max(max_val * 1.1, 30)
 
     parts = []
-    parts.append("<table style='font-size:11px'>")
-    parts.append(f"<tr><th>Yr</th>"
-                 f"<th class='l'>Bat avg ({_esc(us_name)} vs {_esc(vs_name)})</th>"
-                 f"<th class='l'>Bowl avg ({_esc(us_name)} vs {_esc(vs_name)})</th></tr>")
+    parts.append("<table class='avg-tbl'>")
+    parts.append("<tr><th>Yr</th><th class='l'>Bat avg</th>"
+                 "<th class='l'>Bowl avg</th></tr>")
     for s in seasons:
         u = us_avgs.get(s, {})
         v = vs_avgs.get(s, {})
@@ -1498,25 +1871,29 @@ def avg_chart_block(seasons, us_avgs, vs_avgs, us_name, vs_name):
         bat_html = mini_double_bar(ub, vb, max_val)
         bowl_html = mini_double_bar(ubo, vbo, max_val)
         parts.append(f"<tr><td>{s}</td>"
-                     f"<td class='l'>{bat_html}</td>"
-                     f"<td class='l'>{bowl_html}</td></tr>")
+                     f"<td class='l bar2-cell'>{bat_html}</td>"
+                     f"<td class='l bar2-cell'>{bowl_html}</td></tr>")
     parts.append("</table>")
-    parts.append(f"<p class='small'>Blue = {_esc(us_name)} · Red = {_esc(vs_name)}</p>")
+    parts.append(f"<p class='small'>"
+                 f"<span style='display:inline-block;width:8px;height:8px;"
+                 f"background:#1d4ed8;border-radius:2px;vertical-align:middle'></span> "
+                 f"{_esc(us_name)} &nbsp; "
+                 f"<span style='display:inline-block;width:8px;height:8px;"
+                 f"background:#b91c1c;border-radius:2px;vertical-align:middle'></span> "
+                 f"{_esc(vs_name)}</p>")
     return "".join(parts)
 
 
 def mini_double_bar(us_val, vs_val, max_val):
-    """Two narrow stacked bars - one for us, one for vs. Returns HTML."""
-    def bar(val, color_class):
+    """Two narrow stacked bars - one for us, one for them. Returns HTML."""
+    def bar(val, kind):
         if val is None or max_val <= 0:
-            return f"<div style='height:10px;background:#eee;border-radius:2px;margin:1px 0'></div>"
+            return "<div class='bar2'></div>"
         pct = min(100, 100 * val / max_val)
-        return (f"<div style='height:10px;background:#eee;border-radius:2px;margin:1px 0;position:relative'>"
-                f"<div style='position:absolute;left:0;top:0;bottom:0;width:{pct:.1f}%;"
-                f"background:{color_class};border-radius:2px;display:flex;"
-                f"align-items:center;justify-content:flex-end;padding-right:4px;"
-                f"color:#fff;font-size:9.5px;font-weight:600'>{val:.1f}</div></div>")
-    return f"<div>{bar(us_val,'#2563b8')}{bar(vs_val,'#c03030')}</div>"
+        return (f"<div class='bar2'>"
+                f"<span class='{kind}' style='width:{pct:.1f}%'>"
+                f"{val:.1f}</span></div>")
+    return f"{bar(us_val,'us')}{bar(vs_val,'them')}"
 
 
 if __name__ == "__main__":
