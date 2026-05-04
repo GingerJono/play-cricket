@@ -76,6 +76,35 @@ OUT_DISMISSALS = ("ct", "b", "lbw", "run out", "st", "hit wicket",
                   "retired out", "pairs inning")
 
 
+# ---------------------------------------------------------------- format filter --
+# Every query in this module must exclude T20s, Indoor and Pairs cricket so
+# the scout report reflects long-form senior fixtures only.
+#
+# Include a match if:
+#   game_type = 'Standard'                       (no Pairs / Indoor)
+# AND ANY of:
+#   match_type = 'Declaration'                   (timed cricket)
+#   match_type = 'Limited Overs' AND no_of_overs > 30
+#   match_type = 'Limited Overs' AND no_of_overs IS NULL/0
+#       AND at least one innings was bowled for > 20 overs
+#       (lets through Cup matches that left no_of_overs unset but
+#        actually played a 40+ over game)
+#
+# Used as: f"AND {long_format_filter_sql('m')}"
+def long_format_filter_sql(m_alias="m"):
+    a = m_alias
+    return (
+        f"({a}.game_type = 'Standard'"
+        f" AND ({a}.match_type = 'Declaration'"
+        f"      OR ({a}.match_type = 'Limited Overs'"
+        f"          AND ({a}.no_of_overs > 30"
+        f"               OR (({a}.no_of_overs IS NULL OR {a}.no_of_overs <= 0)"
+        f"                   AND COALESCE("
+        f"                     (SELECT MAX(CAST(overs AS REAL)) FROM innings"
+        f"                       WHERE match_id = {a}.match_id), 0) > 20)))))"
+    )
+
+
 # ---------------------------------------------------------------- helpers ---
 
 def slugify(s: str) -> str:
@@ -335,10 +364,12 @@ def fetch_1stxi_matches(conn, team_ids, comp_types=("League","Cup"),
                toss_won_by_team_id, toss, batted_first,
                competition_type, match_type,
                result, result_applied_to, result_description
-        FROM matches
+        FROM matches m
         WHERE (home_team_id IN ({tids}) OR away_team_id IN ({tids}))
           AND match_date <> ''
-    """.format(tids=",".join("?" * len(team_ids)))
+          AND {fmt}
+    """.format(tids=",".join("?" * len(team_ids)),
+                fmt=long_format_filter_sql("m"))
     params = list(team_ids) + list(team_ids)
     if comp_types:
         sql += f" AND competition_type IN ({','.join('?' * len(comp_types))})"
@@ -379,6 +410,7 @@ def top_batters(conn, club_id, team_ids, seasons,
               AND b.team_batting_id IN ({t_ph})
               AND m.season IN ({s_ph})
               AND m.competition_type IN ({c_ph})
+              AND {long_format_filter_sql('m')}
               AND b.batsman_id IS NOT NULL
               AND lower(coalesce(b.how_out,'')) NOT IN ('did not bat','absent')
         )
@@ -420,6 +452,7 @@ def top_bowlers(conn, club_id, team_ids, seasons,
           AND bo.team_bowling_id IN ({t_ph})
           AND m.season IN ({s_ph})
           AND m.competition_type IN ({c_ph})
+          AND {long_format_filter_sql('m')}
           AND bo.bowler_id IS NOT NULL
     """, (club_id, *team_ids, *seasons, *comp_types)).fetchall()
     agg = {}
@@ -471,6 +504,7 @@ def team_avgs_per_season(conn, club_id, team_ids, seasons,
         FROM batting b JOIN matches m USING(match_id)
         WHERE b.team_batting_club_id=? AND b.team_batting_id IN ({t_ph})
           AND m.season IN ({s_ph}) AND m.competition_type IN ({c_ph})
+          AND {long_format_filter_sql('m')}
         GROUP BY m.season
     """, (club_id, *team_ids, *seasons, *comp_types)).fetchall()
     bowl_rows = conn.execute(f"""
@@ -480,6 +514,7 @@ def team_avgs_per_season(conn, club_id, team_ids, seasons,
         FROM bowling bo JOIN matches m USING(match_id)
         WHERE bo.team_bowling_club_id=? AND bo.team_bowling_id IN ({t_ph})
           AND m.season IN ({s_ph}) AND m.competition_type IN ({c_ph})
+          AND {long_format_filter_sql('m')}
         GROUP BY m.season
     """, (club_id, *team_ids, *seasons, *comp_types)).fetchall()
     for season, runs, dismissals in bat_rows:
@@ -509,11 +544,12 @@ def head_to_head(conn, club_a_team_ids, club_b_team_ids,
                away_club_id, away_club_name, away_team_id, away_team_name,
                toss_won_by_team_id, toss, batted_first,
                competition_type, result, result_applied_to, result_description
-        FROM matches
+        FROM matches m
         WHERE ((home_team_id IN ({a_ph}) AND away_team_id IN ({b_ph}))
             OR (home_team_id IN ({b_ph}) AND away_team_id IN ({a_ph})))
           AND match_date <> ''
           AND competition_type IN ({c_ph})
+          AND {long_format_filter_sql('m')}
         ORDER BY substr(match_date,7,4)||substr(match_date,4,2)||substr(match_date,1,2) DESC
     """
     cur = conn.execute(sql,
@@ -567,15 +603,16 @@ def league_table_with_form(conn, division_id, season, club_team_ids_by_team,
         # Pull form for this team_id (last 5 played League matches in this season)
         form = []
         if team_id and season is not None:
-            recs = conn.execute("""
+            recs = conn.execute(f"""
                 SELECT result, result_applied_to, home_team_id, away_team_id
-                FROM matches
+                FROM matches m
                 WHERE (home_team_id=? OR away_team_id=?)
                   AND season=?
                   AND match_date<>''
                   AND substr(match_date,7,4)||substr(match_date,4,2)||substr(match_date,1,2) <= ?
                   AND result <> ''
                   AND competition_type='League'
+                  AND {long_format_filter_sql('m')}
                 ORDER BY substr(match_date,7,4)||substr(match_date,4,2)||substr(match_date,1,2) DESC
                 LIMIT 5
             """, (team_id, team_id, season, today_iso)).fetchall()
@@ -692,6 +729,7 @@ def first_innings_matrix(conn, club_id, team_ids, today_iso, comp_types=("League
         WHERE (m.home_team_id IN ({t_ph}) OR m.away_team_id IN ({t_ph}))
           AND m.competition_type IN ({c_ph})
           AND m.match_date <> '' AND m.result <> ''
+          AND {long_format_filter_sql('m')}
           AND substr(m.match_date,7,4)||substr(m.match_date,4,2)||
               substr(m.match_date,1,2) <= ?
         ORDER BY substr(m.match_date,7,4)||substr(m.match_date,4,2)||
@@ -772,6 +810,7 @@ def chase_history(conn, club_id, team_ids, today_iso,
         WHERE (m.home_team_id IN ({t_ph}) OR m.away_team_id IN ({t_ph}))
           AND m.competition_type IN ({c_ph})
           AND m.match_date <> ''
+          AND {long_format_filter_sql('m')}
           AND substr(m.match_date,7,4)||substr(m.match_date,4,2)||
               substr(m.match_date,1,2) <= ?
         ORDER BY substr(m.match_date,7,4)||substr(m.match_date,4,2)||
@@ -1016,10 +1055,11 @@ def main():
     # Find the division_id the 1st XI played in for the current season
     div_row = conn.execute(f"""
         SELECT league_name, competition_id, competition_name, COUNT(*) c
-        FROM matches
+        FROM matches m
         WHERE (home_team_id IN ({','.join('?' * len(target_team_ids))})
             OR away_team_id IN ({','.join('?' * len(target_team_ids))}))
           AND season=? AND competition_type='League'
+          AND {long_format_filter_sql('m')}
         GROUP BY league_name, competition_id, competition_name
         ORDER BY c DESC LIMIT 1
     """, (*target_team_ids, *target_team_ids, cur_season)).fetchone()
@@ -1033,10 +1073,11 @@ def main():
         if not league_table:
             # Fall back to last completed season's table
             prev_div = conn.execute(f"""
-                SELECT competition_id FROM matches
+                SELECT competition_id FROM matches m
                 WHERE (home_team_id IN ({','.join('?' * len(target_team_ids))})
                     OR away_team_id IN ({','.join('?' * len(target_team_ids))}))
                   AND season=? AND competition_type='League'
+                  AND {long_format_filter_sql('m')}
                 LIMIT 1
             """, (*target_team_ids, *target_team_ids, cur_season - 1)).fetchone()
             if prev_div and prev_div[0]:
@@ -1055,10 +1096,11 @@ def main():
              for m in s_matches], target_all)
         # Find the division for that season + position
         sdrow = conn.execute(f"""
-            SELECT league_name, competition_id, competition_name FROM matches
+            SELECT league_name, competition_id, competition_name FROM matches m
             WHERE (home_team_id IN ({','.join('?' * len(target_team_ids))})
                 OR away_team_id IN ({','.join('?' * len(target_team_ids))}))
               AND season=? AND competition_type='League'
+              AND {long_format_filter_sql('m')}
             GROUP BY league_name, competition_id, competition_name
             ORDER BY COUNT(*) DESC LIMIT 1
         """, (*target_team_ids, *target_team_ids, s)).fetchone()
