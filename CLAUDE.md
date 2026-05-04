@@ -22,6 +22,12 @@ DB to grow / be refreshed → see _Workflow_ below.
 ```
 stats/
   fetch.py           pulls Play-Cricket JSON; --site-id and --division-ids
+  fetch_balls.py     pulls ball-by-ball from the ResultsVault backend
+                     (the API behind Play-Cricket's match-centre widget).
+                     Not exposed by the public play-cricket API; see
+                     `BALL_BY_BALL.md` for the auth + endpoint trail.
+  _rv_token.js       auto-generated node helper used by fetch_balls.py
+                     to compute the X-IAS-API-REQUEST auth header.
   build_db.py        loads cached JSON into SQLite (data/rainham.db)
   scout.py           generic opposition scouting report (any club).
                      Emits md / html / a long mobile-friendly png inside a
@@ -40,6 +46,10 @@ stats/
       matches/<site_id>/<season>.json   per-season fixture lists
       match_detail/<match_id>.json      full scorecards (shared)
       league_table/<division_id>.json   cached league tables (shared)
+      rv_match/<match_id>.json          ResultsVault metadata + innings
+                                        index (rv_match_id, result_ids)
+      balls/<match_id>/<innings>.json   ball-by-ball stream, untouched
+                                        upstream payload
   reports/
     index.html       generated overview of every report (committed)
     scouting/<YYYY-MM-DD>/<slug>/v<N>/scout.{md,html,png}
