@@ -1,4 +1,4 @@
-# Scout — Spartans CC, Essex 1st XI (v2)
+# Scout — Spartans CC, Essex 1st XI (v3)
 
 _All sections: 1st XI only, League + Cup unless noted. Compared vs Rainham CC, Essex 1st XI. Today 2026-05-04._
 
@@ -190,21 +190,33 @@ _Rating uses wickets remaining + overs remaining. 5/5 comfortable · 4/5 solid �
 - Opens bowling with ≥1 left-armer in **0%** of games · _(coverage 0% across 0 games)_
 - Opens bowling with ≥1 spinner in **0%** of games · _(same coverage as above)_
 
-### 6e. When batting first vs second (last 3 seasons L+C)
+### 6e. Pace vs spin by over block
+
+_Driven by ball-by-ball data — captured for **0/39** in-scope matches (0% coverage). Style mix within each block depends additionally on bowler metadata._
+
+| Block | Pace | Spin | Unknown | Balls | Coverage |
+|---|--:|--:|--:|--:|--:|
+| **1-10** | — | — | — | 0 | — |
+| **11-20** | — | — | — | 0 | — |
+| **21-30** | — | — | — | 0 | — |
+| **31-40** | — | — | — | 0 | — |
+| **41+** | — | — | — | 0 | — |
+
+### 6f. When batting first vs second (last 3 seasons L+C)
 
 - Spartans CC, Essex batting 1st: 23 played, 13W / 5L / 3D / 2NR — win rate 57%
 - Spartans CC, Essex batting 2nd: 15 played, 8W / 5L / 2D — win rate 53%
 - Rainham CC, Essex batting 1st: 16 played, 8W / 7L / 1D — win rate 50%
 - Rainham CC, Essex batting 2nd: 18 played, 6W / 10L / 1D / 1NR — win rate 33%
 
-### 6f. Home vs away (last 3 seasons L+C)
+### 6g. Home vs away (last 3 seasons L+C)
 
 - Spartans CC, Essex at home: 18 played, 9W / 2L / 5D / 2NR — win rate 50%
 - Spartans CC, Essex away: 21 played, 13W / 8L — win rate 62%
 - Rainham CC, Essex at home: 17 played, 9W / 6L / 1D / 1NR — win rate 53%
 - Rainham CC, Essex away: 18 played, 5W / 11L / 1D / 1NR — win rate 28%
 
-### 6g. When they win the toss
+### 6h. When they win the toss
 
 **Won toss in 23 matches** — chose to bat 21 (91%), chose to field 2 (9%).
 
@@ -213,7 +225,7 @@ _Rating uses wickets remaining + overs remaining. 5/5 comfortable · 4/5 solid �
 
 _Reference: lost toss → outcome: 15 played, 8W / 4L / 3D — win rate 53%._
 
-### 6h. Team batting & bowling avg per season (1st XI, L+C)
+### 6i. Team batting & bowling avg per season (1st XI, L+C)
 
 | Season | Spartans CC, Essex bat | Rainham CC, Essex bat | Spartans CC, Essex bowl | Rainham CC, Essex bowl |
 |--:|--:|--:|--:|--:|
