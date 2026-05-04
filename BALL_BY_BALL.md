@@ -9,7 +9,33 @@ deliveries faced, not the deliveries themselves.
 
 There's no `ball_by_ball` endpoint anywhere in `https://play-cricket.com/api/v2/`.
 
-## How the public match-centre widget gets it
+## Two scoring backends
+
+Play-Cricket embeds **two different** ball-by-ball backends on its match
+pages, depending on which scoring product was used:
+
+1. **ResultsVault** (`api.resultsvault.co.uk`) — feeds the
+   ECB-hosted *match-centre* widget. Used when the match was scored on
+   PCS / PCS Pro. Returns a rich per-ball stream with `batter_id`,
+   `bowler_id`, `dismissed_batter_id`, `runs_bat`, `runs_extra`,
+   `extras_type`, plus auto-generated `s_desc` / `l_desc` commentary.
+
+2. **NV Play** (`w-api2.ecb.nvplay.net`) — feeds the inline
+   `<nvplay widget="scorecard">` widgets. Used for matches scored on NV
+   Play / live-streamed via the Spencer-style nvplay scorers. Returns a
+   leaner per-ball stream — just `BallKey` and `Display` (e.g. `"4"`,
+   `"W"`, `"1lb"`, `"w+2"`) — but enough to reconstruct everything we
+   need by walking the BattingCard / BowlingCard / FOW.
+
+`fetch_balls.py` tries RV first, falls back to NV Play when RV returns
+`[]`. A match scraped via NV Play is recorded with `match_bbb.source =
+'nvplay'`; a match scraped via RV with `'rv'`.
+
+The match page itself is a poor signal: the inline JS often shows
+"this match was not digitally scored" referring to PCS / RV, while the
+NV Play widget right above it happily renders the balls.
+
+## ResultsVault path
 
 Every Play-Cricket match page (`/website/results/<match_id>`) embeds an
 ECB-hosted React widget called the **match centre** (loaded from
@@ -60,6 +86,64 @@ public bundle on first run, writes it to `_rv_token.js`, and shells
 out to `node` to compute fresh tokens. Re-run with `--probe` to
 re-bootstrap if the bundle hash changes.
 
+## NV Play path
+
+Discovered by inspecting `<nvplay widget='scorecard'>` tags on a match
+page that was rendering balls but had no RV data. The flow:
+
+```
+1.  Resolve apiBaseUrl (one-shot per session, cacheable):
+    GET https://w-auth.nvplay.com/api/widgetauthorisation/<customer_id>
+        -> {"ApiBaseUrl": "https://w-api2.ecb.nvplay.net", "VersionSuffix": ...}
+
+2.  Pull the full scorecard:
+    GET {api}/api/scorecard/<match_id>
+        ?idType=play-cricket
+        &customerId=<customer_id>
+        &loadFullData=true
+        &playerids=true
+    -> {Match: {Team1Players, Team2Players, IsTeam2BattingFirst, ...},
+        Innings: [
+          {BattingCard, BowlingCard, FallOfWicketList,
+           Overs: [{OverNo, Balls: [{BallKey, Display}]}]
+          },
+          ...
+        ]}
+```
+
+Customer id `5e401d65-10ec-4a28-a0f6-1c084ce30445` is the Play-Cricket
+integration; it's identical on every Play-Cricket match page.
+
+The per-ball payload is much leaner than RV — a single compact `Display`
+token like `"."`, `"1"`, `"4"`, `"W"` (wicket), `"w"` (wide), `"1lb"`
+(leg-bye), `"w+2"`, `"1nb"`. We reconstruct the rest in
+`_nvplay_balls.py`:
+
+- **Runs / extras / wicket flag**: parse the Display token directly
+  (`parse_display`).
+- **Strike rotation**: walk balls in order; swap on odd batter-runs and
+  end-of-over.
+- **Dismissed batter**: take from the FOW row matching the global
+  ball-number; fall back to the on-strike batter.
+- **Batter/bowler IDs**: NV Play's `Match.Team{1,2}Players[].ExternalId`
+  IS the play-cricket player_id. We build a single
+  `nv_id -> player_id` map per match, then look up via the BattingCard /
+  BowlingCard `Id` field.
+- **Bowler-per-over**: solve a small constraint problem
+  (`assign_bowlers`):
+    * Each bowler must bowl exactly their stated number of overs.
+    * No two consecutive overs by the same bowler (alternating ends).
+    * Bowlers tend to bowl from a single end (odd / even over indices).
+      We enforce this only when subset-sum says it's feasible
+      (otherwise the strict version explodes); otherwise fall back to
+      the looser "no consecutive" rule with a most-remaining-first
+      greedy.
+
+Quality on the current cache: ~99% batter / ~93% bowler attribution
+across 69 NV-source matches. The 7% missing bowlers are the cases where
+the constraint solver hits its iteration cap and we leave bowler_id
+NULL.
+
 ## Sample ball
 
 ```json
@@ -92,6 +176,92 @@ re-bootstrap if the bundle hash changes.
 the PCS Pro fields. They're sparsely populated for the recreational
 matches in this cache — most clubs use the free PCS app, which doesn't
 capture pitch maps.
+
+## Player-ID resolution
+
+Both backends ultimately need to land **Play-Cricket `player_id`s**
+in the `balls` table so they join cleanly against `match_players`
+and `data/metadata/players/...`.
+
+### RV → PC translation
+
+RV's per-ball `batter_id` / `bowler_id` are in RV's own namespace
+(11M-range ints; PC is 4M-range). The mapping is built once per
+match from `MatchTeams[].TeamMembers[]`, which carries:
+
+```json
+{
+  "player_id":   11189264,
+  "player_name":  "Barber, Max",   // "Last, First"
+  "player_name2": "Max Barber",    // "First Last"
+  "player_name3": "M Barber"       // "F Last"
+}
+```
+
+`_rv_balls.build_rv_to_pc_map()` matches each RV roster row against
+PC `match_players` by name, with successive fallbacks:
+
+1. Exact normalised "First Last" match against `player_name`.
+2. "Last, First" form match.
+3. `(initial, last)` match.
+4. Last-name only — but **only** if the last name is unique on the
+   PC side; otherwise leave unmapped.
+
+Per-ball loading then just translates `batter_id`, `non_striker_id`,
+`bowler_id`, `dismissed_batter_id` through the map.
+
+### NV → PC translation
+
+NV exposes the PC `player_id` directly on each
+`Match.Team{1,2}Players[].ExternalId`. The harder problem is
+matching a per-ball **surname-only** text (e.g. `"Patel"`, `"R Nolde"`)
+back to one of the team's roster entries. We index each team
+separately by surname and `(initial, surname)` and resolve based on
+how the C field wrote the name.
+
+### Second-pass disambiguation
+
+Both first-pass resolvers leave `batter_id` / `bowler_id` NULL
+whenever a name maps to multiple candidates. `_disambig.py` runs a
+second pass per innings to recover those NULLs by **cross-referencing
+the scorecard tables**:
+
+1. Group all NULL-id balls in the innings by the unresolved name
+   (re-parsed from `l_desc`).
+2. For each name group, aggregate BBB stats:
+   * Batter group → total `runs_bat` and legal-balls.
+   * Bowler group → bowler-runs (incl. wides + no-balls), wickets,
+     legal-balls, plus the set of `over_no`s the group bowled in.
+3. Score every PC candidate (from `match_players`) against its
+   scorecard row in `batting` / `bowling`, summing absolute
+   deviations on the relevant counts.
+4. Tie-breakers for bowlers (cribbed from Jono's heuristics —
+   "who appears higher in the bowling figures bowled the earlier
+   overs; spells tend to be in blocks of odds/evens"):
+   * Penalise candidates whose `bowl_position` doesn't match the
+     BBB group's average over number.
+   * Reward candidates whose BBB overs are entirely odd or
+     entirely even (single-end consistency).
+5. Require a strict score margin (≥ 0.5) between the best
+   candidate and runner-up; otherwise leave NULL. **Never guess.**
+
+Effect on attribution / accuracy (validation against `batting` /
+`bowling` totals):
+
+```
+              attribution      batter exact   bowler exact
+              before / after   before / after  before / after
+RV bat        90.2 / 90.3      95.7 / 95.7    -
+RV bowl       89.3 / 89.4      -              94.0 / 94.0
+NV bat        88.6 / 95.7      93.5 / 92.7    -
+NV bowl       87.2 / 94.7      -              88.3 / 88.0
+```
+
+NV attribution gained ~7 pp; RV barely moved (its NULLs are mostly
+genuinely-missing roster entries, not name collisions). The slight
+NV-accuracy dip (-0.8 pp on batters) is the disambiguation
+introducing ~14 wrong assignments out of +81 new ones — net positive
+both for accuracy and downstream coverage %.
 
 ## Coverage in the current cache
 
