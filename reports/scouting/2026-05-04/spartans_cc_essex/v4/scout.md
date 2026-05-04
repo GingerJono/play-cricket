@@ -143,8 +143,8 @@ _The runs the team batting first put up. Avg shown prominently, median in bracke
 
 | | at Home | Away |
 |---|---|---|
-| Spartans CC, Essex **bat 1st**<br>_own first innings_ | **217** (med 247) <br><sub>n=10 · Jun '24 → Sep '25</sub> | **220** (med 207) <br><sub>n=10 · Aug '24 → Apr '26</sub> |
-| Spartans CC, Essex **bowl 1st**<br>_opponent's first innings_ | **178** (med 151.5) <br><sub>n=10 · May '24 → Jul '25</sub> | **175** (med 177) <br><sub>n=10 · Sep '23 → Aug '25</sub> |
+| **Bat 1st**<br>_our innings_ | **217** (med 247) <br><sub>n=10 · Jun '24 → Sep '25</sub> | **220** (med 207) <br><sub>n=10 · Aug '24 → Apr '26</sub> |
+| **Bowl 1st**<br>_opp. innings_ | **178** (med 151.5) <br><sub>n=10 · May '24 → Jul '25</sub> | **175** (med 177) <br><sub>n=10 · Sep '23 → Aug '25</sub> |
 
 ### 6b. When batting first vs second (last 3 seasons L+C)
 

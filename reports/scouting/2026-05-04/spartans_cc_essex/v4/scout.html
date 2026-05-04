@@ -181,28 +181,30 @@ table.players tbody tr.p-stat + tr.p-name td{border-top:1px solid var(--line)}
 
 /* First-innings matrix (bat/bowl × home/away) */
 table.fi-matrix{width:100%;margin:6px 0 4px;border-collapse:separate;
-  border-spacing:6px}
-table.fi-matrix thead th{padding:4px 6px;font-size:10.5px;
+  border-spacing:5px;table-layout:fixed}
+table.fi-matrix col.rh-col{width:78px}
+table.fi-matrix thead th{padding:3px 4px;font-size:10.5px;
   text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
   background:none;border:none;text-align:center}
 table.fi-matrix thead th.corner{background:transparent}
-table.fi-matrix th.rh{text-align:left;font-weight:700;font-size:11.5px;
-  color:var(--ink);background:#f7f8fc;padding:8px 10px;border-radius:8px;
-  border:1px solid var(--line);width:36%}
-table.fi-matrix th.rh .subh{display:block;font-size:10px;font-weight:600;
-  color:var(--muted);text-transform:none;letter-spacing:0;margin-top:2px}
+table.fi-matrix th.rh{text-align:left;font-weight:800;font-size:12.5px;
+  color:var(--ink);background:#f7f8fc;padding:8px 8px;border-radius:8px;
+  border:1px solid var(--line);line-height:1.15;vertical-align:middle}
+table.fi-matrix th.rh .subh{display:block;font-size:9.5px;font-weight:600;
+  color:var(--muted);text-transform:none;letter-spacing:0;margin-top:3px;
+  white-space:normal}
 table.fi-matrix td{padding:0;background:transparent;border:none}
 .fi-cell{background:#fff;border:1px solid var(--line);border-radius:9px;
-  padding:8px 10px;text-align:center;box-shadow:var(--shadow);
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  min-height:78px;justify-content:center}
+  padding:8px 6px;text-align:center;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  min-height:88px;justify-content:center}
 .fi-cell.empty{background:#fafbfd;color:var(--muted)}
-.fi-cell .avg{font-size:22px;font-weight:800;color:var(--ink);line-height:1;
+.fi-cell .avg{font-size:24px;font-weight:800;color:var(--ink);line-height:1;
   font-variant-numeric:tabular-nums}
 .fi-cell .med{font-size:11px;color:var(--muted);font-weight:600;
-  font-variant-numeric:tabular-nums}
+  font-variant-numeric:tabular-nums;margin-top:2px}
 .fi-cell .sub{font-size:9.5px;color:var(--muted);font-weight:600;
-  margin-top:2px;letter-spacing:.02em}
+  letter-spacing:.02em;line-height:1.25}
 
 /* Toss split bar */
 .choice-bar{height:22px;background:#eef0f6;border-radius:6px;
@@ -420,7 +422,7 @@ a:hover{text-decoration:underline}
 <h2><span class='num'>6</span>Patterns</h2>
 <h3>First-innings totals · last 10 in each quadrant</h3>
 <p class='subtle'>The runs the team batting first put up. Bigger number = stronger signal for <b>chase / defend</b> at the toss.</p>
-<table class='fi-matrix'><thead><tr><th class='corner'></th><th>at <b>Home</b></th><th><b>Away</b></th></tr></thead><tbody><tr><th class='rh'>Spartans CC, Essex bat 1st<br><span class='subh'>own first innings</span></th><td><div class='fi-cell'><div class='avg'>217</div><div class='med'>med 247</div><div class='sub'>n=10 · Jun '24 → Sep '25</div></div></td><td><div class='fi-cell'><div class='avg'>220</div><div class='med'>med 207</div><div class='sub'>n=10 · Aug '24 → Apr '26</div></div></td></tr><tr><th class='rh'>Spartans CC, Essex bowl 1st<br><span class='subh'>opponent's first innings</span></th><td><div class='fi-cell'><div class='avg'>178</div><div class='med'>med 151.5</div><div class='sub'>n=10 · May '24 → Jul '25</div></div></td><td><div class='fi-cell'><div class='avg'>175</div><div class='med'>med 177</div><div class='sub'>n=10 · Sep '23 → Aug '25</div></div></td></tr></tbody></table>
+<table class='fi-matrix'><colgroup><col class='rh-col'><col><col></colgroup><thead><tr><th class='corner'></th><th>Home</th><th>Away</th></tr></thead><tbody><tr><th class='rh'>Bat 1st<span class='subh'>our innings</span></th><td><div class='fi-cell'><div class='avg'>217</div><div class='med'>med 247</div><div class='sub'>n=10</div><div class='sub'>Jun '24 → Sep '25</div></div></td><td><div class='fi-cell'><div class='avg'>220</div><div class='med'>med 207</div><div class='sub'>n=10</div><div class='sub'>Aug '24 → Apr '26</div></div></td></tr><tr><th class='rh'>Bowl 1st<span class='subh'>opp. innings</span></th><td><div class='fi-cell'><div class='avg'>178</div><div class='med'>med 151.5</div><div class='sub'>n=10</div><div class='sub'>May '24 → Jul '25</div></div></td><td><div class='fi-cell'><div class='avg'>175</div><div class='med'>med 177</div><div class='sub'>n=10</div><div class='sub'>Sep '23 → Aug '25</div></div></td></tr></tbody></table>
 <h3>Bat 1st vs Bat 2nd · last 3 seasons</h3>
 <div class='chart'><div class='bar-row'><div class='lbl'>Spartans CC, Essex bat 1st</div><div class='bar'><div class='seg W' style='width:59.3%' title='W: 16'>16</div><div class='seg D' style='width:11.1%' title='D: 3'>3</div><div class='seg L' style='width:22.2%' title='L: 6'>6</div><div class='seg A' style='width:7.4%' title='A: 2'></div></div><div class='num'>16–6 · 59%</div></div><div class='bar-row'><div class='lbl'>Spartans CC, Essex bat 2nd</div><div class='bar'><div class='seg W' style='width:63.2%' title='W: 12'>12</div><div class='seg D' style='width:10.5%' title='D: 2'>2</div><div class='seg L' style='width:26.3%' title='L: 5'>5</div></div><div class='num'>12–5 · 63%</div></div><div class='bar-row'><div class='lbl'>Rainham CC, Essex bat 1st</div><div class='bar'><div class='seg W' style='width:47.1%' title='W: 8'>8</div><div class='seg D' style='width:5.9%' title='D: 1'></div><div class='seg L' style='width:41.2%' title='L: 7'>7</div><div class='seg NR' style='width:5.9%' title='NR: 1'></div></div><div class='num'>8–7 · 47%</div></div><div class='bar-row'><div class='lbl'>Rainham CC, Essex bat 2nd</div><div class='bar'><div class='seg W' style='width:36.8%' title='W: 7'>7</div><div class='seg D' style='width:5.3%' title='D: 1'></div><div class='seg L' style='width:52.6%' title='L: 10'>10</div><div class='seg A' style='width:5.3%' title='A: 1'></div></div><div class='num'>7–10 · 37%</div></div></div>
 <h3>Home vs Away · last 3 seasons</h3>

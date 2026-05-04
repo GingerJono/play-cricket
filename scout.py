@@ -1427,8 +1427,8 @@ def render_md(d):
         md.append("| | at Home | Away |")
         md.append("|---|---|---|")
         for side, label, sub_label in (
-            ("bat",  f"{d['club_name']} **bat 1st**",  "own first innings"),
-            ("bowl", f"{d['club_name']} **bowl 1st**", "opponent's first innings"),
+            ("bat",  "**Bat 1st**",  "our innings"),
+            ("bowl", "**Bowl 1st**", "opp. innings"),
         ):
             row = [f"{label}<br>_{sub_label}_"]
             for venue in ("home", "away"):
@@ -1744,28 +1744,30 @@ table.players tbody tr.p-stat + tr.p-name td{border-top:1px solid var(--line)}
 
 /* First-innings matrix (bat/bowl × home/away) */
 table.fi-matrix{width:100%;margin:6px 0 4px;border-collapse:separate;
-  border-spacing:6px}
-table.fi-matrix thead th{padding:4px 6px;font-size:10.5px;
+  border-spacing:5px;table-layout:fixed}
+table.fi-matrix col.rh-col{width:78px}
+table.fi-matrix thead th{padding:3px 4px;font-size:10.5px;
   text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
   background:none;border:none;text-align:center}
 table.fi-matrix thead th.corner{background:transparent}
-table.fi-matrix th.rh{text-align:left;font-weight:700;font-size:11.5px;
-  color:var(--ink);background:#f7f8fc;padding:8px 10px;border-radius:8px;
-  border:1px solid var(--line);width:36%}
-table.fi-matrix th.rh .subh{display:block;font-size:10px;font-weight:600;
-  color:var(--muted);text-transform:none;letter-spacing:0;margin-top:2px}
+table.fi-matrix th.rh{text-align:left;font-weight:800;font-size:12.5px;
+  color:var(--ink);background:#f7f8fc;padding:8px 8px;border-radius:8px;
+  border:1px solid var(--line);line-height:1.15;vertical-align:middle}
+table.fi-matrix th.rh .subh{display:block;font-size:9.5px;font-weight:600;
+  color:var(--muted);text-transform:none;letter-spacing:0;margin-top:3px;
+  white-space:normal}
 table.fi-matrix td{padding:0;background:transparent;border:none}
 .fi-cell{background:#fff;border:1px solid var(--line);border-radius:9px;
-  padding:8px 10px;text-align:center;box-shadow:var(--shadow);
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  min-height:78px;justify-content:center}
+  padding:8px 6px;text-align:center;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  min-height:88px;justify-content:center}
 .fi-cell.empty{background:#fafbfd;color:var(--muted)}
-.fi-cell .avg{font-size:22px;font-weight:800;color:var(--ink);line-height:1;
+.fi-cell .avg{font-size:24px;font-weight:800;color:var(--ink);line-height:1;
   font-variant-numeric:tabular-nums}
 .fi-cell .med{font-size:11px;color:var(--muted);font-weight:600;
-  font-variant-numeric:tabular-nums}
+  font-variant-numeric:tabular-nums;margin-top:2px}
 .fi-cell .sub{font-size:9.5px;color:var(--muted);font-weight:600;
-  margin-top:2px;letter-spacing:.02em}
+  letter-spacing:.02em;line-height:1.25}
 
 /* Toss split bar */
 .choice-bar{height:22px;background:#eef0f6;border-radius:6px;
@@ -2278,7 +2280,12 @@ def mini_double_bar(us_val, vs_val, max_val):
 
 
 def _render_fi_matrix(matrix, club_name):
-    """Render the bat/bowl × home/away first-innings matrix."""
+    """Render the bat/bowl × home/away first-innings matrix.
+
+    Row labels are deliberately short — the section header already tells
+    the reader which team this is about, so repeating the club name in
+    every row just steals horizontal space from the data cells.
+    """
     def cell(side, venue):
         c = matrix.get((side, venue))
         if not c:
@@ -2288,26 +2295,33 @@ def _render_fi_matrix(matrix, club_name):
         first = _date_short(c["first"])
         last = _date_short(c["last"])
         med = c["median"]
-        med_s = f"{med:.0f}" if isinstance(med, float) and med.is_integer() else f"{med:.1f}".rstrip("0").rstrip(".") if isinstance(med, float) else str(med)
+        if isinstance(med, float):
+            med_s = f"{med:.0f}" if med.is_integer() else f"{med:.1f}"
+        else:
+            med_s = str(med)
         return (f"<div class='fi-cell'>"
                 f"<div class='avg'>{c['avg']:.0f}</div>"
                 f"<div class='med'>med {med_s}</div>"
-                f"<div class='sub'>n={c['n']} · {_esc(first)} → {_esc(last)}</div>"
+                f"<div class='sub'>n={c['n']}</div>"
+                f"<div class='sub'>{_esc(first)} → {_esc(last)}</div>"
                 f"</div>")
 
     return (
         "<table class='fi-matrix'>"
+        "<colgroup>"
+        "<col class='rh-col'><col><col>"
+        "</colgroup>"
         "<thead><tr>"
         "<th class='corner'></th>"
-        "<th>at <b>Home</b></th>"
-        "<th><b>Away</b></th>"
+        "<th>Home</th>"
+        "<th>Away</th>"
         "</tr></thead>"
         "<tbody>"
-        f"<tr><th class='rh'>{_esc(club_name)} bat 1st<br>"
-        f"<span class='subh'>own first innings</span></th>"
+        "<tr><th class='rh'>Bat 1st"
+        "<span class='subh'>our innings</span></th>"
         f"<td>{cell('bat','home')}</td><td>{cell('bat','away')}</td></tr>"
-        f"<tr><th class='rh'>{_esc(club_name)} bowl 1st<br>"
-        f"<span class='subh'>opponent's first innings</span></th>"
+        "<tr><th class='rh'>Bowl 1st"
+        "<span class='subh'>opp. innings</span></th>"
         f"<td>{cell('bowl','home')}</td><td>{cell('bowl','away')}</td></tr>"
         "</tbody></table>"
     )
