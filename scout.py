@@ -52,6 +52,7 @@ DB = ROOT / "data" / "rainham.db"
 RAW_DIR = ROOT / "data" / "raw"
 LEAGUE_TABLE_DIR = RAW_DIR / "league_table"
 REPORTS_DIR = ROOT / "reports"
+SCOUTING_DIR = REPORTS_DIR / "scouting"
 
 # Headless-Chromium binary — used for rendering scout.html → scout.png.
 # We look at the env var first, then a couple of well-known paths.
@@ -808,7 +809,7 @@ def main():
     }
 
     # ---- Output paths (versioned per-day) ----
-    club_dir = REPORTS_DIR / today / slugify(club_name)
+    club_dir = SCOUTING_DIR / today / slugify(club_name)
     club_dir.mkdir(parents=True, exist_ok=True)
     version = args.version if args.version is not None else next_version(club_dir)
     out_dir = club_dir / f"v{version}"
@@ -834,6 +835,13 @@ def main():
 
     # Update `latest` symlink so consumers can find the most recent version.
     update_latest_symlink(club_dir, f"v{version}")
+
+    # Always refresh the top-level index so the new report appears in it.
+    try:
+        import build_index
+        build_index.build()
+    except Exception as e:
+        print(f"index refresh skipped: {e}", file=sys.stderr)
     return 0
 
 

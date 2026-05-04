@@ -10,7 +10,8 @@ Streaks are computed in chronological order across all formats / teams,
 ignoring 'did not bat' and 'absent' rows (they are not innings; they
 neither extend nor break a streak).
 
-Writes stats/streaks_and_fifties.md.
+Writes stats/reports/ad-hoc/streaks_and_fifties.md (and refreshes the
+top-level reports/index.html).
 """
 
 from __future__ import annotations
@@ -20,7 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 DB = ROOT / "data" / "rainham.db"
-OUT_MD = ROOT / "streaks_and_fifties.md"
+OUT_MD = ROOT / "reports" / "ad-hoc" / "streaks_and_fifties.md"
 
 # Dismissal modes that count as "out" (i.e. would make a 0 a duck)
 OUT_DISMISSALS = {
@@ -253,9 +254,15 @@ def main() -> int:
               "breaks it, including not-outs.")
     md.append("")
 
+    OUT_MD.parent.mkdir(parents=True, exist_ok=True)
     OUT_MD.write_text("\n".join(md))
     print()
     print(f"Wrote {OUT_MD}")
+    try:
+        import build_index
+        build_index.build()
+    except Exception as e:
+        print(f"index refresh skipped: {e}")
     return 0
 
 

@@ -4,7 +4,8 @@ Side-by-side: Jon O'Neill (batsman_id 20972) vs Raj Hothi (batsman_id 5572853).
 
 Scope: League + Cup matches only (Friendlies excluded). All formats / all
 Rainham teams within that scope. Reads stats/data/rainham.db; writes
-stats/oneill_vs_hothi.md.
+stats/reports/ad-hoc/oneill_vs_hothi.md (and refreshes the top-level
+reports/index.html).
 """
 
 from __future__ import annotations
@@ -14,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 DB = ROOT / "data" / "rainham.db"
-OUT_MD = ROOT / "oneill_vs_hothi.md"
+OUT_MD = ROOT / "reports" / "ad-hoc" / "oneill_vs_hothi.md"
 
 PLAYERS = [
     (20972,  "Jon O'Neill"),
@@ -360,7 +361,13 @@ def main() -> int:
     md.append(f"**Tally: {name_a} {a_score} — {b_score} {name_b}**")
     md.append("")
 
+    OUT_MD.parent.mkdir(parents=True, exist_ok=True)
     OUT_MD.write_text("\n".join(md))
+    try:
+        import build_index
+        build_index.build()
+    except Exception as e:
+        print(f"index refresh skipped: {e}")
 
     # console summary
     print(f"{name_a} vs {name_b} (League + Cup)")
