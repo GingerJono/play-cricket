@@ -177,6 +177,92 @@ the PCS Pro fields. They're sparsely populated for the recreational
 matches in this cache — most clubs use the free PCS app, which doesn't
 capture pitch maps.
 
+## Player-ID resolution
+
+Both backends ultimately need to land **Play-Cricket `player_id`s**
+in the `balls` table so they join cleanly against `match_players`
+and `data/metadata/players/...`.
+
+### RV → PC translation
+
+RV's per-ball `batter_id` / `bowler_id` are in RV's own namespace
+(11M-range ints; PC is 4M-range). The mapping is built once per
+match from `MatchTeams[].TeamMembers[]`, which carries:
+
+```json
+{
+  "player_id":   11189264,
+  "player_name":  "Barber, Max",   // "Last, First"
+  "player_name2": "Max Barber",    // "First Last"
+  "player_name3": "M Barber"       // "F Last"
+}
+```
+
+`_rv_balls.build_rv_to_pc_map()` matches each RV roster row against
+PC `match_players` by name, with successive fallbacks:
+
+1. Exact normalised "First Last" match against `player_name`.
+2. "Last, First" form match.
+3. `(initial, last)` match.
+4. Last-name only — but **only** if the last name is unique on the
+   PC side; otherwise leave unmapped.
+
+Per-ball loading then just translates `batter_id`, `non_striker_id`,
+`bowler_id`, `dismissed_batter_id` through the map.
+
+### NV → PC translation
+
+NV exposes the PC `player_id` directly on each
+`Match.Team{1,2}Players[].ExternalId`. The harder problem is
+matching a per-ball **surname-only** text (e.g. `"Patel"`, `"R Nolde"`)
+back to one of the team's roster entries. We index each team
+separately by surname and `(initial, surname)` and resolve based on
+how the C field wrote the name.
+
+### Second-pass disambiguation
+
+Both first-pass resolvers leave `batter_id` / `bowler_id` NULL
+whenever a name maps to multiple candidates. `_disambig.py` runs a
+second pass per innings to recover those NULLs by **cross-referencing
+the scorecard tables**:
+
+1. Group all NULL-id balls in the innings by the unresolved name
+   (re-parsed from `l_desc`).
+2. For each name group, aggregate BBB stats:
+   * Batter group → total `runs_bat` and legal-balls.
+   * Bowler group → bowler-runs (incl. wides + no-balls), wickets,
+     legal-balls, plus the set of `over_no`s the group bowled in.
+3. Score every PC candidate (from `match_players`) against its
+   scorecard row in `batting` / `bowling`, summing absolute
+   deviations on the relevant counts.
+4. Tie-breakers for bowlers (cribbed from Jono's heuristics —
+   "who appears higher in the bowling figures bowled the earlier
+   overs; spells tend to be in blocks of odds/evens"):
+   * Penalise candidates whose `bowl_position` doesn't match the
+     BBB group's average over number.
+   * Reward candidates whose BBB overs are entirely odd or
+     entirely even (single-end consistency).
+5. Require a strict score margin (≥ 0.5) between the best
+   candidate and runner-up; otherwise leave NULL. **Never guess.**
+
+Effect on attribution / accuracy (validation against `batting` /
+`bowling` totals):
+
+```
+              attribution      batter exact   bowler exact
+              before / after   before / after  before / after
+RV bat        90.2 / 90.3      95.7 / 95.7    -
+RV bowl       89.3 / 89.4      -              94.0 / 94.0
+NV bat        88.6 / 95.7      93.5 / 92.7    -
+NV bowl       87.2 / 94.7      -              88.3 / 88.0
+```
+
+NV attribution gained ~7 pp; RV barely moved (its NULLs are mostly
+genuinely-missing roster entries, not name collisions). The slight
+NV-accuracy dip (-0.8 pp on batters) is the disambiguation
+introducing ~14 wrong assignments out of +81 new ones — net positive
+both for accuracy and downstream coverage %.
+
 ## Coverage in the current cache
 
 Sampled the 30 most-recent **played** Rainham matches (Mar–May 2026):

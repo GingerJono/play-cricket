@@ -31,6 +31,7 @@ DB_PATH = ROOT / "data" / "rainham.db"
 
 import _nvplay_balls as _nv  # noqa: E402  (after constants for symmetry)
 import _rv_balls as _rv      # noqa: E402
+import _disambig as _dis     # noqa: E402
 
 SCHEMA = """
 DROP TABLE IF EXISTS clubs;
@@ -615,6 +616,15 @@ def insert_balls(
             (match_id, _to_int(rv.get("rv_match_id")), "rv",
              n_innings, n_balls, n_legal),
         )
+        # Second pass: try to recover NULL batter/bowler ids by
+        # cross-referencing the scorecard tables.
+        for inn_seq, is_home_b in is_home_for_seq.items():
+            _dis.disambiguate_innings(
+                cur, match_id, inn_seq,
+                is_home_batting=is_home_b,
+                home_club_id=home_club_id,
+                away_club_id=away_club_id,
+            )
     return (n_innings, n_balls, n_legal)
 
 
@@ -661,6 +671,7 @@ def insert_balls_nvplay(
     n_innings = 0
     n_balls = 0
     n_legal = 0
+    is_home_for_seq: dict[int, bool] = {}
     for inn_idx, inn in enumerate(innings):
         inn_seq = inn_idx + 1
         batting_side = _nv.innings_batting_side(scorecard, inn_idx)
@@ -670,6 +681,7 @@ def insert_balls_nvplay(
             is_home_batting = not team1_is_home
         else:
             is_home_batting = (inn_idx == 0)
+        is_home_for_seq[inn_seq] = is_home_batting
 
         bat_club  = home_club_id if is_home_batting else away_club_id
         bowl_club = away_club_id if is_home_batting else home_club_id
@@ -719,6 +731,14 @@ def insert_balls_nvplay(
             "INSERT OR REPLACE INTO match_bbb VALUES (?,?,?,?,?,?)",
             (match_id, None, "nvplay", n_innings, n_balls, n_legal),
         )
+        # Second pass: scorecard-driven disambiguation of NULL ids.
+        for inn_seq, is_home_b in is_home_for_seq.items():
+            _dis.disambiguate_innings(
+                cur, match_id, inn_seq,
+                is_home_batting=is_home_b,
+                home_club_id=home_club_id,
+                away_club_id=away_club_id,
+            )
     return (n_innings, n_balls, n_legal)
 
 

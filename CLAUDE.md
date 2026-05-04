@@ -30,9 +30,15 @@ stats/
                      `BALL_BY_BALL.md` for the auth + endpoint trail.
   _rv_token.js       auto-generated node helper used by fetch_balls.py
                      to compute the X-IAS-API-REQUEST auth header.
-  _nvplay_balls.py   parses NV Play `Display` tokens and reconstructs
-                     per-ball batter / bowler / dismissal attribution
-                     from the BattingCard, BowlingCard and FOW.
+  _rv_balls.py       builds a per-match {rv_player_id -> pc_player_id}
+                     map by matching RV's MatchTeams[].TeamMembers[]
+                     names against the PC match_players roster.
+  _nvplay_balls.py   parses NV Play's per-ball `C` field
+                     ("X to Y, outcome") and resolves names against
+                     Match.Team{1,2}Players[].ExternalId.
+  _disambig.py       second-pass disambiguation that recovers NULL
+                     batter_id / bowler_id rows by cross-referencing
+                     the scorecard `batting` / `bowling` tables.
   build_db.py        loads cached JSON into SQLite (data/rainham.db)
   scout.py           generic opposition scouting report (any club).
                      Emits md / html / a long mobile-friendly png inside a
@@ -372,6 +378,74 @@ comparison would have caught it. Don't skip that step.
   convert to `yyyymmdd` for ordering / filtering.
 - Don't trust `result` alone — also check `result_applied_to` to know
   whose perspective the W/L is from. See `result_for(...)` in `scout.py`.
+
+## Ball-by-ball player attribution
+
+Both backends (RV and NV Play) emit per-ball commentary text along
+with numeric IDs:
+
+  * **RV** → `l_desc = " <bowler> to <batter>: <outcome>"` plus
+    numeric `batter_id` / `bowler_id` in **RV's own player-id
+    namespace** (11M-range ints, distinct from PC's 4M-range).
+  * **NV Play** → `C = "<bowler> to <striker>, <outcome>"` (only
+    when the request includes `&commentary=true`); no numeric ids
+    on the ball, but `Match.Team{1,2}Players[].ExternalId` is
+    already the PC `player_id`.
+
+Per-ball IDs land in the `balls` table as **PC `player_id`s** via:
+
+1. **First pass — roster match.**
+   * RV: `_rv_balls.build_rv_to_pc_map()` matches each RV
+     `TeamMember` against PC `match_players` by name (full /
+     "Last, First" / "F Last" / last-only fallbacks). Returns NULL
+     for ambiguous names.
+   * NV: `_nvplay_balls.build_team_index()` indexes
+     `Match.Team{1,2}Players[]` by surname and `(initial, surname)`;
+     each ball's bowler/striker text is resolved against the
+     bowling-team / batting-team index. NULL on ambiguity.
+
+2. **Second pass — scorecard disambiguation** (`_disambig.py`).
+   For any ball that ended up with `batter_id IS NULL` or
+   `bowler_id IS NULL`:
+   1. Re-parse `l_desc` to extract the unresolved name text.
+   2. Group balls in this innings by that name text.
+   3. Aggregate BBB statistics for the group (runs / balls /
+      wickets / overs).
+   4. Look up scorecard rows for every PC candidate that the name
+      could refer to (in `batting` / `bowling` for this
+      `match_id, innings_seq`).
+   5. Score each candidate against the BBB aggregate (absolute
+      deviations, with wickets weighted 3×).
+   6. Tie-breakers for bowlers (Jono's heuristics):
+      * Higher position in `bowling.bowl_position` ⇒ bowled the
+        earlier overs (compares `bowl_position` to the BBB group's
+        average `over_no`).
+      * Spells alternate ends — bowlers whose BBB overs are mostly
+        odd-indexed *or* mostly even-indexed get a small bonus,
+        bowlers with 50/50 mixes get nothing.
+   7. Require a strict score margin (≥ 0.5) between best and
+      runner-up — leaves NULL otherwise. We never guess.
+
+   The pass runs once per innings, after the loaders have inserted
+   the balls. It only ever **assigns** NULLs; never overwrites a
+   non-NULL id.
+
+Validation (BBB-aggregate runs vs `batting` / `bowling` totals over
+all 445 BBB-loaded matches):
+
+  RV    batter exact 95.7%  ≤5  98.8%   bowler exact 94.0%
+  NV    batter exact 92.7%  ≤5  99.1%   bowler exact 88.0%
+  Attribution    RV 90.3% bat / 89.4% bowl
+                 NV 95.7% bat / 94.7% bowl
+
+The pass added ~7 percentage points of NV attribution at the cost of
+~14 wrongly-assigned batter-innings (out of +81 newly-attributed) —
+net positive both for accuracy and for downstream coverage %, since
+wrong attributions don't appear in committed metadata files and
+therefore don't inflate coverage.
+
+If you tighten the disambiguation further, do it via `_disambig.py`
+— don't push that logic into the loaders.
 
 ## Roadmap: opposition metadata + BBB coverage
 
