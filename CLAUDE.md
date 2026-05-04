@@ -603,35 +603,87 @@ RCC_SUBMIT_WHATSAPP=447700900123 \
   python3 build_metadata.py
 ```
 
-`_app_lib.py` is shared: CSS, page wrapper, `metadata_status()`, the
-SQLite helper. **Don't** inline app-specific logic into it; keep it
-"chrome only". Each builder is independently runnable.
+`_app_lib.py` is shared: CSS, page wrapper + hero, `metadata_status()`,
+the SQLite helper, and the **`first_xi_fixture_where()` /
+`first_xi_match_ids()` helpers** that encode the universe filter (see
+below). **Don't** inline app-specific logic into it; keep it "chrome +
+shared filters only".
+
+#### Visual design (mobile-first)
+
+The `app/` styling is a deliberate sibling of the `reports/` look —
+same gradient hero, white cards on a muted backdrop, tabular numerics,
+W/L pills using the same colours. CSS lives in `_app_lib.CSS` and is
+written once to `app/static/app.css`; pages link to it.
+
+- **Mobile-first**, `max-width: 540px`, single column. The page chrome
+  is `header.hero` (gradient, breadcrumbs, h1, lead, stats chips)
+  followed by `<main>` containing `.card` blocks. Don't add a sticky
+  top-bar — the hero IS the header on every page.
+- **Status pills** use `.tag.complete / .partial / .notcap / .review /
+  .conflict`; result pills use `.pill.W / .L / .D / .NR`.
+- **Lists are cards, not tables** on the data-repo + metadata pages
+  (there's a `.fix-list` / `.row-list` pattern). Tables are reserved
+  for dense numeric grids and are wrapped in `.table-wrap` for
+  horizontal scrolling.
+
+#### Universe filter
+
+**Only these fixtures count** for *both* builders:
+
+  * Rainham 1st XI on either side (`team_id = '51207'`)
+  * League games (always)  OR  Cup games whose `competition_name`
+    does NOT match T20 / Twenty20 / 20-20 / 20/20 / "Smash" patterns
+  * Played, in the last 10 seasons (today's date is the cutoff)
+
+Encoded once in `_app_lib.first_xi_fixture_where()`:
+
+```python
+sql_filter, params = L.first_xi_fixture_where(alias="m")
+sql = f"SELECT ... FROM matches m WHERE {sql_filter} AND m.season >= ?"
+```
+
+**Excluded everywhere**: 2nd / 3rd / 4th / Sunday / U13 / U15 / Indoor
+fixtures, Friendlies, T20 / 20-over Cup competitions. The metadata
+pages only surface clubs / players that appear on a `match_players`
+row for one of these matches — so a 2nd-XI-only opposition won't show
+up at all.
 
 #### Build outputs
 
+Every page starts with a hero summary (see "Visual design" above).
+Hero stat chips on each screen:
+- `index.html`:        fixtures · with-BBB count · BBB coverage %
+- `clubs.html`:        fixtures · clubs · players · complete count
+- `club/<id>.html`:    players · complete · partial · missing
+- `player.html`:       (no stats — the hero is one row of breadcrumbs +
+                        the player's name + status pill)
+
 `app/index.html` — **data repository / 10-year game list**.
-- One row per played Rainham fixture in the last 10 seasons (today's
-  date is the cutoff for "played").
-- Columns: date, Rainham team, opposition, fmt, result, **BBB ✓/✗**,
-  **opp batting cov %**, **opp bowling cov %**.
-- Coverage % uses the SQL in §coverage formulas below; both columns
-  sit at 0 % until the metadata queue is bootstrapped, which is fine.
+- One card per played 1st-XI fixture (filter as above).
+- Each card: date · season · opposition · competition · format chip ·
+  W/L pill · BBB ✓/✗ · `opp bat` cov bar · `opp bowl` cov bar.
+- Cards with no BBB hide the coverage rows entirely (don't show
+  em-dashes — they add noise).
+- Coverage % uses the SQL in §coverage formulas below.
 
-`app/metadata/clubs.html` — every opposition club Rainham has played,
-with `complete / partial / not captured / needs review` rollups.
+`app/metadata/clubs.html` — every relevant opposition club, sorted by
+squad size. Each row shows the rollup chips
+(`N✓ / N partial / N missing [/ N pending]`) and total player count.
 
-`app/metadata/club/<club_id>.html` — per-club roster (~277 small
-pages). Static because the count is bounded and it makes deep-link
-sharing easier.
+`app/metadata/club/<club_id>.html` — per-club roster (~43 small
+pages, one per relevant club). Each player is a row-link with their
+status pill, `N apps vs us · last seen <date>`, and a 🎬 chip if any
+of their matches in our cache has video evidence.
 
 `app/metadata/player.html` + `app/data/players.json` —
 - ONE static template (~700 bytes) reads `?id=<player_id>` from the
-  URL, fetches the bundled `app/data/players.json` (~3 MB, cached by
-  the browser after the first hit), and renders the player record +
-  the mailto / WhatsApp submit form.
-- Why bundled instead of per-player files? 14k tiny per-player files
-  would burn ~56 MB in 4 KB filesystem blocks and be a chore to
-  navigate in git; the bundle compresses to ~700 KB over HTTP.
+  URL, fetches the bundled `app/data/players.json` (~200 KB after the
+  filter, cached by the browser after the first hit), and renders the
+  player record + the mailto / WhatsApp submit form.
+- Why bundled instead of per-player files? Even 800-odd tiny files
+  burn ~3 MB in 4 KB filesystem blocks and are a chore to navigate in
+  git. The bundle gzips to ~50 KB over HTTP.
 
 `app/static/app.css` and `app/static/player.js` — written once by the
 builders. The submit form's destinations (`SUBMIT_EMAIL`,
@@ -677,4 +729,11 @@ just `python3 -m http.server` from the repo root and browse
 - **Don't** auto-merge submissions. Approval is always Jono via Claude
   Code.
 - **Don't** put any of the `app/` content under `reports/`. Different
-  category, different generator (`build_app.py`, not `build_index.py`).
+  category, different generators (`build_data_repo.py` /
+  `build_metadata.py`, not `build_index.py`).
+- **Don't** widen the universe filter without checking with Jono first.
+  The point is to keep this focused on opposition we'll actually
+  scout. Excluded fixtures (2nd XI, friendlies, T20 cups, etc.) stay
+  excluded.
+- **Don't** desktop-ify the layout. `max-width: 540px` is deliberate —
+  the user reads everything from his phone.

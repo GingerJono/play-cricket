@@ -1,10 +1,10 @@
 
 // Player metadata page — runtime renderer + submission form.
 //
-// Reads ?id=<player_id> from the URL, fetches
-// ../data/players/<id>.json, and builds the page. The submit form has
-// NO backend; it composes a structured plain-text body and opens either
-// a mailto: or wa.me/ link.
+// Reads ?id=<player_id> from the URL, fetches ../data/players.json
+// (one bundled file, ~3 MB, browser-cached after first hit) and looks
+// the player up by id. The submit form has NO backend; it composes a
+// structured plain-text body and opens either a mailto: or wa.me/ link.
 (function() {
   const SUBMIT_EMAIL = "jono@example.com";
   const SUBMIT_WHATSAPP = "447700900123";
@@ -16,8 +16,6 @@
     return;
   }
 
-  // One bundled JSON for every player; cached by the browser after
-  // the first hit. Look the player up by id once it lands.
   fetch('../data/players.json')
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
     .then(bundle => {
@@ -92,88 +90,93 @@
   function render(p) {
     document.title = p.name + ' — metadata';
     const nameEl = document.getElementById('player-name');
-    nameEl.innerHTML = '';
-    nameEl.appendChild(document.createTextNode(p.name + ' '));
-    const sub = el('span', {class: 'muted', style: 'font-size:14px'});
-    sub.textContent = '#' + p.player_id;
-    nameEl.appendChild(sub);
+    nameEl.textContent = p.name;
 
     const stEl = document.getElementById('player-status');
     stEl.innerHTML = '';
-    stEl.appendChild(document.createTextNode('Status: '));
+    stEl.appendChild(document.createTextNode('#' + p.player_id + ' · '));
     stEl.appendChild(statusPill(statusOf(p.metadata)));
     if (p.seen_clubs && p.seen_clubs.length) {
-      stEl.appendChild(document.createTextNode(' · clubs seen: '));
+      stEl.appendChild(document.createTextNode(' · '));
+      const clubsBit = el('span', {style: 'opacity:.85'});
       p.seen_clubs.forEach((c, i) => {
-        if (i) stEl.appendChild(document.createTextNode(', '));
-        const a = el('a', {href: 'club/' + c.club_id + '.html'});
+        if (i) clubsBit.appendChild(document.createTextNode(', '));
+        const a = el('a', {href: 'club/' + c.club_id + '.html',
+                           style: 'color:#fff'});
         a.textContent = c.club_name;
-        stEl.appendChild(a);
+        clubsBit.appendChild(a);
       });
+      stEl.appendChild(clubsBit);
     }
 
     // Current metadata
     const mb = document.getElementById('meta-box');
-    mb.appendChild(el('h2', null, ['Current metadata']));
+    const card = el('div', {class: 'card'});
+    card.appendChild(el('h2', null, ['Current metadata']));
     const m = p.metadata || {};
     const fields = ['batting_hand','bowling_type','pace_type','spin_type',
                     'bowling_arm','angle_to_rhb'];
     const populated = fields.filter(k => m[k]);
     if (!populated.length) {
-      mb.appendChild(el('p', {class: 'note'}, ['No metadata captured yet.']));
+      card.appendChild(el('p', {class: 'note'}, ['No metadata captured yet.']));
     } else {
-      const row = el('div', {class: 'row', style: 'flex-wrap:wrap'});
+      const grid = el('div', {class: 'meta-grid'});
       populated.forEach(k => {
-        const cell = el('div', null, [
-          el('label', null, [FIELD_LABELS[k]]),
-          el('div', null, [String(m[k])]),
-        ]);
-        row.appendChild(cell);
+        grid.appendChild(el('div', null, [
+          el('div', {class: 'k'}, [FIELD_LABELS[k]]),
+          el('div', {class: 'v'}, [String(m[k])]),
+        ]));
       });
-      mb.appendChild(row);
-      if (m.notes) mb.appendChild(el('p', {class: 'note'}, [m.notes]));
+      card.appendChild(grid);
+      if (m.notes) card.appendChild(el('p', {class: 'note'}, [m.notes]));
     }
+    mb.appendChild(card);
 
     // Video evidence
     const vb = document.getElementById('video-box');
-    vb.appendChild(el('h2', null, ['Video evidence']));
+    const vCard = el('div', {class: 'card'});
+    vCard.appendChild(el('h2', null, ['Video evidence']));
     const withVideos = (p.evidence_matches || []);
     if (!withVideos.length) {
-      vb.appendChild(el('p', {class: 'note'}, [
+      vCard.appendChild(el('p', {class: 'note'}, [
         'No videos recorded for matches involving this player yet. ' +
-        '(Video links live in data/metadata/videos/<match_id>.json.)'
+        'Video links live in data/metadata/videos/<match_id>.json.'
       ]));
     } else {
-      const tbl = el('table');
-      tbl.innerHTML =
-        '<thead><tr><th>Date</th><th>Opp</th><th>Videos</th></tr></thead>';
-      const tb = el('tbody');
+      const list = el('div', {class: 'fix-list'});
       withVideos.forEach(mt => {
-        const tr = el('tr');
-        tr.appendChild(el('td', null, [mt.date]));
-        tr.appendChild(el('td', null, [mt.opp]));
-        const td = el('td');
-        mt.videos.forEach((v, i) => {
-          if (i) td.appendChild(document.createTextNode(' · '));
-          const a = el('a', {href: v.url, target: '_blank'});
+        const card = el('div', {class: 'fix'});
+        const r1 = el('div', {class: 'row1'});
+        const left = el('div', {class: 'left'});
+        left.appendChild(el('div', {class: 'date'}, [mt.date]));
+        left.appendChild(el('div', {class: 'opp'}, ['vs ' + mt.opp]));
+        r1.appendChild(left);
+        const right = el('div', {class: 'right'});
+        right.appendChild(el('span', {class: 'tag yes'},
+          ['🎬 ' + mt.videos.length]));
+        r1.appendChild(right);
+        card.appendChild(r1);
+        mt.videos.forEach(v => {
+          const a = el('a', {href: v.url, target: '_blank',
+                              style: 'display:block;font-size:12px;' +
+                                     'margin-top:3px;font-weight:600'});
           a.textContent = v.label || 'watch';
-          td.appendChild(a);
+          card.appendChild(a);
         });
-        tr.appendChild(td);
-        tb.appendChild(tr);
+        list.appendChild(card);
       });
-      tbl.appendChild(tb);
-      vb.appendChild(tbl);
+      vCard.appendChild(list);
     }
+    vb.appendChild(vCard);
 
-    // Submit form
     renderForm(p);
   }
 
   function renderForm(p) {
     const fb = document.getElementById('form-box');
-    fb.appendChild(el('h2', null, ['Submit metadata']));
-    fb.appendChild(el('p', {class: 'note'}, [
+    const card = el('div', {class: 'card'});
+    card.appendChild(el('h2', null, ['Submit metadata']));
+    card.appendChild(el('p', {class: 'note'}, [
       'Fill in what you know. The button below opens your email or ' +
       'WhatsApp with a structured message; Jono receives it and adds ' +
       'it to the queue. Nothing is sent until you press the button in ' +
@@ -193,9 +196,8 @@
       });
       return sel;
     }
-
     function row(items) {
-      const r = el('div', {class: 'row'});
+      const r = el('div', {class: 'field-row'});
       items.forEach(it => r.appendChild(it));
       return r;
     }
@@ -218,7 +220,7 @@
 
     const vidMatches = (p.evidence_matches || []);
     const evid = el('select', {id: 'f-evidence', name: 'evidence_match_ids',
-                               multiple: 'multiple', size: '5'});
+                               multiple: 'multiple', size: '4'});
     if (vidMatches.length) {
       vidMatches.forEach(mt => {
         const lbl = mt.date + ' — ' + mt.opp + ' (' + mt.videos.length +
@@ -230,8 +232,7 @@
       o.setAttribute('disabled', 'disabled');
       evid.appendChild(o);
     }
-    form.appendChild(el('label', null,
-      ['Evidence matches (Cmd/Ctrl-click for multi)']));
+    form.appendChild(el('label', null, ['Evidence matches (multi-select)']));
     form.appendChild(evid);
 
     form.appendChild(el('label', null, ['Notes / reasoning (optional)']));
@@ -245,7 +246,7 @@
       placeholder: 'e.g. Jane Smith',
     }));
 
-    const btnRow = el('div', {style: 'margin-top:14px'});
+    const btnRow = el('div', {class: 'btn-row'});
     const mailBtn = el('a', {href: '#', id: 'sendMail', class: 'btn'},
                        ['Send via email']);
     const waBtn   = el('a', {href: '#', id: 'sendWA', class: 'btn secondary'},
@@ -253,12 +254,11 @@
     btnRow.appendChild(mailBtn);
     btnRow.appendChild(waBtn);
     form.appendChild(btnRow);
-    form.appendChild(el('p', {class: 'note'}, [
-      'Receiving address: ',
-      el('code', {id: 'addrPreview'}),
-    ]));
+    form.appendChild(el('p', {class: 'note', style: 'margin-top:10px'},
+      ['Receiving address: ', el('code', {id: 'addrPreview'})]));
 
-    document.getElementById('form-box').appendChild(form);
+    card.appendChild(form);
+    fb.appendChild(card);
 
     document.getElementById('addrPreview').textContent =
       SUBMIT_EMAIL ? SUBMIT_EMAIL :
