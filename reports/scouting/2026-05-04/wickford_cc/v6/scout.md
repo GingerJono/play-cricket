@@ -1,4 +1,4 @@
-# Scout — Wickford CC 1st XI (v5)
+# Scout — Wickford CC 1st XI (v6)
 
 _All sections: 1st XI only, League + Cup unless noted. Compared vs Rainham CC, Essex 1st XI. Today 2026-05-04._
 
@@ -148,23 +148,39 @@ _The runs the team batting first put up — own innings on the **Bat 1st** row, 
 | **Bat 1st**<br>_own runs_ | **243** (med 229) <br><sub>n=10 · Jun '24 → Sep '25</sub> | **216** (med 204.5) <br><sub>n=10 · Jun '24 → Aug '25</sub> |
 | **Bowl 1st**<br>_opp. runs_ | **203** (med 214) <br><sub>n=10 · May '23 → May '26</sub> | **215** (med 219) <br><sub>n=10 · Aug '23 → Apr '26</sub> |
 
-### 6b. Run chases — last 10 of each quadrant
+### 6b. Run chase history — last 10 each (when Wickford CC batted second)
 
-_Successful: the avg target the chaser knocked off. Unsuccessful: scored X vs target Y._
+_Rating uses wickets remaining + overs remaining. 5/5 comfortable · 4/5 solid · 3/5 very close · 2/5 fell short · 1/5 no chance. T/D/A/NR shown as a special label._
 
-#### **Wickford CC chasing** _(they batted second)_
+**Home chases · Wickford CC batting second at home**
 
-| | at Home | Away |
-|---|---|---|
-| **Made**<br>_chased it_ | chased **175**<br><sub>n=10 · May '21 → May '26</sub> | chased **173**<br><sub>n=9 · Jun '19 → Apr '26</sub> |
-| **Failed**<br>_fell short_ | **172** vs **246** _(75 short)_<br><sub>n=10 · Jul '20 → Jul '25</sub> | **169** vs **270** _(101 short)_<br><sub>n=10 · Jul '22 → Aug '25</sub> |
+| Date | Opp | Tgt | Outcome | Detail |
+|---|---|--:|---|---|
+| [May '26](https://play-cricket.com/website/results/7675565) | Brentwood CC | 206 | **5/5** Comfortable | won by 4w, 11ov in hand |
+| [Jul '25](https://play-cricket.com/website/results/7017055) | Frenford CC | 255 | **2/5** Fell short | 174 vs 255 — 81 short |
+| [Jul '25](https://play-cricket.com/website/results/7017040) | Redbridge CC | 224 | **3/5** Very close | only 1w left |
+| [May '25](https://play-cricket.com/website/results/7017015) | Benfleet CC | 200 | **2/5** Fell short | 163 vs 200 — 37 short |
+| [Jul '24](https://play-cricket.com/website/results/6525594) | Benfleet CC | 40 | _Abandoned_ | abandoned |
+| [May '24](https://play-cricket.com/website/results/6525559) | Stanford Le Hope CC | 248 | **1/5** No chance | 127 vs 248 — 121 short (49% off) |
+| [May '24](https://play-cricket.com/website/results/6525554) | Hornchurch Athletic CC | 188 | **5/5** Comfortable | won by 7w, 10ov in hand |
+| [Jun '23](https://play-cricket.com/website/results/5791412) | Benfleet CC | 171 | **5/5** Comfortable | won by 4w, 7ov in hand |
+| [Jun '23](https://play-cricket.com/website/results/5791397) | Springfield CC | 280 | **2/5** Fell short | 202 vs 280 — 78 short |
+| [May '23](https://play-cricket.com/website/results/5791381) | Orsett & Thurrock CC | 232 | **1/5** No chance | all out for 59 in 20.4ov |
 
-#### **Opposition chasing** _(Wickford CC batted first)_
+**Away chases · Wickford CC batting second away**
 
-| | at Home | Away |
-|---|---|---|
-| **Made**<br>_chased it_ | chased **198**<br><sub>n=10 · Aug '22 → Jun '25</sub> | chased **167**<br><sub>n=10 · Jul '22 → Aug '25</sub> |
-| **Failed**<br>_fell short_ | **174** vs **265** _(92 short)_<br><sub>n=8 · Aug '20 → Sep '25</sub> | **155** vs **224** _(69 short)_<br><sub>n=9 · Jun '19 → Aug '25</sub> |
+| Date | Opp | Tgt | Outcome | Detail |
+|---|---|--:|---|---|
+| [Apr '26](https://play-cricket.com/website/results/7246934) | Belhus CC | 189 | **5/5** Comfortable | won by 7w, 17ov in hand |
+| [Aug '25](https://play-cricket.com/website/results/7017079) | Harlow Town CC | 140 | **5/5** Comfortable | won by 6w, 15ov in hand |
+| [Aug '25](https://play-cricket.com/website/results/7017061) | Benfleet CC | 253 | **2/5** Fell short | 153 vs 253 — 100 short |
+| [Jun '25](https://play-cricket.com/website/results/7017027) | Rainham CC | 248 | **2/5** Fell short | 240 vs 248 — 8 short |
+| [May '25](https://play-cricket.com/website/results/7017003) | Redbridge CC | 80 | **5/5** Comfortable | won by 9w, 32ov in hand |
+| [Apr '25](https://play-cricket.com/website/results/6699169) | Buckhurst Hill CC | 336 | **1/5** No chance | 128 vs 336 — 208 short (62% off) |
+| [Aug '24](https://play-cricket.com/website/results/6525630) | West Essex CC | 224 | **3/5** Very close | only 2w left |
+| [Jun '24](https://play-cricket.com/website/results/6525582) | Leigh On Sea CC | 216 | **2/5** Fell short | 141 vs 216 — 75 short |
+| [May '24](https://play-cricket.com/website/results/6525560) | Barking CC | 149 | **2/5** Fell short | 141 vs 149 — 8 short |
+| [Aug '23](https://play-cricket.com/website/results/5791454) | Benfleet CC | 244 | **2/5** Fell short | 147 vs 244 — 97 short |
 
 ### 6c. When batting first vs second (last 3 seasons L+C)
 

@@ -1,4 +1,4 @@
-# Scout — Spartans CC, Essex 1st XI (v6)
+# Scout — Spartans CC, Essex 1st XI (v7)
 
 _All sections: 1st XI only, League + Cup unless noted. Compared vs Rainham CC, Essex 1st XI. Today 2026-05-04._
 
@@ -146,23 +146,39 @@ _The runs the team batting first put up — own innings on the **Bat 1st** row, 
 | **Bat 1st**<br>_own runs_ | **217** (med 247) <br><sub>n=10 · Jun '24 → Sep '25</sub> | **220** (med 207) <br><sub>n=10 · Aug '24 → Apr '26</sub> |
 | **Bowl 1st**<br>_opp. runs_ | **178** (med 151.5) <br><sub>n=10 · May '24 → Jul '25</sub> | **175** (med 177) <br><sub>n=10 · Sep '23 → Aug '25</sub> |
 
-### 6b. Run chases — last 10 of each quadrant
+### 6b. Run chase history — last 10 each (when Spartans CC, Essex batted second)
 
-_Successful: the avg target the chaser knocked off. Unsuccessful: scored X vs target Y._
+_Rating uses wickets remaining + overs remaining. 5/5 comfortable · 4/5 solid · 3/5 very close · 2/5 fell short · 1/5 no chance. T/D/A/NR shown as a special label._
 
-#### **Spartans CC, Essex chasing** _(they batted second)_
+**Home chases · Spartans CC, Essex batting second at home**
 
-| | at Home | Away |
-|---|---|---|
-| **Made**<br>_chased it_ | chased **164**<br><sub>n=10 · Jun '22 → Jul '25</sub> | chased **151**<br><sub>n=10 · Jun '21 → Aug '25</sub> |
-| **Failed**<br>_fell short_ | **114** vs **218** _(104 short)_<br><sub>n=8 · Jul '20 → May '24</sub> | **154** vs **209** _(55 short)_<br><sub>n=10 · Jun '22 → May '25</sub> |
+| Date | Opp | Tgt | Outcome | Detail |
+|---|---|--:|---|---|
+| [Jul '25](https://play-cricket.com/website/results/7163566) | Goodmayes United  CC | 133 | **5/5** Comfortable | won by 4w, 4ov in hand |
+| [Jun '25](https://play-cricket.com/website/results/7082193) | Essex Lions CC | 318 | _Draw_ | draw |
+| [Jun '25](https://play-cricket.com/website/results/7148132) | Neo CC | 119 | **3/5** Very close | final over · 3w + 4% overs left |
+| [Jun '25](https://play-cricket.com/website/results/7082188) | East London Titans Sporting Club | 304 | _Draw_ | draw |
+| [May '25](https://play-cricket.com/website/results/7090099) | Aztecs CC | 152 | **5/5** Comfortable | won by 4w, 4ov in hand |
+| [May '25](https://play-cricket.com/website/results/7082159) | Neo CC | 242 | **4/5** Solid | won by 3w, 4ov in hand |
+| [Aug '24](https://play-cricket.com/website/results/6553978) | London Riders CC | 154 | **5/5** Comfortable | won by 9w, 24ov in hand |
+| [Jul '24](https://play-cricket.com/website/results/6624160) | Roding Valley CC | 109 | **5/5** Comfortable | won by 7w, 3ov in hand |
+| [Jun '24](https://play-cricket.com/website/results/6553912) | Redbridge Parks CC | 103 | **5/5** Comfortable | won by 6w, 29ov in hand |
+| [May '24](https://play-cricket.com/website/results/6553884) | East London Titans Sporting Club | 76 | **2/5** Fell short | 62 vs 76 — 14 short |
 
-#### **Opposition chasing** _(Spartans CC, Essex batted first)_
+**Away chases · Spartans CC, Essex batting second away**
 
-| | at Home | Away |
-|---|---|---|
-| **Made**<br>_chased it_ | chased **142**<br><sub>n=5 · May '22 → May '25</sub> | chased **126**<br><sub>n=10 · May '22 → Apr '26</sub> |
-| **Failed**<br>_fell short_ | **143** vs **232** _(89 short)_<br><sub>n=10 · Jun '23 → Sep '25</sub> | **111** vs **231** _(120 short)_<br><sub>n=10 · Jun '24 → Aug '25</sub> |
+| Date | Opp | Tgt | Outcome | Detail |
+|---|---|--:|---|---|
+| [Aug '25](https://play-cricket.com/website/results/7082235) | Millwall Stars CC | 64 | **5/5** Comfortable | won by 9w, 40ov in hand |
+| [Jul '25](https://play-cricket.com/website/results/7082201) | Tower Hamlets CC | 146 | **5/5** Comfortable | won by 7w, 11ov in hand |
+| [Jun '25](https://play-cricket.com/website/results/7082183) | Neo CC | 189 | **5/5** Comfortable | won by 7w, 3ov in hand |
+| [May '25](https://play-cricket.com/website/results/7082175) | Essex Lions CC | 305 | **2/5** Fell short | 202 vs 305 — 103 short |
+| [May '25](https://play-cricket.com/website/results/7128306) | Victoria Park CC | 168 | **2/5** Fell short | 120 vs 168 — 48 short |
+| [Apr '25](https://play-cricket.com/website/results/7108493) | East London Titans Sporting Club | 190 | **2/5** Fell short | 163 vs 190 — 27 short |
+| [Aug '24](https://play-cricket.com/website/results/6554001) | Essex Lions CC | 229 | **4/5** Solid | won by 5w, 2ov in hand |
+| [May '24](https://play-cricket.com/website/results/6553904) | Victoria Park CC | 114 | **3/5** Very close | only 2w left |
+| [May '24](https://play-cricket.com/website/results/6553893) | London Eagles CC | 188 | **2/5** Fell short | 151 vs 188 — 37 short |
+| [Sep '23](https://play-cricket.com/website/results/6057634) | Neo CC | 168 | _No result_ | no result |
 
 ### 6c. When batting first vs second (last 3 seasons L+C)
 

@@ -735,21 +735,18 @@ def first_innings_matrix(conn, club_id, team_ids, today_iso, comp_types=("League
     return out
 
 
-def chase_matrix(conn, club_id, team_ids, today_iso,
-                 comp_types=("League","Cup"), last=10):
-    """For each played match where the result is W or L (decisive), bucket
-    by who was chasing (us / opp) × Spartans' venue (home / away) ×
-    outcome (won / lost), then keep the last `last` of each.
-
-    Returns dict keyed by (chaser, venue, outcome) where:
-      - chaser: 'us' if our 1st XI batted second, 'opp' otherwise
-      - venue:  'home' / 'away' (always Spartans' venue)
-      - outcome: 'won' if the chaser succeeded, 'lost' if they failed
-
-    Each entry:
-      - won  → {n, avg_target, first, last}        (target chased down)
-      - lost → {n, avg_score, avg_target, first, last}
-               (chaser fell short — scored avg_score vs avg_target)
+def chase_history(conn, club_id, team_ids, today_iso,
+                  comp_types=("League","Cup"), last=10):
+    """Return {'home': [chase, ...], 'away': [chase, ...]} where each
+    chase is a dict with everything the §6b table needs:
+        match_id, match_date, opp_name, opp_short, target,
+        runs_scored, wickets_fallen, overs_used, max_overs,
+        result_us (W/L/D/T/A/NR/CON from chaser perspective),
+        rating  (1-5, or None for special),
+        label   (human label e.g. 'Comfortable', 'Tie'),
+        reason  (one-line explanation of the rating).
+    Only matches where the scouted club's 1st XI batted second are
+    included. Sorted newest → oldest, capped at `last` per venue.
     """
     if not team_ids:
         return None
@@ -757,73 +754,182 @@ def chase_matrix(conn, club_id, team_ids, today_iso,
     c_ph = ",".join("?" * len(comp_types))
     rows = conn.execute(f"""
         SELECT m.match_id, m.match_date, m.home_club_id, m.batted_first,
-               m.result, m.result_applied_to,
-               (SELECT i.runs FROM innings i
-                 WHERE i.match_id=m.match_id AND i.innings_seq=1) AS r1,
-               (SELECT i.runs FROM innings i
-                 WHERE i.match_id=m.match_id AND i.innings_seq=2) AS r2
+               m.result, m.result_applied_to, m.no_of_overs,
+               m.home_club_name, m.away_club_name,
+               (SELECT runs FROM innings
+                  WHERE match_id=m.match_id AND innings_seq=1) AS r1,
+               (SELECT runs FROM innings
+                  WHERE match_id=m.match_id AND innings_seq=2) AS r2,
+               (SELECT wickets FROM innings
+                  WHERE match_id=m.match_id AND innings_seq=2) AS w2,
+               (SELECT overs FROM innings
+                  WHERE match_id=m.match_id AND innings_seq=2) AS o2,
+               (SELECT overs FROM innings
+                  WHERE match_id=m.match_id AND innings_seq=1) AS o1,
+               (SELECT revised_target_runs FROM innings
+                  WHERE match_id=m.match_id AND innings_seq=2) AS dls
         FROM matches m
         WHERE (m.home_team_id IN ({t_ph}) OR m.away_team_id IN ({t_ph}))
           AND m.competition_type IN ({c_ph})
-          AND m.match_date <> '' AND m.result <> ''
+          AND m.match_date <> ''
           AND substr(m.match_date,7,4)||substr(m.match_date,4,2)||
               substr(m.match_date,1,2) <= ?
         ORDER BY substr(m.match_date,7,4)||substr(m.match_date,4,2)||
                  substr(m.match_date,1,2) DESC
     """, (*team_ids, *team_ids, *comp_types, today_iso)).fetchall()
 
-    target = set(team_ids)
-    buckets = {(c, v, o): []
-               for c in ("us", "opp")
-               for v in ("home", "away")
-               for o in ("won", "lost")}
-
-    for mid, mdate, hcid, bf, res, rat, r1, r2 in rows:
-        if r1 is None or r2 is None:
-            continue
+    target_set = set(team_ids)
+    home, away = [], []
+    for (mid, mdate, hcid, bf, res, rat, no_of_overs,
+         hname, aname, r1, r2, w2, o2, o1, dls) in rows:
         bf = (bf or "").strip()
-        if not bf or res not in ("W", "L"):
-            continue
+        if not bf or bf in target_set:
+            continue   # we batted first → not a chase by us
+        # We're batting second.
         venue = "home" if hcid == club_id else "away"
-        we_batted_first = bf in target
-        we_won = (res == "W" and rat in target) or \
-                 (res == "L" and rat and rat not in target)
-        we_lost = not we_won
-
-        if we_batted_first:
-            # Opposition was chasing our R1
-            chaser = "opp"
-            target_runs, chaser_score = r1, r2
-            chaser_won = we_lost
-        else:
-            # We were chasing their R1
-            chaser = "us"
-            target_runs, chaser_score = r1, r2
-            chaser_won = we_won
-
-        outcome = "won" if chaser_won else "lost"
-        buckets[(chaser, venue, outcome)].append((mdate, target_runs, chaser_score))
-
-    out = {}
-    for k, items in buckets.items():
-        sample = items[:last]
-        if not sample:
-            out[k] = None
+        bucket = home if venue == "home" else away
+        if len(bucket) >= last:
             continue
-        n = len(sample)
-        dates = sorted((d for d, _, _ in sample), key=to_iso)
-        if k[2] == "won":
-            tgts = [t for _, t, _ in sample]
-            out[k] = {"n": n, "avg_target": sum(tgts) / n,
-                      "first": dates[0], "last": dates[-1]}
+        opp = aname if hcid == club_id else hname
+        opp_short = re.sub(r",.*$", "", opp or "").strip()
+
+        # Target: runs to win (R1 + 1) unless DLS-revised.
+        if dls and dls > 0:
+            target = dls
+        elif r1 is not None:
+            target = r1 + 1
         else:
-            tgts = [t for _, t, _ in sample]
-            scores = [s for _, _, s in sample]
-            out[k] = {"n": n,
-                      "avg_target": sum(tgts) / n,
-                      "avg_score": sum(scores) / n,
-                      "first": dates[0], "last": dates[-1]}
-    return out
+            target = None
+
+        # Result from our (chaser) perspective.
+        result_us = result_for(res, rat, target_set)
+
+        # Compute rating + reason.
+        max_overs = _infer_max_overs(no_of_overs, o1, o2)
+        rating, label, reason = _chase_rating(
+            result_us, r2 or 0, target, w2, o2, max_overs,
+        )
+
+        bucket.append({
+            "match_id": mid,
+            "match_date": mdate,
+            "opp_name": opp,
+            "opp_short": opp_short,
+            "target": target,
+            "runs_scored": r2,
+            "wickets_fallen": w2,
+            "overs_used": o2,
+            "max_overs": max_overs,
+            "result_us": result_us,
+            "rating": rating,
+            "label": label,
+            "reason": reason,
+        })
+        if len(home) >= last and len(away) >= last:
+            break
+    return {"home": home, "away": away}
+
+
+def _infer_max_overs(no_of_overs, innings1_overs, innings2_overs):
+    """Return a per-innings overs limit. Prefer matches.no_of_overs;
+    fall back to ceiling(max(innings1,innings2) / 5) * 5 (i.e. snap up
+    to the next 5-over boundary — most leagues are 20/40/45/50)."""
+    if no_of_overs and no_of_overs > 0:
+        return float(no_of_overs)
+    b1 = overs_to_balls(innings1_overs)
+    b2 = overs_to_balls(innings2_overs)
+    bb = max(b1, b2)
+    if bb <= 0:
+        return None
+    overs = bb / 6
+    import math
+    snapped = math.ceil(overs / 5) * 5
+    # Don't let an early bowl-out + quick chase produce a silly small limit.
+    return float(max(snapped, 20))
+
+
+def _chase_rating(result, runs_scored, target, wickets_fallen, overs_used,
+                  max_overs):
+    """Apply the spec's heuristic. Returns (rating|None, label, reason).
+
+    - Special results (T/D/A/NR/CON) → rating None, label='Tie'/'Draw'/…
+    - Wins → 5/4/3 with the close-finish band (3) checked first so it
+      can override an apparent 4/5 or 5/5.
+    - Losses → 1 (no chance) or 2 (fell short).
+    """
+    label_special = {
+        "T": "Tie", "D": "Draw", "A": "Abandoned",
+        "NR": "No result", "CON": "Walkover",
+    }
+    if result in label_special:
+        return None, label_special[result], label_special[result].lower()
+
+    balls_used = overs_to_balls(overs_used)
+    max_balls = (max_overs * 6) if max_overs else None
+    overs_remaining = None        # in whole-ish overs
+    overs_pct_remaining = None
+    if max_balls and balls_used is not None:
+        balls_left = max(0, max_balls - balls_used)
+        overs_remaining = balls_left / 6
+        overs_pct_remaining = 100 * balls_left / max_balls
+    wkts_lost = wickets_fallen if wickets_fallen is not None else 0
+    wkts_left = max(0, 10 - wkts_lost)
+
+    if result == "W":
+        # 3/5 — Very close (overrides comfortable / solid).
+        close_triggers = []
+        if overs_remaining is not None and overs_remaining <= 1:
+            close_triggers.append("final over")
+        if wkts_left <= 2:
+            close_triggers.append(f"only {wkts_left}w left")
+        if overs_pct_remaining is not None and overs_pct_remaining <= 2:
+            close_triggers.append(f"{overs_pct_remaining:.0f}% overs left")
+        if (wkts_left <= 3 and overs_pct_remaining is not None
+                and overs_pct_remaining <= 5):
+            close_triggers.append(
+                f"{wkts_left}w + {overs_pct_remaining:.0f}% overs left")
+        if close_triggers:
+            return 3, "Very close", " · ".join(close_triggers)
+
+        # 5/5 — Comfortable.
+        if (wkts_left >= 6 or
+            (wkts_left >= 4 and overs_pct_remaining is not None
+             and overs_pct_remaining >= 5)):
+            ov_bit = (f", {overs_remaining:.0f}ov in hand"
+                      if overs_remaining is not None else "")
+            return 5, "Comfortable", f"won by {wkts_left}w{ov_bit}"
+
+        # 4/5 — Solid win, default for any other win.
+        ov_bit = (f", {overs_remaining:.0f}ov in hand"
+                  if overs_remaining is not None and overs_remaining > 0
+                  else "")
+        return 4, "Solid", f"won by {wkts_left}w{ov_bit}"
+
+    if result == "L":
+        all_out = wkts_lost >= 10
+        runs_pct = (runs_scored / target * 100) if target else 0
+        overs_used_pct = (100 * balls_used / max_balls
+                          if balls_used and max_balls else None)
+        deficit = (target - runs_scored) if target else None
+
+        # 1/5 — bowled out early, or fell well short, or way off-pace.
+        bowled_early = (all_out and overs_used_pct is not None
+                        and overs_used_pct < 60)
+        big_deficit = runs_pct < 60
+        if bowled_early or big_deficit:
+            if bowled_early:
+                reason = (f"all out for {runs_scored}"
+                          f" in {balls_to_overs(balls_used)}ov")
+            else:
+                reason = (f"{runs_scored} vs {target}"
+                          f" — {deficit} short ({100-runs_pct:.0f}% off)")
+            return 1, "No chance", reason
+
+        # 2/5 — fell short but in the game.
+        return 2, "Fell short", f"{runs_scored} vs {target} — {deficit} short"
+
+    # Unrecognised result code.
+    return None, result or "—", "no result"
 
 
 # ---------------------------------------------------------------- main ----
@@ -1097,8 +1203,9 @@ def main():
 
     # 6e. First-innings matrix (bat/bowl first × home/away, last 10 each)
     fi_matrix = first_innings_matrix(conn, club_id, target_team_ids, today_iso)
-    # 6f. Chase matrix (us/opp chasing × home/away × won/lost, last 10 each)
-    ch_matrix = chase_matrix(conn, club_id, target_team_ids, today_iso)
+    # 6f. Chase history — last 10 chases each at home and away (scouted
+    # team batting second only). Replaces the old summary chase matrix.
+    ch_history = chase_history(conn, club_id, target_team_ids, today_iso)
 
     # Play-Cricket subdomain for player profile links (used in §2/§3/§5)
     pc_subdomain = (CLUB_LINKS.get(str(club_id), {}) or {}).get("pc_subdomain")
@@ -1129,7 +1236,7 @@ def main():
         "us_avgs": us_avgs,
         "vs_avgs": vs_avgs,
         "fi_matrix": fi_matrix,
-        "ch_matrix": ch_matrix,
+        "ch_history": ch_history,
         "video_links": video_links_for(club_id, club_name, recent_matches=recent),
     }
 
@@ -1541,41 +1648,45 @@ def render_md(d):
             md.append("| " + " | ".join(row) + " |")
         md.append("")
 
-    ch = d.get("ch_matrix")
+    ch = d.get("ch_history")
     if ch:
-        md.append("### 6b. Run chases — last 10 of each quadrant")
+        md.append(f"### 6b. Run chase history — last 10 each (when "
+                  f"{d['club_name']} batted second)")
         md.append("")
-        md.append("_Successful: the avg target the chaser knocked off. "
-                  "Unsuccessful: scored X vs target Y._")
+        md.append("_Rating uses wickets remaining + overs remaining. "
+                  "5/5 comfortable · 4/5 solid · 3/5 very close · "
+                  "2/5 fell short · 1/5 no chance. T/D/A/NR shown "
+                  "as a special label._")
         md.append("")
 
-        def chase_cell(chaser, venue, outcome):
-            c = ch.get((chaser, venue, outcome))
-            if not c:
-                return "—"
-            sub = (f"<br><sub>n={c['n']} · {_date_short(c['first'])} → "
-                   f"{_date_short(c['last'])}</sub>")
-            if outcome == "won":
-                return f"chased **{c['avg_target']:.0f}**{sub}"
-            gap = c['avg_target'] - c['avg_score']
-            return (f"**{c['avg_score']:.0f}** vs **{c['avg_target']:.0f}** "
-                    f"_({gap:.0f} short)_{sub}")
+        def chase_table(items, title):
+            md.append(f"**{title}**")
+            md.append("")
+            if not items:
+                md.append("_No chases in the cache._")
+                md.append("")
+                return
+            md.append("| Date | Opp | Tgt | Outcome | Detail |")
+            md.append("|---|---|--:|---|---|")
+            for c in items:
+                date = _date_short(c["match_date"])
+                url = play_cricket_match_url(c["match_id"])
+                opp = c["opp_short"]
+                tgt = c["target"] if c["target"] is not None else "—"
+                if c["rating"] is None:
+                    out = f"_{c['label']}_"
+                else:
+                    out = f"**{c['rating']}/5** {c['label']}"
+                reason = c.get("reason") or ""
+                md.append(
+                    f"| [{date}]({url}) | {opp} | {tgt} | {out} | {reason} |"
+                )
+            md.append("")
 
-        for chaser, header in (
-            ("us",  f"**{d['club_name']} chasing** _(they batted second)_"),
-            ("opp", f"**Opposition chasing** _({d['club_name']} batted first)_"),
-        ):
-            md.append(f"#### {header}")
-            md.append("")
-            md.append("| | at Home | Away |")
-            md.append("|---|---|---|")
-            md.append(f"| **Made**<br>_chased it_ "
-                      f"| {chase_cell(chaser, 'home', 'won')} "
-                      f"| {chase_cell(chaser, 'away', 'won')} |")
-            md.append(f"| **Failed**<br>_fell short_ "
-                      f"| {chase_cell(chaser, 'home', 'lost')} "
-                      f"| {chase_cell(chaser, 'away', 'lost')} |")
-            md.append("")
+        chase_table(ch.get("home", []),
+                    f"Home chases · {d['club_name']} batting second at home")
+        chase_table(ch.get("away", []),
+                    f"Away chases · {d['club_name']} batting second away")
 
     md.append("### 6c. When batting first vs second (last 3 seasons L+C)")
     md.append("")
@@ -1916,12 +2027,63 @@ tr.won .fi-cell .avg{color:#0f5b29}
 .fi-cell .tag.own{background:#1d4ed8;color:#fff}
 .fi-cell .tag.opp{background:#b91c1c;color:#fff}
 
-/* Chasing-matrix specifics — narrow row-header so two cells fit comfortably */
-table.chase-matrix th.rh .subh{font-size:9px}
-.fi-cell .vs{font-size:11px;color:var(--muted);font-weight:600;
-  font-variant-numeric:tabular-nums;line-height:1.2}
-.fi-cell .vs b{color:var(--ink);font-weight:800}
-.fi-cell .gap{font-size:10px;color:var(--muted);margin-top:2px;font-weight:600}
+/* Chase history — two side-by-side stacked card-tables, one per venue.
+   Each chase is a row with date / opp / target / rating + reason. */
+.ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 6px}
+.ch-block{background:#fff;border:1px solid var(--line);border-radius:10px;
+  padding:8px 9px 9px;box-shadow:var(--shadow);min-width:0}
+.ch-title{font-weight:800;font-size:11.5px;color:var(--ink);
+  text-transform:uppercase;letter-spacing:.05em;
+  padding:0 0 6px;border-bottom:1px solid var(--line);
+  margin-bottom:5px}
+.ch-title .sub{display:block;text-transform:none;letter-spacing:0;
+  font-size:9.5px;font-weight:600;color:var(--muted);margin-top:2px}
+.ch-head, .ch-row{display:grid;
+  grid-template-columns: 44px minmax(0,1fr) 28px minmax(64px,auto);
+  grid-template-rows:auto auto;
+  column-gap:5px;row-gap:1px;
+  padding:5px 1px;font-size:10.5px;
+  border-bottom:1px solid var(--line)}
+.ch-head{font-size:9.5px;color:var(--muted);font-weight:700;
+  text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid
+  var(--line-2);padding-bottom:3px}
+.ch-head .cd, .ch-head .co, .ch-head .ct, .ch-head .cr{grid-row:1}
+.ch-head .cn{grid-row:2;display:none}
+.ch-row .cd{grid-row:1;grid-column:1;font-weight:700;color:var(--muted);
+  font-size:10px;white-space:nowrap}
+.ch-row .cd a{color:var(--accent);text-decoration:none}
+.ch-row .co{grid-row:1;grid-column:2;font-weight:700;font-size:11px;
+  color:var(--ink);white-space:normal;word-break:break-word;line-height:1.2}
+.ch-row .ct{grid-row:1;grid-column:3;font-weight:700;font-size:11px;
+  color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+.ch-row .cr{grid-row:1;grid-column:4;display:flex;align-items:center;
+  gap:4px;justify-self:end;flex-wrap:wrap;justify-content:flex-end}
+.ch-row .cn{grid-row:2;grid-column:1 / -1;
+  font-size:9.5px;color:var(--muted);line-height:1.3;
+  padding-left:0;margin-top:1px;font-style:italic}
+.ch-row:last-child{border-bottom:none}
+.ch-empty{padding:14px 8px;font-size:11px;color:var(--muted);text-align:center}
+
+/* Rating badge + dots */
+.rb{display:inline-flex;align-items:center;justify-content:center;
+  background:#888;color:#fff;font-weight:800;font-size:10px;
+  padding:2px 5px;border-radius:5px;line-height:1.05;letter-spacing:.02em;
+  white-space:nowrap}
+.rb.special{background:#6b7280}
+.cr .label{font-size:9.5px;color:var(--muted);font-weight:700;
+  display:none}  /* hidden by default to save space; legend tells you */
+.dots{display:inline-flex;gap:2px}
+.dots .dot{display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--c, #888);opacity:.18}
+.dots .dot.on{opacity:1}
+
+.ch-legend{display:flex;flex-wrap:wrap;gap:8px 12px;margin:6px 2px 2px;
+  font-size:10.5px;color:var(--muted)}
+.ch-legend .legend-item{display:inline-flex;align-items:center;gap:4px}
+
+@media (max-width: 460px){
+  .ch-grid{grid-template-columns:1fr}
+}
 
 /* Toss split bar */
 .choice-bar{height:22px;background:#eef0f6;border-radius:6px;
@@ -2220,15 +2382,18 @@ def render_html(d):
                      f"when {_esc(d['club_name'])} bowls first.</p>")
         parts.append(_render_fi_matrix(d["fi_matrix"], d["club_name"]))
 
-    # 6b. Chase matrix.
-    if d.get("ch_matrix"):
-        parts.append("<h3>Run chases · last 10 in each quadrant</h3>")
-        parts.append("<p class='subtle'>"
-                     "<b style='color:#0f5b29'>Green</b> = chase succeeded "
-                     "(the headline number is the target chased); "
-                     "<b style='color:#8b1c1c'>red</b> = chase failed "
-                     "(scored X vs target Y).</p>")
-        parts.append(_render_chase_matrix(d["ch_matrix"], d["club_name"]))
+    # 6b. Chase history (replaces the old summary chase matrix). Two
+    # tables side by side — last 10 chases at home and away — with a
+    # 1-5 rating per chase and an inline reason so the long PNG carries
+    # all the information.
+    if d.get("ch_history"):
+        parts.append("<h3>Run chase history · last 10 each</h3>")
+        parts.append("<p class='subtle'>Only fixtures where "
+                     f"<b>{_esc(d['club_name'])}</b> batted second. Rating "
+                     "is deterministic and uses wickets remaining + overs "
+                     "remaining; see legend at the bottom.</p>")
+        parts.append(_render_chase_history(
+            d["ch_history"], d["club_name"], d["club_id"], d.get("pc_subdomain")))
 
     parts.append("<h3>Bat 1st vs Bat 2nd · last 3 seasons</h3>")
     parts.append(wld_chart_block([
@@ -2497,61 +2662,96 @@ def _render_fi_matrix(matrix, club_name):
     )
 
 
-def _render_chase_matrix(matrix, club_name):
-    """Two stacked 2×2 grids, one for "we chase" and one for "opp chases".
-    Rows are won/lost (chaser perspective); columns are home/away
-    (always Spartans' venue)."""
+RATING_COLOURS = {
+    5: "#0f5b29",   # comfortable
+    4: "#3a7d44",   # solid
+    3: "#b07d20",   # close
+    2: "#a83a3a",   # fell short
+    1: "#7f1414",   # no chance
+}
+RATING_LABELS = {
+    5: "Comfortable", 4: "Solid", 3: "Very close",
+    2: "Fell short", 1: "No chance",
+}
 
-    def cell(chaser, venue, outcome):
-        c = matrix.get((chaser, venue, outcome))
-        if not c:
-            return ("<div class='fi-cell empty'>"
-                    "<div class='avg'>—</div>"
-                    "<div class='sub'>no data</div></div>")
-        first = _date_short(c["first"])
-        last = _date_short(c["last"])
-        if outcome == "won":
-            body = (f"<div class='avg'>{c['avg_target']:.0f}</div>"
-                    f"<div class='med'>chased</div>")
+
+def _rating_dots(rating):
+    """5 small filled/empty dots for a 1-5 rating (None for special)."""
+    if rating is None:
+        return ""
+    out = []
+    colour = RATING_COLOURS.get(rating, "#888")
+    for i in range(1, 6):
+        cls = "on" if i <= rating else "off"
+        out.append(f"<span class='dot {cls}' style='--c:{colour}'></span>")
+    return f"<span class='dots'>{''.join(out)}</span>"
+
+
+def _render_chase_history(history, club_name, club_id, pc_subdomain):
+    """Two tables (Home, Away), last 10 chases each, newest first.
+    Cols: Date · Opp · Tgt · Rating (with inline one-line reason)."""
+
+    def chase_row(c):
+        url = play_cricket_match_url(c["match_id"])
+        date = _date_short(c["match_date"])
+        opp = _esc(c["opp_short"][:18])
+        tgt = c["target"] if c["target"] is not None else "—"
+        # Rating cell — number, dots, label, reason
+        if c["rating"] is None:
+            badge = (f"<span class='rb special'>{_esc(c['label'])}</span>")
+            reason_html = (f"<span class='reason'>{_esc(c['reason'])}</span>"
+                           if c["reason"] and c["reason"] != c["label"].lower()
+                           else "")
         else:
-            gap = c['avg_target'] - c['avg_score']
-            body = (f"<div class='vs'><b>{c['avg_score']:.0f}</b> "
-                    f"vs <b>{c['avg_target']:.0f}</b></div>"
-                    f"<div class='gap'>fell {gap:.0f} short</div>")
-        return (f"<div class='fi-cell'>"
-                f"{body}"
-                f"<div class='sub'>n={c['n']}</div>"
-                f"<div class='sub'>{_esc(first)} → {_esc(last)}</div>"
-                f"</div>")
-
-    def block(chaser, title, sub_title):
+            colour = RATING_COLOURS[c["rating"]]
+            badge = (f"<span class='rb' style='background:{colour}'>"
+                     f"{c['rating']}/5</span>"
+                     f"<span class='label'>{_esc(c['label'])}</span>")
+            reason_html = (f"<span class='reason'>{_esc(c['reason'])}</span>"
+                           if c["reason"] else "")
         return (
-            f"<p class='subtle' style='margin-top:8px'><b>{_esc(title)}</b> "
-            f"&middot; <span class='small'>{_esc(sub_title)}</span></p>"
-            "<table class='fi-matrix chase-matrix'>"
-            "<colgroup><col class='rh-col'><col><col></colgroup>"
-            "<thead><tr>"
-            "<th class='corner'></th>"
-            "<th>Home</th><th>Away</th>"
-            "</tr></thead>"
-            "<tbody>"
-            "<tr class='won'><th class='rh'>Made"
-            "<span class='subh'>chased it</span></th>"
-            f"<td>{cell(chaser,'home','won')}</td>"
-            f"<td>{cell(chaser,'away','won')}</td></tr>"
-            "<tr class='lost'><th class='rh'>Failed"
-            "<span class='subh'>fell short</span></th>"
-            f"<td>{cell(chaser,'home','lost')}</td>"
-            f"<td>{cell(chaser,'away','lost')}</td></tr>"
-            "</tbody></table>"
+            "<div class='ch-row'>"
+            f"<div class='cd'><a href='{url}'>{_esc(date)}</a></div>"
+            f"<div class='co'>{opp}</div>"
+            f"<div class='ct'>{tgt}</div>"
+            f"<div class='cr'>{badge}{_rating_dots(c['rating'])}</div>"
+            f"<div class='cn'>{reason_html}</div>"
+            "</div>"
         )
 
-    return (
-        block("us",  f"{club_name} chasing",
-              "they batted second")
-        + block("opp", "Opposition chasing",
-                f"{club_name} batted first, opp chasing the target")
-    )
+    def block(items, label, sub):
+        if not items:
+            body = "<div class='ch-empty'>No chases in the cache.</div>"
+        else:
+            body = ("<div class='ch-head'>"
+                    "<div class='cd'>Date</div>"
+                    "<div class='co'>Opp</div>"
+                    "<div class='ct'>Tgt</div>"
+                    "<div class='cr'>Outcome</div>"
+                    "<div class='cn'></div>"
+                    "</div>"
+                    + "".join(chase_row(c) for c in items))
+        return (
+            f"<div class='ch-block'>"
+            f"<div class='ch-title'>{_esc(label)}"
+            f"<span class='sub'>{_esc(sub)}</span></div>"
+            f"{body}</div>"
+        )
+
+    parts = ["<div class='ch-grid'>"]
+    parts.append(block(history.get("home", []), "Home chases",
+                       f"{club_name} batting second at home"))
+    parts.append(block(history.get("away", []), "Away chases",
+                       f"{club_name} batting second away"))
+    parts.append("</div>")
+    # Legend
+    parts.append("<div class='ch-legend'>")
+    for r in (5, 4, 3, 2, 1):
+        parts.append(f"<span class='legend-item'>"
+                     f"<span class='rb' style='background:{RATING_COLOURS[r]}'>"
+                     f"{r}/5</span> {RATING_LABELS[r]}</span>")
+    parts.append("</div>")
+    return "".join(parts)
 
 
 if __name__ == "__main__":
