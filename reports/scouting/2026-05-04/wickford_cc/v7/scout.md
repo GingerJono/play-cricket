@@ -1,4 +1,4 @@
-# Scout — Wickford CC 1st XI (v3)
+# Scout — Wickford CC 1st XI (v7)
 
 _All sections: 1st XI only, League + Cup unless noted. Compared vs Rainham CC, Essex 1st XI. Today 2026-05-04._
 
@@ -23,8 +23,8 @@ _Essex League — Division 05 - 1st XI Division Four_
 
 | Season | League / Division | Pos | P | W | L | D | NR | Win% |
 |--:|---|--:|--:|--:|--:|--:|--:|--:|
-| 2024 | Essex League — Division 04 - 1st XI Division Three | 9/10 | 18 | 4 | 11 | 1 | 1 | 22.2% |
-| 2025 | Essex League — Division 05 - 1st XI Division Four | 5/10 | 18 | 7 | 6 | 2 | 1 | 38.9% |
+| 2024 | Essex League — Division 04 - 1st XI Division Three | 9/10 | 17 | 4 | 11 | 1 | 1 | 23.5% |
+| 2025 | Essex League — Division 05 - 1st XI Division Four | 5/10 | 17 | 7 | 6 | 2 | 0 | 41.2% |
 | 2026 | Essex League — Division 05 - 1st XI Division Four | 10/10 | 0 | 0 | 0 | 0 | 0 | 0.0% |
 
 ## 2. Top run scorers — last 3 seasons (1st XI, L+C)
@@ -57,11 +57,11 @@ _Essex League — Division 05 - 1st XI Division Four_
 | 4 | [Porag Hasan](https://wickford.play-cricket.com/player_stats/bowling/6338427?rule_type_id=179) | 16 | 124.5 | 16 | 550 | **20** | 27.50 | 4.41 | 3/31 | 0 | 0 |
 | 5 | [Chirag Desai](https://wickford.play-cricket.com/player_stats/bowling/5323679?rule_type_id=179) | 19 | 147.2 | 15 | 587 | **20** | 29.35 | 3.98 | 3/36 | 0 | 0 |
 | 6 | [Josh Spooner](https://wickford.play-cricket.com/player_stats/bowling/1792129?rule_type_id=179) | 9 | 69.1 | 9 | 359 | **14** | 25.64 | 5.19 | 3/42 | 0 | 0 |
-| 7 | [Andrew Metcalfe](https://wickford.play-cricket.com/player_stats/bowling/5060749?rule_type_id=179) | 11 | 76 | 6 | 394 | **12** | 32.83 | 5.18 | 3/35 | 0 | 0 |
+| 7 | [Andrew Metcalfe](https://wickford.play-cricket.com/player_stats/bowling/5060749?rule_type_id=179) | 10 | 69 | 4 | 372 | **12** | 31.00 | 5.39 | 3/35 | 0 | 0 |
 | 8 | [Connor Etchells](https://wickford.play-cricket.com/player_stats/bowling/5671181?rule_type_id=179) | 6 | 34.5 | 4 | 149 | **9** | 16.56 | 4.28 | 6/27 | 1 | 0 |
 | 9 | [Tony Munyonga](https://wickford.play-cricket.com/player_stats/bowling/4332729?rule_type_id=179) | 7 | 57 | 7 | 232 | **9** | 25.78 | 4.07 | 3/34 | 0 | 0 |
-| 10 | [Elliot Yorston](https://wickford.play-cricket.com/player_stats/bowling/5618490?rule_type_id=179) | 13 | 62.5 | 1 | 300 | **9** | 33.33 | 4.77 | 3/52 | 0 | 0 |
-| 11 | [Adam Deller](https://wickford.play-cricket.com/player_stats/bowling/449523?rule_type_id=179) | 7 | 38.3 | 0 | 199 | **8** | 24.88 | 5.17 | 3/31 | 0 | 0 |
+| 10 | [Adam Deller](https://wickford.play-cricket.com/player_stats/bowling/449523?rule_type_id=179) | 7 | 38.3 | 0 | 199 | **8** | 24.88 | 5.17 | 3/31 | 0 | 0 |
+| 11 | [Elliot Yorston](https://wickford.play-cricket.com/player_stats/bowling/5618490?rule_type_id=179) | 12 | 56.5 | 1 | 283 | **8** | 35.38 | 4.98 | 3/52 | 0 | 0 |
 | 12 | [Hayden Briggs](https://wickford.play-cricket.com/player_stats/bowling/5569062?rule_type_id=179) | 6 | 32 | 0 | 171 | **6** | 28.50 | 5.34 | 1/9 | 0 | 0 |
 
 ## 4. Head-to-head vs Rainham CC, Essex 1st XI (any era in cache)
@@ -75,7 +75,6 @@ _Essex League — Division 05 - 1st XI Division Four_
 
 **Upcoming fixtures:**
 - 16/05/2026 (League, A)
-- 01/08/2026 (League, H)
 
 ## 5. Last 20 1st XI played matches (L+C)
 
@@ -106,7 +105,6 @@ _Essex League — Division 05 - 1st XI Division Four_
 - **L** [26/07/2025](https://play-cricket.com/website/results/7017055) · League · H vs **Frenford CC** — Frenford 254/8 (50.0) · Wickford 174/10 (42.0)
   - 🏏 [Tom Merritt](https://wickford.play-cricket.com/player_stats/batting/5834723?rule_type_id=179) **39** (#1)
   - 🎯 [Zisan Abedin](https://wickford.play-cricket.com/player_stats/bowling/4588171?rule_type_id=179) **2/39** (11ov)
-- **NR** [19/07/2025](https://play-cricket.com/website/results/7017050) · League · H vs **Harlow Town CC** — —
 - **D** [12/07/2025](https://play-cricket.com/website/results/7017045) · League · A vs **Roding Valley CC** — Wickford 281/6 (50.0) · Roding Valley 230/8 (45.0)
   - 🏏 [Jatin Kukreja](https://wickford.play-cricket.com/player_stats/batting/6146888?rule_type_id=179) **94** (77b, #4) · [Adam Deller](https://wickford.play-cricket.com/player_stats/batting/449523?rule_type_id=179) **89** (118b, #3)
   - 🎯 [Jatin Kukreja](https://wickford.play-cricket.com/player_stats/bowling/6146888?rule_type_id=179) **2/21** (5.0ov)
@@ -136,47 +134,84 @@ _Essex League — Division 05 - 1st XI Division Four_
 - **T** [10/05/2025](https://play-cricket.com/website/results/7017000) · League · H vs **Roding Valley CC** — Wickford 279/4 (50.0) · Roding Valley 279/10 (50.0)
   - 🏏 [Jatin Kukreja](https://wickford.play-cricket.com/player_stats/batting/6146888?rule_type_id=179) **108*** (99b, #4) · [Frankie Mckenna](https://wickford.play-cricket.com/player_stats/batting/4836368?rule_type_id=179) **61*** (50b, #6)
   - 🎯 [Porag Hasan](https://wickford.play-cricket.com/player_stats/bowling/6338427?rule_type_id=179) **3/44** (10.0ov) · [Zisan Abedin](https://wickford.play-cricket.com/player_stats/bowling/4588171?rule_type_id=179) **3/51** (9.0ov)
+- **L** [26/04/2025](https://play-cricket.com/website/results/6699169) · Cup · A vs **Buckhurst Hill CC** — Buckhurst Hill LC 335/5 (45) · Wickford 128/10 (31.5)
+  - 🏏 [John Grimes](https://wickford.play-cricket.com/player_stats/batting/5455747?rule_type_id=179) **28** (27b, #8)
+  - 🎯 [John Grimes](https://wickford.play-cricket.com/player_stats/bowling/5455747?rule_type_id=179) **2/46** (6ov)
 
 ## 6. Patterns
 
 ### 6a. First-innings totals — last 10 of each quadrant
 
-_The runs the team batting first put up. Avg shown prominently, median in brackets._
+_The runs the team batting first put up — own innings on the **Bat 1st** row, opposition's on the **Bowl 1st** row. Avg shown prominently, median in brackets._
 
 | | at Home | Away |
 |---|---|---|
-| Wickford CC **bat 1st**<br>_own first innings_ | **243** (med 229) <br><sub>n=10 · Jun '24 → Sep '25</sub> | **216** (med 204.5) <br><sub>n=10 · Jun '24 → Aug '25</sub> |
-| Wickford CC **bowl 1st**<br>_opponent's first innings_ | **203** (med 214) <br><sub>n=10 · May '23 → May '26</sub> | **215** (med 219) <br><sub>n=10 · Aug '23 → Apr '26</sub> |
+| **Bat 1st**<br>_own runs_ | **243** (med 229) <br><sub>n=10 · Jun '24 → Sep '25</sub> | **216** (med 204.5) <br><sub>n=10 · Jun '24 → Aug '25</sub> |
+| **Bowl 1st**<br>_opp. runs_ | **223** (med 227) <br><sub>n=10 · Aug '22 → May '26</sub> | **215** (med 219) <br><sub>n=10 · Aug '23 → Apr '26</sub> |
 
-### 6b. When batting first vs second (last 3 seasons L+C)
+### 6b. Run chase history — last 10 each (when Wickford CC batted second)
+
+_Rating uses wickets remaining + overs remaining. 5/5 comfortable · 4/5 solid · 3/5 very close · 2/5 fell short · 1/5 no chance. T/D/A/NR shown as a special label._
+
+**Home chases · Wickford CC batting second at home**
+
+| Date | Opp | Tgt | Outcome | Detail |
+|---|---|--:|---|---|
+| [May '26](https://play-cricket.com/website/results/7675565) | Brentwood CC | 206 | **5/5** Comfortable | won by 4w, 11ov in hand |
+| [Jul '25](https://play-cricket.com/website/results/7017055) | Frenford CC | 255 | **2/5** Fell short | 174 vs 255 — 81 short |
+| [Jul '25](https://play-cricket.com/website/results/7017040) | Redbridge CC | 224 | **3/5** Very close | only 1w left |
+| [May '25](https://play-cricket.com/website/results/7017015) | Benfleet CC | 200 | **2/5** Fell short | 163 vs 200 — 37 short |
+| [May '24](https://play-cricket.com/website/results/6525559) | Stanford Le Hope CC | 248 | **1/5** No chance | 127 vs 248 — 121 short (49% off) |
+| [May '24](https://play-cricket.com/website/results/6525554) | Hornchurch Athletic CC | 188 | **5/5** Comfortable | won by 7w, 10ov in hand |
+| [Jun '23](https://play-cricket.com/website/results/5791412) | Benfleet CC | 171 | **5/5** Comfortable | won by 4w, 7ov in hand |
+| [Jun '23](https://play-cricket.com/website/results/5791397) | Springfield CC | 280 | **2/5** Fell short | 202 vs 280 — 78 short |
+| [May '23](https://play-cricket.com/website/results/5791381) | Orsett & Thurrock CC | 232 | **1/5** No chance | all out for 59 in 20.4ov |
+| [Aug '22](https://play-cricket.com/website/results/5236623) | Loughton CC | 239 | **2/5** Fell short | 235 vs 239 — 4 short |
+
+**Away chases · Wickford CC batting second away**
+
+| Date | Opp | Tgt | Outcome | Detail |
+|---|---|--:|---|---|
+| [Apr '26](https://play-cricket.com/website/results/7246934) | Belhus CC | 189 | **5/5** Comfortable | won by 7w, 17ov in hand |
+| [Aug '25](https://play-cricket.com/website/results/7017079) | Harlow Town CC | 140 | **5/5** Comfortable | won by 6w, 15ov in hand |
+| [Aug '25](https://play-cricket.com/website/results/7017061) | Benfleet CC | 253 | **2/5** Fell short | 153 vs 253 — 100 short |
+| [Jun '25](https://play-cricket.com/website/results/7017027) | Rainham CC | 248 | **2/5** Fell short | 240 vs 248 — 8 short |
+| [May '25](https://play-cricket.com/website/results/7017003) | Redbridge CC | 80 | **5/5** Comfortable | won by 9w, 32ov in hand |
+| [Apr '25](https://play-cricket.com/website/results/6699169) | Buckhurst Hill CC | 336 | **1/5** No chance | 128 vs 336 — 208 short (62% off) |
+| [Aug '24](https://play-cricket.com/website/results/6525630) | West Essex CC | 224 | **3/5** Very close | only 2w left |
+| [Jun '24](https://play-cricket.com/website/results/6525582) | Leigh On Sea CC | 216 | **2/5** Fell short | 141 vs 216 — 75 short |
+| [May '24](https://play-cricket.com/website/results/6525560) | Barking CC | 149 | **2/5** Fell short | 141 vs 149 — 8 short |
+| [Aug '23](https://play-cricket.com/website/results/5791454) | Benfleet CC | 244 | **2/5** Fell short | 147 vs 244 — 97 short |
+
+### 6c. When batting first vs second (last 3 seasons L+C)
 
 - Wickford CC batting 1st: 21 played, 6W / 10L / 4D / 1NR — win rate 29%
-- Wickford CC batting 2nd: 16 played, 7W / 8L / 1NR — win rate 44%
-- Rainham CC, Essex batting 1st: 17 played, 8W / 7L / 1D / 1NR — win rate 47%
-- Rainham CC, Essex batting 2nd: 19 played, 7W / 10L / 1D / 1NR — win rate 37%
+- Wickford CC batting 2nd: 15 played, 7W / 8L — win rate 47%
+- Rainham CC, Essex batting 1st: 16 played, 8W / 7L / 1D — win rate 50%
+- Rainham CC, Essex batting 2nd: 18 played, 6W / 10L / 1D / 1NR — win rate 33%
 
-### 6c. Home vs away (last 3 seasons L+C)
+### 6d. Home vs away (last 3 seasons L+C)
 
-- Wickford CC at home: 19 played, 7W / 8L / 1D / 3NR — win rate 37%
+- Wickford CC at home: 17 played, 7W / 8L / 1D / 1NR — win rate 41%
 - Wickford CC away: 20 played, 6W / 10L / 3D / 1NR — win rate 30%
-- Rainham CC, Essex at home: 19 played, 9W / 6L / 1D / 3NR — win rate 47%
-- Rainham CC, Essex away: 19 played, 6W / 11L / 1D / 1NR — win rate 32%
+- Rainham CC, Essex at home: 17 played, 9W / 6L / 1D / 1NR — win rate 53%
+- Rainham CC, Essex away: 18 played, 5W / 11L / 1D / 1NR — win rate 28%
 
-### 6d. When they win the toss
+### 6e. When they win the toss
 
-**Won toss in 24 matches** — chose to bat 14 (58%), chose to field 10 (42%).
+**Won toss in 23 matches** — chose to bat 14 (61%), chose to field 9 (39%).
 
 - Won toss → batted first → 14 played, 3W / 9L / 2D — win rate 21%
-- Won toss → fielded first → 10 played, 5W / 4L / 1NR — win rate 50%
+- Won toss → fielded first → 9 played, 5W / 4L — win rate 56%
 
 _Reference: lost toss → outcome: 13 played, 5W / 5L / 2D / 1NR — win rate 38%._
 
-### 6e. Team batting & bowling avg per season (1st XI, L+C)
+### 6f. Team batting & bowling avg per season (1st XI, L+C)
 
 | Season | Wickford CC bat | Rainham CC, Essex bat | Wickford CC bowl | Rainham CC, Essex bowl |
 |--:|--:|--:|--:|--:|
-| 2024 | 17.90 | 19.78 | 27.56 | 24.11 |
-| 2025 | 27.09 | 18.32 | 28.53 | 23.05 |
+| 2024 | 17.90 | 19.78 | 27.45 | 24.11 |
+| 2025 | 27.09 | 17.96 | 28.53 | 24.20 |
 | 2026 | 40.22 | 9.50 | 25.47 | 18.22 |
 
 ## 7. Web / video links

@@ -5,6 +5,33 @@ Built from `php/epizy/cron_api_matches_master.php` + `php/cron_api_matches_liste
 which is the same API the live site uses (see `php/globals.php` for the
 canonical token / site_id).
 
+## ⚠️ Every `git push` publishes
+
+The GitHub Pages workflow (`.github/workflows/static.yml`) is wired to
+fire on **every push to every branch** — not just `main`. The whole repo
+becomes the live deployment, and there's a single concurrency slot for
+"pages" so whichever branch pushed most recently wins.
+
+What this means for Claude:
+
+- When you `git push` a feature branch, you are **publishing the site**.
+  `reports/index.html`, every `reports/scouting/.../scout.html`, every
+  `scout.png` — all of it goes live at the project's Pages URL.
+- Don't push half-finished reports or broken HTML and assume "it's only
+  on a branch". A branch push is a deploy.
+- Run `python3 build_index.py` (or rely on the auto-call from
+  `scout.py` / the ad-hoc generators) before pushing so the index
+  matches what's in the tree.
+- Don't commit secrets into the repo — the API token lives in
+  `php/globals.php` (not in-tree) and `fetch.py` reads it via
+  `PC_API_TOKEN`. Anything that lands in the working tree gets
+  deployed.
+
+The "every branch deploys" behaviour is intentional: the user iterates
+on scouting reports on feature branches and wants the changes visible
+at the published URL immediately — there's no staging, no preview env.
+Treat every push as production.
+
 ## When to read this file
 
 - The user asks for any **stat about a Rainham player or match** (runs,
