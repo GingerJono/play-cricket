@@ -1315,6 +1315,113 @@ def team_style_profile(conn, club_id, team_ids, last_n_seasons,
     }
 
 
+def over_block_mix(conn, club_id, team_ids, last_n_seasons, today_iso,
+                    player_meta, comp_types=("League","Cup")):
+    """For each 10-over block (1-10, 11-20, 21-30, 31-40, 41+), aggregate
+    legal balls bowled by the scouted club and split by pace / spin /
+    unknown using player-style metadata.
+
+    Driven by the `balls` table — i.e. only matches with ball-by-ball
+    data captured contribute. We expose two coverage numbers so the
+    reader can tell the noise floor apart from a real signal:
+
+      bbb_coverage_pct       — share of in-scope matches that have any
+                                ball-by-ball data at all
+      block.coverage_pct     — within that block's balls, share that
+                                were bowled by a tagged bowler
+
+    Returns:
+      {
+        "match_n":            int,    matches in scope
+        "match_n_with_bbb":   int,    matches with any BBB
+        "bbb_coverage_pct":   float,
+        "blocks": [
+          {"label": "1-10", "from": 0, "to": 10,
+           "pace_balls", "spin_balls", "unknown_balls", "total_balls",
+           "pct_pace", "pct_spin", "pct_unknown",
+           "coverage_pct"},
+          ...
+        ],
+      }
+    """
+    if not team_ids:
+        return None
+    seasons_ph = ",".join("?" * len(last_n_seasons))
+    t_ph = ",".join("?" * len(team_ids))
+    c_ph = ",".join("?" * len(comp_types))
+    iso_expr = ("substr(m.match_date,7,4)||substr(m.match_date,4,2)||"
+                "substr(m.match_date,1,2)")
+    flt = long_format_filter_sql("m")
+
+    mids = [r[0] for r in conn.execute(f"""
+        SELECT m.match_id FROM matches m
+        WHERE (m.home_team_id IN ({t_ph}) OR m.away_team_id IN ({t_ph}))
+          AND m.competition_type IN ({c_ph})
+          AND m.season IN ({seasons_ph})
+          AND m.match_date <> '' AND m.result <> ''
+          AND {iso_expr} <= ?
+          AND {flt}
+    """, (*team_ids, *team_ids, *comp_types,
+          *last_n_seasons, today_iso)).fetchall()]
+    if not mids:
+        return None
+
+    mid_ph = ",".join("?" * len(mids))
+    matches_with_bbb = {r[0] for r in conn.execute(f"""
+        SELECT DISTINCT match_id FROM balls
+        WHERE match_id IN ({mid_ph}) AND team_bowling_club_id = ?
+    """, (*mids, club_id)).fetchall()}
+
+    rows = conn.execute(f"""
+        SELECT over_no, bowler_id, COUNT(*) AS n
+        FROM balls
+        WHERE match_id IN ({mid_ph})
+          AND team_bowling_club_id = ?
+          AND is_legal_ball = 1
+        GROUP BY over_no, bowler_id
+    """, (*mids, club_id)).fetchall()
+
+    block_defs = [
+        ("1-10",  0, 10),
+        ("11-20", 10, 20),
+        ("21-30", 20, 30),
+        ("31-40", 30, 40),
+        ("41+",   40, 999),
+    ]
+    blocks = []
+    for label, lo, hi in block_defs:
+        pace = spin = unk = 0
+        for over_no, bid, n in rows:
+            if over_no is None or not (lo <= over_no < hi):
+                continue
+            tag = bowling_tag(player_meta.get(bid))
+            cat = bowling_category(tag) if tag else None
+            if cat == "pace":
+                pace += n
+            elif cat == "spin":
+                spin += n
+            else:
+                unk += n
+        total = pace + spin + unk
+        blocks.append({
+            "label": label, "from": lo, "to": hi,
+            "pace_balls": pace, "spin_balls": spin, "unknown_balls": unk,
+            "total_balls": total,
+            "pct_pace":    100 * pace / total if total else 0,
+            "pct_spin":    100 * spin / total if total else 0,
+            "pct_unknown": 100 * unk  / total if total else 0,
+            "coverage_pct": 100 * (pace + spin) / total if total else 0,
+        })
+
+    return {
+        "match_n":           len(mids),
+        "match_n_with_bbb":  len(matches_with_bbb),
+        "bbb_coverage_pct":  100 * len(matches_with_bbb) / len(mids)
+                              if mids else 0,
+        "blocks": blocks,
+    }
+
+
 # ---------------------------------------------------------------- main ----
 
 def play_cricket_match_url(match_id):
@@ -1607,6 +1714,13 @@ def main():
         today_iso, player_meta,
     )
 
+    # Pace vs spin per 10-over block (driven by balls table — depends
+    # on BBB coverage AND player-style metadata coverage).
+    over_blocks = over_block_mix(
+        conn, club_id, target_team_ids, last_n_seasons,
+        today_iso, player_meta,
+    )
+
     # ---- Build report data ----
     data = {
         "club_name": club_name,
@@ -1635,6 +1749,7 @@ def main():
         "fi_matrix": fi_matrix,
         "ch_history": ch_history,
         "style_profile": style_profile,
+        "over_blocks": over_blocks,
         "player_meta": player_meta,
         "video_links": video_links_for(club_id, club_name, recent_matches=recent),
     }
@@ -2136,7 +2251,35 @@ def render_md(d):
                   f"_(same coverage as above)_")
         md.append("")
 
-    md.append("### 6e. When batting first vs second (last 3 seasons L+C)")
+    ob = d.get("over_blocks")
+    if ob:
+        md.append("### 6e. Pace vs spin by over block")
+        md.append("")
+        md.append(
+            f"_Driven by ball-by-ball data — captured for "
+            f"**{ob['match_n_with_bbb']}/{ob['match_n']}** in-scope "
+            f"matches ({ob['bbb_coverage_pct']:.0f}% coverage). Style "
+            f"mix within each block depends additionally on bowler "
+            f"metadata._"
+        )
+        md.append("")
+        md.append("| Block | Pace | Spin | Unknown | Balls | Coverage |")
+        md.append("|---|--:|--:|--:|--:|--:|")
+        for b in ob["blocks"]:
+            if b["total_balls"] == 0:
+                md.append(f"| **{b['label']}** | — | — | — | 0 | — |")
+            else:
+                md.append(
+                    f"| **{b['label']}** "
+                    f"| {b['pct_pace']:.0f}% "
+                    f"| {b['pct_spin']:.0f}% "
+                    f"| {b['pct_unknown']:.0f}% "
+                    f"| {b['total_balls']} "
+                    f"| {b['coverage_pct']:.0f}% |"
+                )
+        md.append("")
+
+    md.append("### 6f. When batting first vs second (last 3 seasons L+C)")
     md.append("")
     md.append(f"- {d['club_name']} batting 1st: " + wld_str(d["chart_bat"]["us_bat1"]))
     md.append(f"- {d['club_name']} batting 2nd: " + wld_str(d["chart_bat"]["us_bat2"]))
@@ -2144,7 +2287,7 @@ def render_md(d):
     md.append(f"- {d['vs_club_name']} batting 2nd: " + wld_str(d["chart_bat"]["vs_bat2"]))
     md.append("")
 
-    md.append("### 6f. Home vs away (last 3 seasons L+C)")
+    md.append("### 6g. Home vs away (last 3 seasons L+C)")
     md.append("")
     md.append(f"- {d['club_name']} at home: " + wld_str(d["chart_ha"]["us_home"]))
     md.append(f"- {d['club_name']} away: " + wld_str(d["chart_ha"]["us_away"]))
@@ -2152,7 +2295,7 @@ def render_md(d):
     md.append(f"- {d['vs_club_name']} away: " + wld_str(d["chart_ha"]["vs_away"]))
     md.append("")
 
-    md.append("### 6g. When they win the toss")
+    md.append("### 6h. When they win the toss")
     md.append("")
     t = d["chart_toss"]
     won_n = t["won_n"]
@@ -2171,7 +2314,7 @@ def render_md(d):
         md.append("_No matches with toss data in scope._")
     md.append("")
 
-    md.append("### 6h. Team batting & bowling avg per season (1st XI, L+C)")
+    md.append("### 6i. Team batting & bowling avg per season (1st XI, L+C)")
     md.append("")
     md.append("| Season | "
               f"{d['club_name']} bat | {d['vs_club_name']} bat | "
@@ -2428,6 +2571,32 @@ table.players tr.p-name td .rk{display:inline-flex;align-items:center;
   letter-spacing:.05em;color:var(--muted)}
 .lp-tile .sub{font-size:10px;color:var(--muted);line-height:1.3}
 .lp-tile .cov-row{margin-top:4px}
+
+/* Over-block exhibit (pace vs spin per 10-over block). */
+.ob-grid{display:flex;flex-direction:column;gap:5px;margin:6px 0 4px}
+.ob-row{display:grid;grid-template-columns:60px 1fr 92px;
+  gap:8px;align-items:center;font-size:11px}
+.ob-row .ob-lbl{font-weight:800;color:var(--ink);font-size:11.5px;
+  display:flex;flex-direction:column;line-height:1.1}
+.ob-row .ob-lbl .ob-n{font-weight:600;color:var(--muted);font-size:9.5px;
+  letter-spacing:.04em}
+.ob-row .ob-bar{height:22px;background:#eef0f6;border-radius:6px;
+  display:flex;overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+.ob-row .ob-bar .seg{display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:10.5px;white-space:nowrap;overflow:hidden}
+.ob-row .ob-bar .seg.pace{background:linear-gradient(180deg,#3884b0,#1d6488)}
+.ob-row .ob-bar .seg.spin{background:linear-gradient(180deg,#d4a83a,#a47d20)}
+.ob-row .ob-bar .seg.unk{background:linear-gradient(180deg,#aab1bd,#7f8694);
+  opacity:.85}
+.ob-row .ob-cov{justify-self:end}
+.ob-row.empty .ob-bar{height:22px}
+
+.legend-swatch{display:inline-block;width:10px;height:10px;border-radius:3px;
+  vertical-align:middle;margin-right:3px}
+.legend-swatch.pace{background:#1d6488}
+.legend-swatch.spin{background:#a47d20}
+.legend-swatch.unk{background:#7f8694}
 
 /* Coverage pill — colour-graded so a low-confidence number doesn't
    masquerade as a settled answer. */
@@ -2917,6 +3086,11 @@ def render_html(d):
         parts.append("<h3>Lineup style profile</h3>")
         parts.append(_render_lineup_profile(d["style_profile"], d["club_name"]))
 
+    # 6e. Pace/spin mix by over block (1-10 / 11-20 / 21-30 / 31-40 / 41+).
+    if d.get("over_blocks"):
+        parts.append("<h3>Pace vs spin · by over block</h3>")
+        parts.append(_render_over_blocks(d["over_blocks"], d["club_name"]))
+
     parts.append("<h3>Bat 1st vs Bat 2nd · last 3 seasons</h3>")
     parts.append(wld_chart_block([
         (f"{d['club_name']} bat 1st", d["chart_bat"]["us_bat1"]),
@@ -3389,6 +3563,73 @@ def _render_lineup_profile(profile, club_name):
                       f"{obw.get('n_matches_with_data',0)} games",
                       obw.get("coverage_pct")))
     return ("<div class='lp-grid'>" + "".join(tiles) + "</div>")
+
+
+def _render_over_blocks(ob, club_name):
+    """5-row stacked horizontal-bar chart (one row per 10-over block)
+    showing pace / spin / unknown share. Each row carries its own
+    coverage pill; a single overall pill covers the BBB completeness
+    layered on top."""
+    blocks = ob.get("blocks") or []
+    parts = ["<div class='style-block'>"]
+    parts.append(
+        "<div class='subtle'>"
+        f"How <b>{_esc(club_name)}</b>'s bowling overs split between pace "
+        f"and spin across the innings, in 10-over blocks. "
+        f"BBB data captured for "
+        f"<b>{ob['match_n_with_bbb']}/{ob['match_n']}</b> in-scope "
+        f"matches&nbsp;{_coverage_pill(ob['bbb_coverage_pct'])}.</div>"
+    )
+    if ob["match_n_with_bbb"] == 0:
+        parts.append("<p class='subtle' style='margin:6px 0 0'>"
+                     "No ball-by-ball data captured for this club's "
+                     "matches yet — once a Cricket-club's RV match feed "
+                     "is fetched, this exhibit lights up automatically.</p>")
+        parts.append("</div>")
+        return "".join(parts)
+
+    parts.append("<div class='ob-grid'>")
+    for b in blocks:
+        if b["total_balls"] == 0:
+            parts.append(
+                "<div class='ob-row empty'>"
+                f"<div class='ob-lbl'>{_esc(b['label'])}</div>"
+                "<div class='ob-bar'></div>"
+                "<div class='ob-cov'>—</div>"
+                "</div>"
+            )
+            continue
+        segs = []
+        if b["pct_pace"] > 0:
+            segs.append(f"<div class='seg pace' "
+                        f"style='width:{b['pct_pace']:.1f}%'>"
+                        f"{b['pct_pace']:.0f}%</div>")
+        if b["pct_spin"] > 0:
+            segs.append(f"<div class='seg spin' "
+                        f"style='width:{b['pct_spin']:.1f}%'>"
+                        f"{b['pct_spin']:.0f}%</div>")
+        if b["pct_unknown"] > 0:
+            segs.append(f"<div class='seg unk' "
+                        f"style='width:{b['pct_unknown']:.1f}%'>"
+                        f"{b['pct_unknown']:.0f}%</div>")
+        parts.append(
+            "<div class='ob-row'>"
+            f"<div class='ob-lbl'>{_esc(b['label'])}"
+            f"<span class='ob-n'>{b['total_balls']} balls</span></div>"
+            f"<div class='ob-bar'>{''.join(segs)}</div>"
+            f"<div class='ob-cov'>{_coverage_pill(b['coverage_pct'])}</div>"
+            "</div>"
+        )
+    parts.append("</div>")
+    parts.append(
+        "<p class='subtle' style='margin:6px 0 0'>"
+        "<span class='legend-swatch pace'></span>Pace &nbsp; "
+        "<span class='legend-swatch spin'></span>Spin &nbsp; "
+        "<span class='legend-swatch unk'></span>Unknown bowler "
+        "(no style metadata)</p>"
+    )
+    parts.append("</div>")
+    return "".join(parts)
 
 
 if __name__ == "__main__":

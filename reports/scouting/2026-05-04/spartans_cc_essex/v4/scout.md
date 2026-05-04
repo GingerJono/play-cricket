@@ -1,4 +1,4 @@
-# Scout — Spartans CC, Essex 1st XI (v2)
+# Scout — Spartans CC, Essex 1st XI (v4)
 
 _All sections: 1st XI only, League + Cup unless noted. Compared vs Rainham CC, Essex 1st XI. Today 2026-05-04._
 
@@ -31,7 +31,7 @@ _Essex League — Division 05 - 1st XI Division Four_
 
 | # | Player | M | I | NO | Runs | HS | Avg | SR | 50 | 100 | Pos |
 |--:|--------|--:|--:|--:|---:|---:|---:|---:|--:|--:|--:|
-| 1 | [Fahad Khan](https://spartansessex.play-cricket.com/player_stats/batting/6354683?rule_type_id=179) | 24 | 24 | 0 | **718** | 143 | 29.92 | 87.5 | 3 | 1 | 2 |
+| 1 | [Fahad Khan](https://spartansessex.play-cricket.com/player_stats/batting/6354683?rule_type_id=179) `LHB` | 24 | 24 | 0 | **718** | 143 | 29.92 | 87.5 | 3 | 1 | 2 |
 | 2 | [Nageswara Nallabothu](https://spartansessex.play-cricket.com/player_stats/batting/5352392?rule_type_id=179) | 11 | 11 | 1 | **619** | 159 | 61.90 | 138.7 | 3 | 2 | 4 |
 | 3 | [Basim Shaukat Khan](https://spartansessex.play-cricket.com/player_stats/batting/6066382?rule_type_id=179) | 25 | 25 | 6 | **557** | 93 | 29.32 | 66.5 | 3 | 0 | 3 |
 | 4 | [Syed Waseem](https://spartansessex.play-cricket.com/player_stats/batting/4991927?rule_type_id=179) | 27 | 27 | 0 | **512** | 91 | 18.96 | 74.9 | 1 | 0 | 1 |
@@ -51,16 +51,16 @@ _Essex League — Division 05 - 1st XI Division Four_
 
 | # | Bowler | M | Overs | Mdns | Runs | Wkts | Avg | Econ | Best | 5wi | 4wi |
 |--:|--------|--:|--:|--:|---:|---:|---:|---:|----|--:|--:|
-| 1 | [Rakesh Chowdary Tallapaneni](https://spartansessex.play-cricket.com/player_stats/bowling/6452189?rule_type_id=179) | 19 | 158.2 | 22 | 577 | **60** | 9.62 | 3.64 | 7/35 | 4 | 4 |
+| 1 | [Rakesh Chowdary Tallapaneni](https://spartansessex.play-cricket.com/player_stats/bowling/6452189?rule_type_id=179) `RMF` | 19 | 158.2 | 22 | 577 | **60** | 9.62 | 3.64 | 7/35 | 4 | 4 |
 | 2 | [Ven Kompella](https://spartansessex.play-cricket.com/player_stats/bowling/4979621?rule_type_id=179) | 30 | 135.1 | 4 | 838 | **41** | 20.44 | 6.20 | 5/15 | 2 | 1 |
-| 3 | [MV Rao MV Rao](https://spartansessex.play-cricket.com/player_stats/bowling/5819543?rule_type_id=179) | 13 | 83.2 | 16 | 308 | **23** | 13.39 | 3.70 | 5/16 | 2 | 0 |
+| 3 | [MV Rao MV Rao](https://spartansessex.play-cricket.com/player_stats/bowling/5819543?rule_type_id=179) `RMF` | 13 | 83.2 | 16 | 308 | **23** | 13.39 | 3.70 | 5/16 | 2 | 0 |
 | 4 | [Basim Shaukat Khan](https://spartansessex.play-cricket.com/player_stats/bowling/6066382?rule_type_id=179) | 22 | 106 | 18 | 420 | **20** | 21.00 | 3.96 | 5/28 | 1 | 0 |
 | 5 | [Yash Dhanak](https://spartansessex.play-cricket.com/player_stats/bowling/6208192?rule_type_id=179) | 10 | 63.2 | 12 | 242 | **19** | 12.74 | 3.82 | 7/16 | 1 | 0 |
 | 6 | [Jaydeep Dhorada](https://spartansessex.play-cricket.com/player_stats/bowling/5794161?rule_type_id=179) | 15 | 93.1 | 9 | 325 | **17** | 19.12 | 3.49 | 4/32 | 0 | 1 |
 | 7 | [Sri Arun Ayyappa](https://spartansessex.play-cricket.com/player_stats/bowling/6219432?rule_type_id=179) | 9 | 40 | 5 | 146 | **13** | 11.23 | 3.65 | 4/11 | 0 | 1 |
-| 8 | [Nageswara Nallabothu](https://spartansessex.play-cricket.com/player_stats/bowling/5352392?rule_type_id=179) | 9 | 46.2 | 3 | 208 | **12** | 17.33 | 4.49 | 3/10 | 0 | 0 |
+| 8 | [Nageswara Nallabothu](https://spartansessex.play-cricket.com/player_stats/bowling/5352392?rule_type_id=179) `OS` | 9 | 46.2 | 3 | 208 | **12** | 17.33 | 4.49 | 3/10 | 0 | 0 |
 | 9 | [Boballa Rajesh Reddy](https://spartansessex.play-cricket.com/player_stats/bowling/5345637?rule_type_id=179) | 8 | 41.5 | 3 | 204 | **10** | 20.40 | 4.88 | 5/51 | 1 | 0 |
-| 10 | [Meet Patel(Bala)](https://spartansessex.play-cricket.com/player_stats/bowling/6341248?rule_type_id=179) | 7 | 39.2 | 1 | 207 | **10** | 20.70 | 5.26 | 4/89 | 0 | 1 |
+| 10 | [Meet Patel(Bala)](https://spartansessex.play-cricket.com/player_stats/bowling/6341248?rule_type_id=179) `OS` | 7 | 39.2 | 1 | 207 | **10** | 20.70 | 5.26 | 4/89 | 0 | 1 |
 | 11 | [Parimeet Jadav](https://spartansessex.play-cricket.com/player_stats/bowling/5596358?rule_type_id=179) | 10 | 55 | 8 | 193 | **9** | 21.44 | 3.51 | 2/5 | 0 | 0 |
 | 12 | [Lavathishanth Tharmalingam](https://spartansessex.play-cricket.com/player_stats/bowling/4951819?rule_type_id=179) | 5 | 19.1 | 0 | 84 | **7** | 12.00 | 4.38 | 3/20 | 0 | 0 |
 
@@ -181,30 +181,47 @@ _Rating uses wickets remaining + overs remaining. 5/5 comfortable · 4/5 solid �
 
 ### 6c. Bowling style mix
 
-- Pace: **0%** · Spin: **0%** · Unknown: 100% _(coverage 0%, 7103 balls across 39 matches)_
+- Pace: **22%** · Spin: **7%** · Unknown: 71% _(coverage 29%, 7103 balls across 39 matches)_
+
+| Code | Style | Share |
+|---|---|--:|
+| `RMF` | Right-arm medium-fast | 22% |
+| `OS` | Right-arm off-spin | 7% |
 
 ### 6d. Lineup style profile
 
-- **0.0** left-handers in the XI on average · _(coverage 0% across 38 matches)_
-- Opens batting with ≥1 LHB in **0%** of games · _(coverage 0% across 0 games)_
-- Opens bowling with ≥1 left-armer in **0%** of games · _(coverage 0% across 0 games)_
-- Opens bowling with ≥1 spinner in **0%** of games · _(same coverage as above)_
+- **0.7** left-handers in the XI on average · _(coverage 6% across 38 matches)_
+- Opens batting with ≥1 LHB in **0%** of games · _(coverage 24% across 0 games)_
+- Opens bowling with ≥1 left-armer in **0%** of games · _(coverage 39% across 10 games)_
+- Opens bowling with ≥1 spinner in **20%** of games · _(same coverage as above)_
 
-### 6e. When batting first vs second (last 3 seasons L+C)
+### 6e. Pace vs spin by over block
+
+_Driven by ball-by-ball data — captured for **0/39** in-scope matches (0% coverage). Style mix within each block depends additionally on bowler metadata._
+
+| Block | Pace | Spin | Unknown | Balls | Coverage |
+|---|--:|--:|--:|--:|--:|
+| **1-10** | — | — | — | 0 | — |
+| **11-20** | — | — | — | 0 | — |
+| **21-30** | — | — | — | 0 | — |
+| **31-40** | — | — | — | 0 | — |
+| **41+** | — | — | — | 0 | — |
+
+### 6f. When batting first vs second (last 3 seasons L+C)
 
 - Spartans CC, Essex batting 1st: 23 played, 13W / 5L / 3D / 2NR — win rate 57%
 - Spartans CC, Essex batting 2nd: 15 played, 8W / 5L / 2D — win rate 53%
 - Rainham CC, Essex batting 1st: 16 played, 8W / 7L / 1D — win rate 50%
 - Rainham CC, Essex batting 2nd: 18 played, 6W / 10L / 1D / 1NR — win rate 33%
 
-### 6f. Home vs away (last 3 seasons L+C)
+### 6g. Home vs away (last 3 seasons L+C)
 
 - Spartans CC, Essex at home: 18 played, 9W / 2L / 5D / 2NR — win rate 50%
 - Spartans CC, Essex away: 21 played, 13W / 8L — win rate 62%
 - Rainham CC, Essex at home: 17 played, 9W / 6L / 1D / 1NR — win rate 53%
 - Rainham CC, Essex away: 18 played, 5W / 11L / 1D / 1NR — win rate 28%
 
-### 6g. When they win the toss
+### 6h. When they win the toss
 
 **Won toss in 23 matches** — chose to bat 21 (91%), chose to field 2 (9%).
 
@@ -213,7 +230,7 @@ _Rating uses wickets remaining + overs remaining. 5/5 comfortable · 4/5 solid �
 
 _Reference: lost toss → outcome: 15 played, 8W / 4L / 3D — win rate 53%._
 
-### 6h. Team batting & bowling avg per season (1st XI, L+C)
+### 6i. Team batting & bowling avg per season (1st XI, L+C)
 
 | Season | Spartans CC, Essex bat | Rainham CC, Essex bat | Spartans CC, Essex bowl | Rainham CC, Essex bowl |
 |--:|--:|--:|--:|--:|
