@@ -278,39 +278,24 @@ def assign_bowlers(n_overs: int, bowlers: list[dict]) -> list | None:
         if solve_strict(0, None):
             return list(out)
 
-    # ---- Path 2: relaxed (no-consecutive only) with a most-remaining
-    #              greedy + bounded backtrack ----
+    # ---- Path 2: pure most-remaining-first greedy (no forced-last,
+    # no end parity) — accept being wrong on the last over of an
+    # innings if that's the price of attributing all the others. ----
     out = []
     remaining = {pid: n for pid, n in zip(pref, slots)}
-    cap = [500_000]
-
-    def solve_loose(idx: int, prev) -> bool:
-        if cap[0] <= 0:
-            return False
-        cap[0] -= 1
-        if idx == n_overs:
-            return all(v == 0 for v in remaining.values())
-        candidates = pref
-        if idx == n_overs - 1 and forced_last is not None:
-            candidates = [forced_last]
-        order = sorted(
-            candidates,
+    prev = None
+    for idx in range(n_overs):
+        cands = sorted(
+            [bid for bid in pref if remaining[bid] > 0 and bid != prev],
             key=lambda bid: (-remaining[bid], pref.index(bid)),
         )
-        for bid in order:
-            if remaining[bid] <= 0 or bid == prev:
-                continue
-            remaining[bid] -= 1
-            out.append(bid)
-            if solve_loose(idx + 1, bid):
-                return True
-            out.pop()
-            remaining[bid] += 1
-        return False
-
-    if solve_loose(0, None):
-        return list(out)
-    return None
+        if not cands:
+            return None  # bowling-card sum mismatch with the over list
+        pick = cands[0]
+        remaining[pick] -= 1
+        out.append(pick)
+        prev = pick
+    return out
 
 
 # ---------- Match-level resolution ------------------------------------------
@@ -417,7 +402,7 @@ def reconstruct_innings(
     non_striker_idx = 1
     next_in_idx = 2
     rows: list[dict] = []
-    ball_global = 0       # 1-indexed running ball count across the innings
+    legal_ball_global = 0  # FOW.Ball is keyed on legal balls, NOT all deliveries
 
     for over_i, over in enumerate(overs):
         over_no = over.get("OverNo") or (over_i + 1)
@@ -426,23 +411,42 @@ def reconstruct_innings(
         bowler_pid = bowler_per_over[over_i] if bowler_per_over and over_i < len(bowler_per_over) else None
 
         for j, b in enumerate(ball_list):
-            ball_global += 1
             disp = b.get("Display") or ""
             parsed = parse_display(disp)
             # Within-over ball number = j+1 (matches RV semantics: counts NB/Wd).
             ball_no = j + 1
             if parsed["is_legal_ball"]:
                 legal_in_over += 1
+                legal_ball_global += 1
 
             # Striker / non-striker pids (may be None if name didn't resolve).
             s_pid = bat_pid[striker_idx] if striker_idx < len(bat_pid) else None
             ns_pid = bat_pid[non_striker_idx] if non_striker_idx < len(bat_pid) else None
 
             dismissed_pid = None
+            dismissed_was_non_striker = False
             if parsed["is_wicket"]:
-                # Prefer the FOW row mapping for this ball's global number;
-                # falls back to the on-strike batter.
-                dismissed_pid = fow_by_ball.get(ball_global) or s_pid
+                # FOW.Ball is the legal-ball ordinal. If we find the row,
+                # use its batter; otherwise fall back to current striker.
+                dismissed_pid = fow_by_ball.get(legal_ball_global) or s_pid
+                # If the FOW says the NON-striker was dismissed (typically a
+                # run-out), we need to replace that slot, not the striker.
+                if (dismissed_pid is not None
+                        and dismissed_pid == ns_pid
+                        and dismissed_pid != s_pid):
+                    dismissed_was_non_striker = True
+                # Drift correction: if FOW disagrees with both slots, our
+                # rotation has drifted. Force the dismissed batter onto
+                # the striker slot so subsequent attribution recovers.
+                elif (dismissed_pid is not None and dismissed_pid != s_pid
+                      and dismissed_pid != ns_pid):
+                    try:
+                        striker_idx = next(
+                            i for i, p in enumerate(bat_pid) if p == dismissed_pid
+                        )
+                        s_pid = bat_pid[striker_idx]
+                    except StopIteration:
+                        pass
 
             rows.append({
                 "innings_seq":        inn.get("innings_seq"),
@@ -471,10 +475,13 @@ def reconstruct_innings(
             if total_run % 2 == 1:
                 striker_idx, non_striker_idx = non_striker_idx, striker_idx
 
-            # On wicket, replace dismissed batter with next from order.
+            # On wicket, replace the dismissed slot with the next batter.
             if parsed["is_wicket"]:
                 if next_in_idx < len(bat_order_nv):
-                    striker_idx = next_in_idx
+                    if dismissed_was_non_striker:
+                        non_striker_idx = next_in_idx
+                    else:
+                        striker_idx = next_in_idx
                     next_in_idx += 1
 
         # End-of-over swap (only if the over ended on a legal ball).
