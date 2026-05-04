@@ -947,14 +947,48 @@ CLUB_LINKS = {
         "official": [
             ("Play-Cricket club page", "https://spartansessex.play-cricket.com/home"),
             ("Club website", "https://www.thespartanscricketclub.com/"),
+            ("YouTube channel (@SpartansCC_Essex)",
+             "https://www.youtube.com/@SpartansCC_Essex"),
             ("Instagram (@spartanscricket)", "https://www.instagram.com/spartanscricket/"),
         ],
-        "speculative": [
-            ("YouTube channel '@essexspartans8127' — name match, NOT verified",
-             "https://www.youtube.com/@essexspartans8127"),
-            ("Highlights: 'Challengers CC vs Spartans CC' (RCA T20 Cup) — "
-             "name match, NOT verified that this is the same Spartans",
-             "https://www.youtube.com/watch?v=OQ0vzP7ylx4"),
+        # Verified by Claude on 2026-05-04 by walking the @SpartansCC_Essex
+        # channel + opposition channels and matching titles + livestream
+        # length + stream date against each fixture in section 5.
+        # NB: @essexspartans8127 (American Football club) was previously
+        # listed as speculative — confirmed wrong sport and removed.
+        "verified_videos": [
+            ("H v Essex Lions CC (Cup, 06/09/2025)",
+             "https://youtu.be/01XHP9sG13U"),
+            ("H v Aztecs CC, Ilford (League, 30/08/2025)",
+             "https://youtu.be/C75WRtZvlCs"),
+            ("A v London Avengers CC (Cup, 28/08/2025)",
+             "https://youtu.be/rvIf-e9u7UE"),
+            ("A v Millwall Stars CC (League, 23/08/2025)",
+             "https://youtu.be/UESK7IG6waI"),
+            ("A v Roding Valley CC (League, 16/08/2025)",
+             "https://youtu.be/LGpeN00Ib0E"),
+            ("H v Tower Hamlets CC (League, 09/08/2025)",
+             "https://youtu.be/rvEImb3YABM"),
+            ("A v Waltham Forest CC (League, 02/08/2025)",
+             "https://youtu.be/dQcCTtS9Yg8"),
+            ("H v Goodmayes United CC (Cup, 28/07/2025)",
+             "https://youtu.be/1ONSvioDkas"),
+            ("A v Aztecs CC, Ilford (League, 26/07/2025)",
+             "https://youtu.be/7VeroHGmFA8"),
+            ("H v Roding Valley CC (League, 12/07/2025)",
+             "https://youtu.be/Juz8Hc5fK4M"),
+            ("A v Tower Hamlets CC (League, 05/07/2025)",
+             "https://youtu.be/HSSCw88FcKs"),
+            ("H v Essex Lions CC (League, 28/06/2025)",
+             "https://youtu.be/swP8mS6ETKA"),
+            ("H v Neo CC (Cup, 25/06/2025)",
+             "https://youtu.be/DvhbuC5oLY0"),
+            ("A v Neo CC (League, 14/06/2025)",
+             "https://youtu.be/6fyq21wz4zg"),
+            ("A v Essex Lions CC (League, 31/05/2025)",
+             "https://youtu.be/igN7DG5cA9I"),
+            ("A v Victoria Park CC (Cup, 26/05/2025)",
+             "https://youtu.be/e62uZGAZbME"),
         ],
     },
     "6909": {  # Wickford CC
@@ -1370,12 +1404,33 @@ tr:last-child td{border-bottom:none}
 .bar2 span.us{background:linear-gradient(180deg,#3b82f6,#1d4ed8)}
 .bar2 span.them{background:linear-gradient(180deg,#ef4444,#b91c1c)}
 
-/* Top-N stat tables — highlight the podium rows */
-table.dense th,table.dense td{padding:4px 5px;font-size:11px}
-tr.top-rank td{background:#fffbe8 !important;font-weight:700}
-tr.top-rank:nth-child(2) td{background:#fff4cc !important}
-tr.top-rank:nth-child(3) td{background:#f4e6cb !important}
-tr.top-rank:nth-child(4) td{background:#eceff5 !important}
+/* Top-N players: name on its own row, stats below — keeps long names
+   from squashing the numeric grid on narrow phone widths. */
+table.players{margin:6px 0 4px}
+table.players thead th{font-size:10px;padding:4px 4px;color:var(--muted);
+  background:#f7f8fc;border-bottom:1px solid var(--line-2);
+  text-transform:uppercase;letter-spacing:.05em}
+table.players tr.p-name td{padding:8px 8px 2px;border-top:1px solid var(--line);
+  border-bottom:none;text-align:left;background:#fff;
+  white-space:normal;word-break:normal}
+table.players tr.p-stat td{padding:2px 4px 9px;border-bottom:none;
+  font-size:11.5px;background:#fff}
+table.players tr.p-name + tr.p-stat td{padding-top:1px}
+table.players tr.p-name td .rk{display:inline-flex;align-items:center;
+  justify-content:center;width:20px;height:20px;border-radius:6px;
+  background:#e6ecf9;color:var(--accent);font-weight:800;font-size:10.5px;
+  margin-right:8px;vertical-align:middle}
+table.players tr.p-name td .nm{font-weight:700;font-size:13.5px;color:var(--ink);
+  letter-spacing:-.005em;vertical-align:middle}
+/* Podium tints span both rows of each top-3 player. */
+table.players tr.top1 td{background:#fff4cc !important}
+table.players tr.top1 .rk{background:#f3d568;color:#7a5300}
+table.players tr.top2 td{background:#eef0f5 !important}
+table.players tr.top2 .rk{background:#cdd2dc;color:#3e4757}
+table.players tr.top3 td{background:#f6e7d4 !important}
+table.players tr.top3 .rk{background:#e0b988;color:#6e3f12}
+/* Fade in a subtle separator before the next player */
+table.players tbody tr.p-stat + tr.p-name td{border-top:1px solid var(--line)}
 
 /* Recent-match list — scores wrap to a second line if they don't fit */
 .recent-list{margin:6px 0 2px;display:flex;flex-direction:column;gap:6px}
@@ -1523,43 +1578,57 @@ def render_html(d):
     parts.append("<div class='card'>")
     parts.append(f"<h2><span class='num'>2</span>Top run scorers · "
                  f"{len(d['last_n_seasons'])} seasons</h2>")
-    parts.append("<table class='dense'><tr><th>#</th><th class='l'>Player</th>"
-                 "<th>M</th><th>I</th><th>NO</th><th>Runs</th>"
-                 "<th>HS</th><th>Avg</th><th>SR</th><th>50</th><th>100</th>"
-                 "<th>Pos</th></tr>")
+    parts.append("<table class='players'>")
+    parts.append("<thead><tr>"
+                 "<th>M</th><th>I</th><th>NO</th><th>Runs</th><th>HS</th>"
+                 "<th>Avg</th><th>SR</th><th>50</th><th>100</th><th>Pos</th>"
+                 "</tr></thead><tbody>")
     for i, r in enumerate(d["top_batters"], 1):
         (bid, name, innings, no_, runs, hs, fifties, hundreds, balls_known,
          runs_when_balls, matches_, mode_pos) = r
         avg = f"{runs/(innings-no_):.2f}" if (innings-no_) > 0 else "—"
         sr = f"{100*runs_when_balls/balls_known:.1f}" if balls_known else "—"
-        cls = " class='top-rank'" if i <= 3 else ""
-        parts.append(f"<tr{cls}><td>{i}</td><td class='l'>{_esc(name)}</td>"
-                     f"<td>{matches_}</td><td>{innings}</td><td>{no_}</td>"
-                     f"<td><b>{runs}</b></td><td>{hs}</td><td>{avg}</td>"
-                     f"<td>{sr}</td><td>{fifties}</td><td>{hundreds}</td>"
-                     f"<td>{mode_pos}</td></tr>")
-    parts.append("</table>")
+        rank_cls = f" top{i}" if i <= 3 else ""
+        parts.append(
+            f"<tr class='p-name{rank_cls}'>"
+            f"<td colspan='10' class='l'>"
+            f"<span class='rk'>{i}</span>"
+            f"<span class='nm'>{_esc(name)}</span></td></tr>"
+            f"<tr class='p-stat{rank_cls}'>"
+            f"<td>{matches_}</td><td>{innings}</td><td>{no_}</td>"
+            f"<td><b>{runs}</b></td><td>{hs}</td><td>{avg}</td>"
+            f"<td>{sr}</td><td>{fifties}</td><td>{hundreds}</td>"
+            f"<td>{mode_pos}</td></tr>"
+        )
+    parts.append("</tbody></table>")
     parts.append("</div>")
 
     # ------- 3. Top bowlers -----------------------------------------------
     parts.append("<div class='card'>")
     parts.append(f"<h2><span class='num'>3</span>Top wicket takers · "
                  f"{len(d['last_n_seasons'])} seasons</h2>")
-    parts.append("<table class='dense'><tr><th>#</th><th class='l'>Bowler</th>"
-                 "<th>M</th><th>Ov</th><th>Md</th><th>R</th>"
-                 "<th>W</th><th>Avg</th><th>Econ</th><th>Best</th>"
-                 "<th>5wi</th><th>4wi</th></tr>")
+    parts.append("<table class='players'>")
+    parts.append("<thead><tr>"
+                 "<th>M</th><th>Ov</th><th>Md</th><th>R</th><th>W</th>"
+                 "<th>Avg</th><th>Econ</th><th>Best</th><th>5wi</th><th>4wi</th>"
+                 "</tr></thead><tbody>")
     for i, r in enumerate(d["top_bowlers"], 1):
         avg = f"{r['avg']:.2f}" if r["avg"] is not None else "—"
         econ = f"{r['econ']:.2f}" if r["econ"] is not None else "—"
-        cls = " class='top-rank'" if i <= 3 else ""
-        parts.append(f"<tr{cls}><td>{i}</td><td class='l'>{_esc(r['name'])}</td>"
-                     f"<td>{r['matches']}</td><td>{r['overs']}</td>"
-                     f"<td>{r['maidens']}</td><td>{r['runs']}</td>"
-                     f"<td><b>{r['wickets']}</b></td><td>{avg}</td>"
-                     f"<td>{econ}</td><td>{r['best']}</td>"
-                     f"<td>{r['fivers']}</td><td>{r['fourers']}</td></tr>")
-    parts.append("</table>")
+        rank_cls = f" top{i}" if i <= 3 else ""
+        parts.append(
+            f"<tr class='p-name{rank_cls}'>"
+            f"<td colspan='10' class='l'>"
+            f"<span class='rk'>{i}</span>"
+            f"<span class='nm'>{_esc(r['name'])}</span></td></tr>"
+            f"<tr class='p-stat{rank_cls}'>"
+            f"<td>{r['matches']}</td><td>{r['overs']}</td>"
+            f"<td>{r['maidens']}</td><td>{r['runs']}</td>"
+            f"<td><b>{r['wickets']}</b></td><td>{avg}</td>"
+            f"<td>{econ}</td><td>{r['best']}</td>"
+            f"<td>{r['fivers']}</td><td>{r['fourers']}</td></tr>"
+        )
+    parts.append("</tbody></table>")
     parts.append("</div>")
 
     # ------- 4. H2H -------------------------------------------------------
