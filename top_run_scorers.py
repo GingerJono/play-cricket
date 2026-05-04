@@ -2,7 +2,9 @@
 """
 Top run scorers across all formats / teams for Rainham CC.
 
-Reads stats/data/rainham.db and writes stats/top_run_scorers.md.
+Reads stats/data/rainham.db and writes
+stats/reports/ad-hoc/top_run_scorers.md (and refreshes the top-level
+reports/index.html).
 
 Definitions (also documented in PLAN.md):
   innings   = batting rows where how_out != 'did not bat' AND how_out != 'absent'
@@ -21,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 DB = ROOT / "data" / "rainham.db"
-OUT_MD = ROOT / "top_run_scorers.md"
+OUT_MD = ROOT / "reports" / "ad-hoc" / "top_run_scorers.md"
 
 NOT_OUT = ("not out", "retired not out")
 DID_NOT_BAT = ("did not bat", "absent")
@@ -223,9 +225,15 @@ def main() -> int:
               "See `match_players` table for the fuller appearance list.")
     md.append("")
 
+    OUT_MD.parent.mkdir(parents=True, exist_ok=True)
     OUT_MD.write_text("\n".join(md))
     print()
     print(f"Wrote {OUT_MD}")
+    try:
+        import build_index
+        build_index.build()
+    except Exception as e:
+        print(f"index refresh skipped: {e}")
     return 0
 
 

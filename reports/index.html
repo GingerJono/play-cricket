@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rainham CC — reports index</title>
+<style>
+:root{
+  --bg:#f3f4f8;--card:#fff;--ink:#10172a;--muted:#5a657a;
+  --line:#e6e9f0;--accent:#1d4ed8;--shadow:0 1px 2px rgba(16,23,42,.04),
+  0 4px 14px rgba(16,23,42,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;padding:18px 16px 60px;font-family:-apple-system,
+  BlinkMacSystemFont,'Segoe UI',Inter,Roboto,'Helvetica Neue',Arial,sans-serif;
+  font-size:14.5px;line-height:1.45;color:var(--ink);
+  background:linear-gradient(180deg,#eef1f7 0,#f3f4f8 320px);
+  max-width:980px;margin:0 auto}
+.hero{background:linear-gradient(135deg,#0f1f4a 0%,#1d4ed8 100%);color:#fff;
+  border-radius:16px;padding:18px 22px;box-shadow:var(--shadow);
+  margin:0 0 22px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(circle at 92% -20%,rgba(255,255,255,.18),transparent 50%);
+  pointer-events:none}
+.hero .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+  opacity:.78;font-weight:700}
+.hero h1{font-size:26px;margin:4px 0 6px;font-weight:800;letter-spacing:-.01em}
+.hero p{margin:0;font-size:13.5px;opacity:.88;max-width:640px}
+.cat{margin:0 0 26px}
+.cat.empty-cat{opacity:.6}
+.cat > h2{font-size:16px;margin:0 0 10px;padding:0 0 8px;
+  border-bottom:1px solid var(--line);font-weight:700;
+  display:flex;align-items:center;gap:10px}
+.cat > h2 .count{background:#e6ecf9;color:var(--accent);font-size:11.5px;
+  font-weight:700;padding:2px 9px;border-radius:9px}
+.cat.empty-cat > h2 .count{background:#f0f1f5;color:var(--muted)}
+.cat > p.blurb{margin:0 0 12px;color:var(--muted);font-size:12.5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:12px}
+.r{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:13px 15px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+  gap:8px;min-height:122px}
+.r .meta{display:flex;align-items:center;gap:8px;font-size:11px;
+  color:var(--muted);font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase}
+.r .meta .date{color:var(--muted)}
+.r .meta .ver{background:#e6ecf9;color:var(--accent);padding:1px 7px;
+  border-radius:6px;letter-spacing:.04em;font-size:10.5px}
+.r .meta .legacy{background:#f0eede;color:#a07300;padding:1px 7px;
+  border-radius:6px;letter-spacing:.04em;font-size:10.5px;
+  text-transform:none;font-weight:700}
+.r h3{margin:0;font-size:15px;font-weight:700;letter-spacing:-.005em;
+  word-break:break-word;line-height:1.25}
+.r .links{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.r .links a{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:7px;font-size:11.5px;font-weight:700;
+  text-decoration:none;border:1px solid var(--line);background:#fafbfd;
+  color:var(--accent)}
+.r .links a:hover{background:#eef2fb}
+.r .links a.png{background:#eef1fb;color:var(--accent);border-color:#d4dcf3}
+.r .links a.html{background:#eaf5ec;color:#15803d;border-color:#cde6d2}
+.r .links a.md{background:#f1ecfb;color:#5b21b6;border-color:#dccdf3}
+.empty{padding:14px;background:#fff;border:1px dashed var(--line);
+  border-radius:10px;color:var(--muted);font-size:12.5px}
+.footer{margin-top:32px;font-size:11.5px;color:var(--muted);text-align:center}
+</style></head><body>
+<div class='hero'>
+<div class='eyebrow'>Rainham CC · stats</div>
+<h1>Reports index</h1>
+<p>Every committed report under <code>reports/</code>, grouped by category. 7 reports indexed · refreshed 2026-05-04.</p>
+</div>
+<section class='cat'>
+<h2>Scouting reports <span class='count'>4</span></h2>
+<p class='blurb'>Opposition 1st-XI scouting reports — see `scout.py`.</p>
+<div class='grid'>
+<div class='r'><div class='meta'><span class='date'>2026-05-04</span><span class='ver'>v1</span></div><h3>Spartans Cc Essex</h3><div class='links'><a class='png' href='scouting/2026-05-04/spartans_cc_essex/v1/scout.png' target='_blank' rel='noopener'>🖼 PNG</a><a class='html' href='scouting/2026-05-04/spartans_cc_essex/v1/scout.html' target='_blank' rel='noopener'>🌐 HTML</a><a class='md' href='scouting/2026-05-04/spartans_cc_essex/v1/scout.md' target='_blank' rel='noopener'>📝 MD</a></div></div>
+<div class='r'><div class='meta'><span class='date'>2026-05-04</span><span class='ver'>v1</span></div><h3>Wickford Cc</h3><div class='links'><a class='png' href='scouting/2026-05-04/wickford_cc/v1/scout.png' target='_blank' rel='noopener'>🖼 PNG</a><a class='html' href='scouting/2026-05-04/wickford_cc/v1/scout.html' target='_blank' rel='noopener'>🌐 HTML</a><a class='md' href='scouting/2026-05-04/wickford_cc/v1/scout.md' target='_blank' rel='noopener'>📝 MD</a></div></div>
+<div class='r'><div class='meta'><span class='date'>2026-05-03</span><span class='legacy'>legacy</span></div><h3>Spartans Cc Essex</h3><div class='links'><a class='html' href='scouting/2026-05-03/spartans_cc_essex/scout.html' target='_blank' rel='noopener'>🌐 HTML</a><a class='md' href='scouting/2026-05-03/spartans_cc_essex/scout.md' target='_blank' rel='noopener'>📝 MD</a></div></div>
+<div class='r'><div class='meta'><span class='date'>2026-05-03</span><span class='legacy'>legacy</span></div><h3>Wickford Cc</h3><div class='links'><a class='html' href='scouting/2026-05-03/wickford_cc/scout.html' target='_blank' rel='noopener'>🌐 HTML</a><a class='md' href='scouting/2026-05-03/wickford_cc/scout.md' target='_blank' rel='noopener'>📝 MD</a></div></div>
+</div>
+</section>
+<section class='cat'>
+<h2>Ad-hoc reports <span class='count'>3</span></h2>
+<p class='blurb'>One-off Rainham stat queries promoted into committed scripts (top scorers, streaks, head-to-heads).</p>
+<div class='grid'>
+<div class='r'><div class='meta'><span class='date'>2026-05-04</span></div><h3>Oneill Vs Hothi</h3><div class='links'><a class='md' href='ad-hoc/oneill_vs_hothi.md' target='_blank' rel='noopener'>📝 MD</a></div></div>
+<div class='r'><div class='meta'><span class='date'>2026-05-04</span></div><h3>Streaks And Fifties</h3><div class='links'><a class='md' href='ad-hoc/streaks_and_fifties.md' target='_blank' rel='noopener'>📝 MD</a></div></div>
+<div class='r'><div class='meta'><span class='date'>2026-05-04</span></div><h3>Top Run Scorers</h3><div class='links'><a class='md' href='ad-hoc/top_run_scorers.md' target='_blank' rel='noopener'>📝 MD</a></div></div>
+</div>
+</section>
+<section class='cat empty-cat'>
+<h2>League reports <span class='count'>0</span></h2>
+<p class='blurb'>League-wide reports — division standings, season round-ups.</p>
+<div class='empty'>No reports yet.</div>
+</section>
+<div class='footer'>Generated 2026-05-04 by <code>build_index.py</code> · run it after creating any new report so this page stays in sync.</div>
+</body></html>

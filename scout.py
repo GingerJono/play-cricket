@@ -52,6 +52,7 @@ DB = ROOT / "data" / "rainham.db"
 RAW_DIR = ROOT / "data" / "raw"
 LEAGUE_TABLE_DIR = RAW_DIR / "league_table"
 REPORTS_DIR = ROOT / "reports"
+SCOUTING_DIR = REPORTS_DIR / "scouting"
 
 # Headless-Chromium binary — used for rendering scout.html → scout.png.
 # We look at the env var first, then a couple of well-known paths.
@@ -808,7 +809,7 @@ def main():
     }
 
     # ---- Output paths (versioned per-day) ----
-    club_dir = REPORTS_DIR / today / slugify(club_name)
+    club_dir = SCOUTING_DIR / today / slugify(club_name)
     club_dir.mkdir(parents=True, exist_ok=True)
     version = args.version if args.version is not None else next_version(club_dir)
     out_dir = club_dir / f"v{version}"
@@ -834,6 +835,13 @@ def main():
 
     # Update `latest` symlink so consumers can find the most recent version.
     update_latest_symlink(club_dir, f"v{version}")
+
+    # Always refresh the top-level index so the new report appears in it.
+    try:
+        import build_index
+        build_index.build()
+    except Exception as e:
+        print(f"index refresh skipped: {e}", file=sys.stderr)
     return 0
 
 
@@ -979,8 +987,17 @@ def yt_search_url(query):
 
 
 def video_links_for(club_id, club_name, recent_matches=None):
-    """Return ([(label, url, kind), ...]) where kind is 'official', 'video',
-    'probe' or 'speculative'."""
+    """Return ([(label, url, kind), ...]) where kind is 'official', 'video'
+    or 'speculative'.
+
+    Note: this function deliberately does NOT emit per-match YouTube
+    *search* links. Surfacing the actual playable video per fixture is a
+    manual / AI step (see the "Hunt for match videos" section in
+    CLAUDE.md) — the assistant runs the searches, opens the candidate
+    results, and pastes any verified video URL into
+    `CLUB_LINKS[club_id]["verified_videos"]` before re-running the
+    report. Anything in `verified_videos` ends up here as kind='video';
+    anything in `speculative` ends up as kind='speculative'."""
     out = []
     info = CLUB_LINKS.get(str(club_id), {})
 
@@ -988,35 +1005,8 @@ def video_links_for(club_id, club_name, recent_matches=None):
         out.append((label, url, "official"))
     for label, url in info.get("verified_videos", []):
         out.append((label, url, "video"))
-
-    # Per-match YouTube search probes — one per recent fixture. The search
-    # results page is the start of a manual verification loop: scan the
-    # top 2-3 hits, the right hit is a multi-hour livestream posted within
-    # a day or two of `match_date`, almost always by the home club's
-    # channel.
-    if recent_matches:
-        for m in recent_matches[:20]:
-            opp = (m["away_club_name"] if m["home_club_id"] == str(club_id)
-                   else m["home_club_name"])
-            opp_short = re.sub(r",.*$", "", opp).strip()
-            club_short = re.sub(r",.*$", "", club_name).strip()
-            year = (m["match_date"] or "")[-4:]
-            q = f'"{club_short}" "{opp_short}" cricket {year}'
-            out.append((f"YouTube search — {m['match_date']} vs {opp_short}",
-                        yt_search_url(q), "probe"))
-
     for label, url in info.get("speculative", []):
         out.append((label, url, "speculative"))
-
-    if not info.get("official"):
-        # Generic fallback for any club not in CLUB_LINKS yet.
-        out.append((f"Google search — {club_name} video",
-                     f"https://www.google.com/search?q=%22"
-                     f"{club_name.replace(' ','+')}%22+cricket+video",
-                     "probe"))
-        out.append((f"YouTube search — {club_name}",
-                    yt_search_url(f"{club_name} cricket"),
-                    "probe"))
     return out
 
 
@@ -1195,17 +1185,7 @@ def render_md(d):
     # 7. Links
     md.append("## 7. Web / video links")
     md.append("")
-    md.append("> ⚠️ **How to verify a match video.** The Play-Cricket API "
-              "doesn't expose match video URLs. To find one, **loop the last "
-              "20 fixtures** above, run a YouTube search for each "
-              "`(club + opponent + date)`, then for any plausible hit "
-              "**open the top 2-3 results** and judge whether it really is "
-              "the match — full-day livestreams are typically **2-7 hours "
-              "long** and posted within a day or two of the fixture, almost "
-              "always by the home club's channel. Anything that hasn't been "
-              "eyeballed stays tagged _(speculative)_.")
-    md.append("")
-    by_kind = {"official": [], "video": [], "probe": [], "speculative": []}
+    by_kind = {"official": [], "video": [], "speculative": []}
     for label, url, kind in d["video_links"]:
         by_kind.setdefault(kind, []).append((label, url))
 
@@ -1219,10 +1199,14 @@ def render_md(d):
         for lbl, url in by_kind["video"]:
             md.append(f"- [{lbl}]({url})")
         md.append("")
-    if by_kind["probe"]:
-        md.append("**Per-match YouTube search probes** (one click per fixture)")
-        for lbl, url in by_kind["probe"]:
-            md.append(f"- [{lbl}]({url})")
+    else:
+        md.append("_No match videos verified yet for this club. The "
+                  "assistant will loop the fixtures in section 5 (curl "
+                  "the YouTube search for each, judge the top hits, and "
+                  "paste any verified video into "
+                  "`CLUB_LINKS[\"<club_id>\"][\"verified_videos\"]` in "
+                  "`scout.py`), then re-run the report. See "
+                  "`CLAUDE.md → \"Hunt for match videos\"`._")
         md.append("")
     if by_kind["speculative"]:
         md.append("**Speculative — name match only, NOT verified**")
@@ -1386,36 +1370,32 @@ tr:last-child td{border-bottom:none}
 .bar2 span.us{background:linear-gradient(180deg,#3b82f6,#1d4ed8)}
 .bar2 span.them{background:linear-gradient(180deg,#ef4444,#b91c1c)}
 
-/* Top-N stat lists (batter / bowler highlight cards) */
-.top-list{display:flex;flex-direction:column;gap:6px;margin:8px 0 4px}
-.top-row{display:flex;align-items:center;gap:10px;padding:6px 8px;
-         background:#fafbfd;border:1px solid var(--line);border-radius:8px}
-.top-row .rank{flex:0 0 22px;height:22px;border-radius:6px;background:#e6ecf9;
-               color:var(--accent);font-weight:800;font-size:11px;
-               display:flex;align-items:center;justify-content:center}
-.top-row .rank.gold{background:#fff4cc;color:#a07300}
-.top-row .rank.silver{background:#eef1f5;color:#4b5566}
-.top-row .rank.bronze{background:#f3e0ce;color:#8b5b1c}
-.top-row .name{flex:1;font-weight:700;font-size:12.5px;
-               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.top-row .big{font-size:14px;font-weight:800;color:var(--ink);
-              font-variant-numeric:tabular-nums}
-.top-row .sub{font-size:10.5px;color:var(--muted);
-              font-variant-numeric:tabular-nums}
+/* Top-N stat tables — highlight the podium rows */
+table.dense th,table.dense td{padding:4px 5px;font-size:11px}
+tr.top-rank td{background:#fffbe8 !important;font-weight:700}
+tr.top-rank:nth-child(2) td{background:#fff4cc !important}
+tr.top-rank:nth-child(3) td{background:#f4e6cb !important}
+tr.top-rank:nth-child(4) td{background:#eceff5 !important}
 
-/* Recent-match list */
-.recent-list{margin:6px 0 2px;display:flex;flex-direction:column;gap:5px}
-.r-row{display:flex;align-items:center;gap:8px;padding:7px 9px;
-       border:1px solid var(--line);border-radius:8px;background:#fff}
-.r-row .date{flex:0 0 64px;font-size:10.5px;color:var(--muted);font-weight:600}
-.r-row .opp{flex:1;font-size:12px;font-weight:600;
-            white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.r-row .scores{font-size:10.5px;color:var(--muted);
-               font-variant-numeric:tabular-nums;text-align:right;
-               white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-               max-width:170px}
-.r-row .venue{flex:0 0 18px;font-size:10px;font-weight:700;
+/* Recent-match list — scores wrap to a second line if they don't fit */
+.recent-list{margin:6px 0 2px;display:flex;flex-direction:column;gap:6px}
+.r-row{display:grid;grid-template-columns:64px 32px 18px 1fr;
+       grid-template-rows:auto auto;
+       gap:3px 8px;padding:8px 10px;
+       border:1px solid var(--line);border-radius:8px;background:#fff;
+       align-items:center}
+.r-row .date{grid-column:1;grid-row:1;font-size:10.5px;color:var(--muted);
+             font-weight:700}
+.r-row .pill{grid-column:2;grid-row:1;justify-self:start}
+.r-row .venue{grid-column:3;grid-row:1;font-size:10.5px;font-weight:700;
               text-align:center;color:var(--muted)}
+.r-row .opp{grid-column:4;grid-row:1;font-size:12.5px;font-weight:700;
+            white-space:normal;word-break:break-word;line-height:1.25}
+.r-row .scores{grid-column:1 / -1;grid-row:2;
+               font-size:11px;color:var(--muted);
+               font-variant-numeric:tabular-nums;line-height:1.35;
+               white-space:normal;word-break:break-word}
+.r-row .scores b{color:var(--ink)}
 
 /* Toss split bar */
 .choice-bar{height:22px;background:#eef0f6;border-radius:6px;
@@ -1543,41 +1523,43 @@ def render_html(d):
     parts.append("<div class='card'>")
     parts.append(f"<h2><span class='num'>2</span>Top run scorers · "
                  f"{len(d['last_n_seasons'])} seasons</h2>")
-    parts.append("<div class='top-list'>")
-    rank_classes = {1: "gold", 2: "silver", 3: "bronze"}
-    for i, r in enumerate(d["top_batters"][:8], 1):
+    parts.append("<table class='dense'><tr><th>#</th><th class='l'>Player</th>"
+                 "<th>M</th><th>I</th><th>NO</th><th>Runs</th>"
+                 "<th>HS</th><th>Avg</th><th>SR</th><th>50</th><th>100</th>"
+                 "<th>Pos</th></tr>")
+    for i, r in enumerate(d["top_batters"], 1):
         (bid, name, innings, no_, runs, hs, fifties, hundreds, balls_known,
          runs_when_balls, matches_, mode_pos) = r
-        avg = f"{runs/(innings-no_):.1f}" if (innings-no_) > 0 else "—"
-        rc = rank_classes.get(i, "")
-        parts.append(f"<div class='top-row'>"
-                     f"<div class='rank {rc}'>{i}</div>"
-                     f"<div class='name'>{_esc(name)}</div>"
-                     f"<div class='big'>{runs}</div>"
-                     f"<div class='sub'>runs · {matches_}M · "
-                     f"avg {avg} · HS {hs} · {fifties}×50 · {hundreds}×100</div>"
-                     f"</div>")
-    parts.append("</div>")
+        avg = f"{runs/(innings-no_):.2f}" if (innings-no_) > 0 else "—"
+        sr = f"{100*runs_when_balls/balls_known:.1f}" if balls_known else "—"
+        cls = " class='top-rank'" if i <= 3 else ""
+        parts.append(f"<tr{cls}><td>{i}</td><td class='l'>{_esc(name)}</td>"
+                     f"<td>{matches_}</td><td>{innings}</td><td>{no_}</td>"
+                     f"<td><b>{runs}</b></td><td>{hs}</td><td>{avg}</td>"
+                     f"<td>{sr}</td><td>{fifties}</td><td>{hundreds}</td>"
+                     f"<td>{mode_pos}</td></tr>")
+    parts.append("</table>")
     parts.append("</div>")
 
     # ------- 3. Top bowlers -----------------------------------------------
     parts.append("<div class='card'>")
     parts.append(f"<h2><span class='num'>3</span>Top wicket takers · "
                  f"{len(d['last_n_seasons'])} seasons</h2>")
-    parts.append("<div class='top-list'>")
-    for i, r in enumerate(d["top_bowlers"][:8], 1):
-        avg = f"{r['avg']:.1f}" if r["avg"] is not None else "—"
+    parts.append("<table class='dense'><tr><th>#</th><th class='l'>Bowler</th>"
+                 "<th>M</th><th>Ov</th><th>Md</th><th>R</th>"
+                 "<th>W</th><th>Avg</th><th>Econ</th><th>Best</th>"
+                 "<th>5wi</th><th>4wi</th></tr>")
+    for i, r in enumerate(d["top_bowlers"], 1):
+        avg = f"{r['avg']:.2f}" if r["avg"] is not None else "—"
         econ = f"{r['econ']:.2f}" if r["econ"] is not None else "—"
-        rc = rank_classes.get(i, "")
-        parts.append(f"<div class='top-row'>"
-                     f"<div class='rank {rc}'>{i}</div>"
-                     f"<div class='name'>{_esc(r['name'])}</div>"
-                     f"<div class='big'>{r['wickets']}</div>"
-                     f"<div class='sub'>wkts · {r['matches']}M · "
-                     f"avg {avg} · econ {econ} · BB {r['best']}"
-                     f"{(' · '+str(r['fivers'])+'×5wi') if r['fivers'] else ''}</div>"
-                     f"</div>")
-    parts.append("</div>")
+        cls = " class='top-rank'" if i <= 3 else ""
+        parts.append(f"<tr{cls}><td>{i}</td><td class='l'>{_esc(r['name'])}</td>"
+                     f"<td>{r['matches']}</td><td>{r['overs']}</td>"
+                     f"<td>{r['maidens']}</td><td>{r['runs']}</td>"
+                     f"<td><b>{r['wickets']}</b></td><td>{avg}</td>"
+                     f"<td>{econ}</td><td>{r['best']}</td>"
+                     f"<td>{r['fivers']}</td><td>{r['fourers']}</td></tr>")
+    parts.append("</table>")
     parts.append("</div>")
 
     # ------- 4. H2H -------------------------------------------------------
@@ -1644,13 +1626,14 @@ def render_html(d):
         opp = re.sub(r",.*$", "", opp).strip()
         r = result_for(m["result"], m["result_applied_to"], target_set)
         url = play_cricket_match_url(m["match_id"])
+        scores = _esc(innings_inline(m)).replace(" · ", " &middot; ")
         parts.append(
             f"<div class='r-row'>"
             f"<div class='date'><a href='{url}'>{_esc(m['match_date'])}</a></div>"
             f"<span class='pill {r}'>{r}</span>"
             f"<div class='venue'>{venue}</div>"
             f"<div class='opp'>{_esc(opp)}</div>"
-            f"<div class='scores'>{_esc(innings_inline(m))}</div>"
+            f"<div class='scores'>{scores}</div>"
             f"</div>"
         )
     parts.append("</div>")
@@ -1710,20 +1693,7 @@ def render_html(d):
     # ------- 7. Web / video links ----------------------------------------
     parts.append("<div class='card'>")
     parts.append("<h2><span class='num'>7</span>Web &amp; video links</h2>")
-    parts.append(
-        "<p class='warn'>"
-        "<b>How to verify a match video.</b> The Play-Cricket API doesn't "
-        "expose match video URLs. The right way to find one: <b>loop the "
-        "last 20 fixtures</b> below, search YouTube for each "
-        "<i>(club + opponent + date)</i>, then for any plausible hit "
-        "<b>open the top 2-3 results</b> and judge whether it looks like "
-        "the match — full-day livestreams are typically <b>2-7 hours long</b> "
-        "and posted within a day or two of the fixture by the home club's "
-        "channel. Anything not eyeballed should stay tagged "
-        "<i>speculative</i>."
-        "</p>"
-    )
-    by_kind = {"official": [], "video": [], "probe": [], "speculative": []}
+    by_kind = {"official": [], "video": [], "speculative": []}
     for label, url, kind in d["video_links"]:
         by_kind.setdefault(kind, []).append((label, url))
 
@@ -1743,18 +1713,11 @@ def render_html(d):
                          f"<span class='kind video'>Video</span>"
                          f"<a href='{_esc(url)}'>{_esc(lbl)}</a></div>")
         parts.append("</div>")
-    if by_kind["probe"]:
-        parts.append("<h3>Per-match YouTube searches "
-                     f"({len(by_kind['probe'])} fixtures)</h3>")
-        parts.append("<p class='subtle'>One per recent match. Click each, "
-                     "scan the top 2-3 hits — match-length livestream from "
-                     "around the fixture date = candidate.</p>")
-        parts.append("<div class='link-list'>")
-        for lbl, url in by_kind["probe"]:
-            parts.append(f"<div class='link-row'>"
-                         f"<span class='kind probe'>Probe</span>"
-                         f"<a href='{_esc(url)}'>{_esc(lbl)}</a></div>")
-        parts.append("</div>")
+    else:
+        parts.append("<p class='subtle'>No match videos verified yet for "
+                     "this club. The assistant will work through the "
+                     "fixtures in section 5 and add verified links here in "
+                     "the next version.</p>")
     if by_kind["speculative"]:
         parts.append("<h3>Speculative — name match only, NOT verified</h3>")
         parts.append("<div class='link-list'>")
