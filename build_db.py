@@ -26,7 +26,10 @@ MATCHES_DIR = RAW_DIR / "matches"
 MATCH_DETAIL_DIR = RAW_DIR / "match_detail"
 RV_MATCH_DIR = RAW_DIR / "rv_match"
 BALLS_DIR = RAW_DIR / "balls"
+NV_MATCH_DIR = RAW_DIR / "nv_match"
 DB_PATH = ROOT / "data" / "rainham.db"
+
+import _nvplay_balls as _nv  # noqa: E402  (after constants for symmetry)
 
 SCHEMA = """
 DROP TABLE IF EXISTS clubs;
@@ -201,10 +204,12 @@ CREATE TABLE balls (
 
 -- Lookup table: which matches have ball-by-ball data loaded.
 -- Populated alongside `balls`; lets reports filter cheaply without a
--- COUNT(*) over balls.
+-- COUNT(*) over balls. `source` distinguishes the rich ResultsVault
+-- stream from the leaner NV Play reconstruction (see _nvplay_balls.py).
 CREATE TABLE match_bbb (
     match_id     INTEGER PRIMARY KEY,
     rv_match_id  INTEGER,
+    source       TEXT,        -- 'rv' | 'nvplay'
     n_innings    INTEGER,
     n_balls      INTEGER,
     n_legal      INTEGER
@@ -582,9 +587,148 @@ def insert_balls(
             n_legal += is_legal
     if n_balls:
         cur.execute(
-            "INSERT OR REPLACE INTO match_bbb VALUES (?,?,?,?,?)",
-            (match_id, _to_int(rv.get("rv_match_id")),
+            "INSERT OR REPLACE INTO match_bbb VALUES (?,?,?,?,?,?)",
+            (match_id, _to_int(rv.get("rv_match_id")), "rv",
              n_innings, n_balls, n_legal),
+        )
+    return (n_innings, n_balls, n_legal)
+
+
+def insert_balls_nvplay(
+    cur: sqlite3.Cursor,
+    match_id: int,
+    home_club_id: str,
+    away_club_id: str,
+    pc_match_players: list[dict],
+) -> tuple[int, int, int]:
+    """
+    NV Play fallback loader. Reads `data/raw/nv_match/<match_id>.json`,
+    reconstructs per-ball metadata via _nvplay_balls, and inserts into
+    the same `balls` table.
+
+    Returns (n_innings, n_balls_total, n_legal_balls). (0, 0, 0) when
+    no NV scorecard exists or it has no balls.
+    """
+    nv_path = NV_MATCH_DIR / f"{match_id}.json"
+    if not nv_path.exists():
+        return (0, 0, 0)
+    try:
+        scorecard = json.loads(nv_path.read_text())
+    except Exception:
+        return (0, 0, 0)
+
+    innings = scorecard.get("Innings") or []
+    if not innings:
+        return (0, 0, 0)
+
+    home_players = [r for r in pc_match_players if r["team_side"] == "home"]
+    away_players = [r for r in pc_match_players if r["team_side"] == "away"]
+
+    # Decide which NV `TeamN` corresponds to which PC side, matching by
+    # club name (NV's `Match.Team{1,2}Club`). Build once for the match.
+    m = scorecard.get("Match") or {}
+    nv_id_map = _nv.build_nv_id_map(scorecard)
+
+    def side_of_team(team_no: int) -> str:
+        """Return 'home' / 'away' / None for NV team1 / team2."""
+        nv_club = (m.get(f"Team{team_no}Club") or "").strip().lower()
+        if not nv_club:
+            return None
+        # Match against PC home/away club names through match_players club_id
+        # would require a clubs lookup; instead compare against player_name's
+        # club indirectly. Simpler: match the NV club against home/away club
+        # via a passed-in mapping from caller (we have home/away_club_id but
+        # not name here). Fall through to first-letter heuristic if needed.
+        # The caller provides home_club_id/away_club_id — we accept whichever
+        # team1 happens to be (by convention NV team1 = home in PC's eyes;
+        # if mismatched, IsTeam2BattingFirst still tells us batting order).
+        return None
+
+    # Heuristic: NV `Team1` corresponds to whichever of home/away matches
+    # by name. We compare normalised club names.
+    def _norm(s):
+        return (s or "").strip().lower()
+
+    pc_home_clubname = ""
+    pc_away_clubname = ""
+    if home_players:
+        # We don't have club_name here, but match_players doesn't carry it.
+        # Use the first player's name to look up... actually we can't.
+        # Fall back to NV Team1Club always = home; flip if Team2Club matches
+        # a substring known to be home.
+        pass
+
+    # Without club_name lookups, use a more direct approach: NV publishes
+    # ExternalId for every player. Pick a few PC player_ids on the home
+    # side and check which NV team contains them.
+    home_pids = {r["player_id"] for r in home_players if r["player_id"]}
+    away_pids = {r["player_id"] for r in away_players if r["player_id"]}
+    team1_externals = {int(p.get("ExternalId")) for p in (m.get("Team1Players") or [])
+                       if p.get("ExternalId") and str(p.get("ExternalId")).isdigit()}
+    team2_externals = {int(p.get("ExternalId")) for p in (m.get("Team2Players") or [])
+                       if p.get("ExternalId") and str(p.get("ExternalId")).isdigit()}
+    team1_overlap_home = len(team1_externals & home_pids)
+    team1_overlap_away = len(team1_externals & away_pids)
+    team1_is_home = team1_overlap_home >= team1_overlap_away
+
+    n_innings = 0
+    n_balls = 0
+    n_legal = 0
+    for inn_idx, inn in enumerate(innings):
+        inn_seq = inn_idx + 1
+        batting_side = _nv.innings_batting_side(scorecard, inn_idx)
+        if batting_side == "team1":
+            is_home_batting = team1_is_home
+        elif batting_side == "team2":
+            is_home_batting = not team1_is_home
+        else:
+            # Fall back to the BattingTeamName / first-innings-home heuristic.
+            is_home_batting = (inn_idx == 0)
+
+        bat_club  = home_club_id if is_home_batting else away_club_id
+        bowl_club = away_club_id if is_home_batting else home_club_id
+        bat_players  = home_players if is_home_batting else away_players
+        bowl_players = away_players if is_home_batting else home_players
+
+        inn["innings_seq"] = inn_seq
+        rows = _nv.reconstruct_innings(
+            inn, bat_players, bowl_players, bat_club, bowl_club,
+            nv_id_map=nv_id_map,
+        )
+        if not rows:
+            continue
+        n_innings += 1
+        for b in rows:
+            cur.execute(
+                """INSERT OR REPLACE INTO balls VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (
+                    match_id,
+                    b["innings_seq"],
+                    b["over_no"],
+                    b["ball_no"],
+                    b["ball_no_disp"],
+                    b["batter_id"],
+                    b["non_striker_id"],
+                    b["bowler_id"],
+                    b["team_batting_club_id"],
+                    b["team_bowling_club_id"],
+                    b["runs_bat"] or 0,
+                    b["runs_extra"] or 0,
+                    b["extras_type"],
+                    1 if b["is_legal_ball"] else 0,
+                    b["dismissed_batter_id"],
+                    b["s_desc"] or "",
+                    b["l_desc"] or "",
+                ),
+            )
+            n_balls += 1
+            if b["is_legal_ball"]:
+                n_legal += 1
+
+    if n_balls:
+        cur.execute(
+            "INSERT OR REPLACE INTO match_bbb VALUES (?,?,?,?,?,?)",
+            (match_id, None, "nvplay", n_innings, n_balls, n_legal),
         )
     return (n_innings, n_balls, n_legal)
 
@@ -664,7 +808,8 @@ def main() -> int:
 
     loaded = 0
     skipped_empty = 0
-    bbb_matches = 0
+    bbb_rv = 0
+    bbb_nv = 0
     bbb_balls = 0
     for path in detail_files:
         md = load_match_detail(path)
@@ -678,22 +823,37 @@ def main() -> int:
         insert_match_players(cur, md)
         insert_innings(cur, md)
         if mid is not None:
-            n_inn, n_b, _ = insert_balls(
-                cur, mid,
-                _to_str(md.get("home_club_id")),
-                _to_str(md.get("away_club_id")),
-            )
+            home_club = _to_str(md.get("home_club_id"))
+            away_club = _to_str(md.get("away_club_id"))
+            _, n_b, _ = insert_balls(cur, mid, home_club, away_club)
             if n_b:
-                bbb_matches += 1
+                bbb_rv += 1
                 bbb_balls += n_b
+            else:
+                # RV had nothing; try NV Play if we cached its scorecard.
+                pc_mp = [
+                    {"team_side": r[0], "player_id": r[1], "player_name": r[2]}
+                    for r in cur.execute(
+                        "SELECT team_side, player_id, player_name "
+                        "FROM match_players WHERE match_id = ?",
+                        (mid,),
+                    ).fetchall()
+                ]
+                _, n_b2, _ = insert_balls_nvplay(
+                    cur, mid, home_club, away_club, pc_mp
+                )
+                if n_b2:
+                    bbb_nv += 1
+                    bbb_balls += n_b2
         loaded += 1
         if loaded % 500 == 0:
             print(f"  loaded {loaded}", flush=True)
 
     conn.commit()
     print(f"Loaded {loaded} matches; skipped {skipped_empty} empty payloads", flush=True)
-    print(f"Ball-by-ball: {bbb_matches} matches, {bbb_balls} balls", flush=True)
-    if bbb_matches:
+    print(f"Ball-by-ball: {bbb_rv} RV + {bbb_nv} NV = "
+          f"{bbb_rv + bbb_nv} matches, {bbb_balls} balls", flush=True)
+    if bbb_rv + bbb_nv:
         validate_balls(cur)
 
     cur.execute("SELECT COUNT(*) FROM clubs")

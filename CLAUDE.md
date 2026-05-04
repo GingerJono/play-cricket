@@ -22,12 +22,17 @@ DB to grow / be refreshed → see _Workflow_ below.
 ```
 stats/
   fetch.py           pulls Play-Cricket JSON; --site-id and --division-ids
-  fetch_balls.py     pulls ball-by-ball from the ResultsVault backend
-                     (the API behind Play-Cricket's match-centre widget).
+  fetch_balls.py     pulls ball-by-ball from BOTH backends Play-Cricket
+                     embeds: ResultsVault (PCS-scored matches) and
+                     NV Play (live-streamed / NV-scored matches). Tries
+                     RV first; falls back to NV Play when RV is empty.
                      Not exposed by the public play-cricket API; see
                      `BALL_BY_BALL.md` for the auth + endpoint trail.
   _rv_token.js       auto-generated node helper used by fetch_balls.py
                      to compute the X-IAS-API-REQUEST auth header.
+  _nvplay_balls.py   parses NV Play `Display` tokens and reconstructs
+                     per-ball batter / bowler / dismissal attribution
+                     from the BattingCard, BowlingCard and FOW.
   build_db.py        loads cached JSON into SQLite (data/rainham.db)
   scout.py           generic opposition scouting report (any club).
                      Emits md / html / a long mobile-friendly png inside a
@@ -55,8 +60,10 @@ stats/
       league_table/<division_id>.json   cached league tables (shared)
       rv_match/<match_id>.json          ResultsVault metadata + innings
                                         index (rv_match_id, result_ids)
-      balls/<match_id>/<innings>.json   ball-by-ball stream, untouched
-                                        upstream payload
+      balls/<match_id>/<innings>.json   ball-by-ball stream from RV,
+                                        untouched upstream payload
+      nv_match/<match_id>.json          NV Play full scorecard, fetched
+                                        only when RV returns []
     metadata/                        (committed)
       players/<player_id>.json       canonical, player-keyed
       videos/<match_id>.json         match-keyed video evidence
