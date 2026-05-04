@@ -2211,7 +2211,7 @@ def render_md(d):
 
     sp = d.get("style_profile")
     if sp:
-        md.append("### 6c. Bowling style mix")
+        md.append("### 6c. Bowling style")
         md.append("")
         bm = sp["bowl_mix"]
         md.append(
@@ -2231,55 +2231,31 @@ def render_md(d):
                     f"| {g['pct']:.0f}% |"
                 )
         md.append("")
-
-        md.append("### 6d. Lineup style profile")
-        md.append("")
-        lp = sp["lineup"]; ob = sp["openers_bat"]; obw = sp["openers_bowl"]
-        md.append(f"- **{lp['lhb_per_xi_avg']:.1f}** left-handers in the XI on "
-                  f"average · _(coverage {lp['coverage_pct']:.0f}% across "
-                  f"{lp['n_matches_with_data']} matches)_")
-        md.append(f"- Opens batting with ≥1 LHB in **"
-                  f"{ob['lhb_present_pct']:.0f}%** of games · "
-                  f"_(coverage {ob['coverage_pct']:.0f}% across "
-                  f"{ob['n_matches_with_data']} games)_")
-        md.append(f"- Opens bowling with ≥1 left-armer in **"
+        obw = sp["openers_bowl"]
+        md.append(f"- Opens bowling with ≥1 **left-armer** in **"
                   f"{obw['left_arm_present_pct']:.0f}%** of games · "
                   f"_(coverage {obw['coverage_pct']:.0f}% across "
-                  f"{obw['n_matches_with_data']} games)_")
-        md.append(f"- Opens bowling with ≥1 spinner in **"
+                  f"{obw['n_matches_with_data']} games where both opening "
+                  f"bowlers' styles are known)_")
+        md.append(f"- Opens bowling with ≥1 **spinner** in **"
                   f"{obw['spin_present_pct']:.0f}%** of games · "
                   f"_(same coverage as above)_")
         md.append("")
 
-    ob = d.get("over_blocks")
-    if ob:
-        md.append("### 6e. Pace vs spin by over block")
+        md.append("### 6d. Batting style")
         md.append("")
-        md.append(
-            f"_Driven by ball-by-ball data — captured for "
-            f"**{ob['match_n_with_bbb']}/{ob['match_n']}** in-scope "
-            f"matches ({ob['bbb_coverage_pct']:.0f}% coverage). Style "
-            f"mix within each block depends additionally on bowler "
-            f"metadata._"
-        )
-        md.append("")
-        md.append("| Block | Pace | Spin | Unknown | Balls | Coverage |")
-        md.append("|---|--:|--:|--:|--:|--:|")
-        for b in ob["blocks"]:
-            if b["total_balls"] == 0:
-                md.append(f"| **{b['label']}** | — | — | — | 0 | — |")
-            else:
-                md.append(
-                    f"| **{b['label']}** "
-                    f"| {b['pct_pace']:.0f}% "
-                    f"| {b['pct_spin']:.0f}% "
-                    f"| {b['pct_unknown']:.0f}% "
-                    f"| {b['total_balls']} "
-                    f"| {b['coverage_pct']:.0f}% |"
-                )
+        lp = sp["lineup"]; ob = sp["openers_bat"]
+        md.append(f"- **{lp['lhb_per_xi_avg']:.1f}** left-handers in the XI on "
+                  f"average · _(coverage {lp['coverage_pct']:.0f}% across "
+                  f"{lp['n_matches_with_data']} matches)_")
+        md.append(f"- Opens batting with ≥1 **LHB** in **"
+                  f"{ob['lhb_present_pct']:.0f}%** of games · "
+                  f"_(coverage {ob['coverage_pct']:.0f}% across "
+                  f"{ob['n_matches_with_data']} games where both openers' "
+                  f"hands are known)_")
         md.append("")
 
-    md.append("### 6f. When batting first vs second (last 3 seasons L+C)")
+    md.append("### 6e. When batting first vs second (last 3 seasons L+C)")
     md.append("")
     md.append(f"- {d['club_name']} batting 1st: " + wld_str(d["chart_bat"]["us_bat1"]))
     md.append(f"- {d['club_name']} batting 2nd: " + wld_str(d["chart_bat"]["us_bat2"]))
@@ -2287,7 +2263,7 @@ def render_md(d):
     md.append(f"- {d['vs_club_name']} batting 2nd: " + wld_str(d["chart_bat"]["vs_bat2"]))
     md.append("")
 
-    md.append("### 6g. Home vs away (last 3 seasons L+C)")
+    md.append("### 6f. Home vs away (last 3 seasons L+C)")
     md.append("")
     md.append(f"- {d['club_name']} at home: " + wld_str(d["chart_ha"]["us_home"]))
     md.append(f"- {d['club_name']} away: " + wld_str(d["chart_ha"]["us_away"]))
@@ -2295,7 +2271,7 @@ def render_md(d):
     md.append(f"- {d['vs_club_name']} away: " + wld_str(d["chart_ha"]["vs_away"]))
     md.append("")
 
-    md.append("### 6h. When they win the toss")
+    md.append("### 6g. When they win the toss")
     md.append("")
     t = d["chart_toss"]
     won_n = t["won_n"]
@@ -2314,7 +2290,7 @@ def render_md(d):
         md.append("_No matches with toss data in scope._")
     md.append("")
 
-    md.append("### 6i. Team batting & bowling avg per season (1st XI, L+C)")
+    md.append("### 6h. Team batting & bowling avg per season (1st XI, L+C)")
     md.append("")
     md.append("| Season | "
               f"{d['club_name']} bat | {d['vs_club_name']} bat | "
@@ -3074,22 +3050,20 @@ def render_html(d):
         parts.append(_render_chase_history(
             d["ch_history"], d["club_name"], d["club_id"], d.get("pc_subdomain")))
 
-    # 6c. Bowling style mix (pace vs spin + granular). Uses player-style
-    # metadata; the cells show what the team bowled across the analysis
-    # window, with explicit coverage % so a 5% sample doesn't masquerade
-    # as a settled answer.
+    # 6c. Bowling style — pace/spin mix, granular breakdown, and the
+    # opening-bowler patterns. All under one heading so the bowling story
+    # reads top-to-bottom.
+    # 6d. Batting style — LHB count + opening-batting pattern.
+    # (Per-over-block exhibit is computed but hidden — opposition matches
+    # almost never have ball-by-ball data captured, so the 0/N coverage
+    # noise wasn't worth its place in the report.)
     if d.get("style_profile"):
-        parts.append("<h3>Bowling style mix · "
+        parts.append("<h3>Bowling style · "
                      f"last {len(d['last_n_seasons'])} seasons</h3>")
-        parts.append(_render_bowl_mix(d["style_profile"], d["club_name"]))
+        parts.append(_render_bowl_style(d["style_profile"], d["club_name"]))
 
-        parts.append("<h3>Lineup style profile</h3>")
-        parts.append(_render_lineup_profile(d["style_profile"], d["club_name"]))
-
-    # 6e. Pace/spin mix by over block (1-10 / 11-20 / 21-30 / 31-40 / 41+).
-    if d.get("over_blocks"):
-        parts.append("<h3>Pace vs spin · by over block</h3>")
-        parts.append(_render_over_blocks(d["over_blocks"], d["club_name"]))
+        parts.append("<h3>Batting style</h3>")
+        parts.append(_render_bat_style(d["style_profile"], d["club_name"]))
 
     parts.append("<h3>Bat 1st vs Bat 2nd · last 3 seasons</h3>")
     parts.append(wld_chart_block([
@@ -3524,45 +3498,63 @@ def _render_bowl_mix(profile, club_name):
     return "".join(parts)
 
 
-def _render_lineup_profile(profile, club_name):
-    """Four small tiles: avg LHB / open-bat-LHB / open-bowl-left-arm /
-    open-bowl-spin. Each carries its own coverage pill."""
+def _style_tile(big, lbl, sub, cov):
+    """One tile in the §6 batting/bowling style grids."""
+    cov_pill = _coverage_pill(cov) if cov is not None else ""
+    sub_html = f"<div class='sub'>{_esc(sub)}</div>" if sub else ""
+    return (f"<div class='lp-tile'>"
+            f"<div class='big'>{big}</div>"
+            f"<div class='lbl'>{_esc(lbl)}</div>"
+            f"{sub_html}"
+            f"<div class='cov-row'>{cov_pill}</div>"
+            f"</div>")
+
+
+def _render_bowl_style(profile, club_name):
+    """Bowling story end-to-end: pace/spin split + granular breakdown +
+    two opening-bowler tiles ("opens w/ left-armer", "opens w/ spinner").
+    Each piece carries its own coverage pill so a small sample is
+    obviously a small sample."""
+    out = [_render_bowl_mix(profile, club_name)]
+    obw = profile.get("openers_bowl") or {}
+    ng = obw.get("n_matches_with_data", 0)
+    out.append("<div class='lp-grid'>")
+    out.append(_style_tile(
+        f"{obw.get('left_arm_present_pct', 0):.0f}%",
+        "Open w/ left-armer",
+        f"opening pair includes a left-arm bowler · {ng} games",
+        obw.get("coverage_pct"),
+    ))
+    out.append(_style_tile(
+        f"{obw.get('spin_present_pct', 0):.0f}%",
+        "Open w/ spinner",
+        f"opening pair includes a spinner · {ng} games",
+        obw.get("coverage_pct"),
+    ))
+    out.append("</div>")
+    return "".join(out)
+
+
+def _render_bat_style(profile, club_name):
+    """Batting style: avg LHBs in the XI + opening-batting tile."""
     lp = profile.get("lineup") or {}
     ob = profile.get("openers_bat") or {}
-    obw = profile.get("openers_bowl") or {}
-
-    def tile(big, lbl, sub, cov):
-        cov_pill = _coverage_pill(cov) if cov is not None else ""
-        sub_html = f"<div class='sub'>{_esc(sub)}</div>" if sub else ""
-        return (f"<div class='lp-tile'>"
-                f"<div class='big'>{big}</div>"
-                f"<div class='lbl'>{_esc(lbl)}</div>"
-                f"{sub_html}"
-                f"<div class='cov-row'>{cov_pill}</div>"
-                f"</div>")
-
-    tiles = []
-    lhb_avg = lp.get("lhb_per_xi_avg") or 0
-    tiles.append(tile(f"{lhb_avg:.1f}",
-                      "LHBs in XI",
-                      f"avg across {lp.get('n_matches_with_data',0)} games",
-                      lp.get("coverage_pct")))
-    tiles.append(tile(f"{ob.get('lhb_present_pct',0):.0f}%",
-                      "Bat with LHB",
-                      f"opens with ≥1 left-hander · "
-                      f"{ob.get('n_matches_with_data',0)} games",
-                      ob.get("coverage_pct")))
-    tiles.append(tile(f"{obw.get('left_arm_present_pct',0):.0f}%",
-                      "Bowl with left-arm",
-                      f"opens with ≥1 left-armer · "
-                      f"{obw.get('n_matches_with_data',0)} games",
-                      obw.get("coverage_pct")))
-    tiles.append(tile(f"{obw.get('spin_present_pct',0):.0f}%",
-                      "Bowl with spin",
-                      f"opens with ≥1 spinner · "
-                      f"{obw.get('n_matches_with_data',0)} games",
-                      obw.get("coverage_pct")))
-    return ("<div class='lp-grid'>" + "".join(tiles) + "</div>")
+    out = ["<div class='lp-grid'>"]
+    out.append(_style_tile(
+        f"{(lp.get('lhb_per_xi_avg') or 0):.1f}",
+        "LHBs in XI",
+        f"avg across {lp.get('n_matches_with_data', 0)} games",
+        lp.get("coverage_pct"),
+    ))
+    out.append(_style_tile(
+        f"{ob.get('lhb_present_pct', 0):.0f}%",
+        "Open w/ LHB",
+        f"opening pair includes a left-hander · "
+        f"{ob.get('n_matches_with_data', 0)} games",
+        ob.get("coverage_pct"),
+    ))
+    out.append("</div>")
+    return "".join(out)
 
 
 def _render_over_blocks(ob, club_name):
