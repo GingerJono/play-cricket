@@ -30,6 +30,7 @@ NV_MATCH_DIR = RAW_DIR / "nv_match"
 DB_PATH = ROOT / "data" / "rainham.db"
 
 import _nvplay_balls as _nv  # noqa: E402  (after constants for symmetry)
+import _rv_balls as _rv      # noqa: E402
 
 SCHEMA = """
 DROP TABLE IF EXISTS clubs;
@@ -512,12 +513,20 @@ def insert_balls(
     match_id: int,
     home_club_id: str,
     away_club_id: str,
+    pc_match_players: list[dict] | None = None,
 ) -> tuple[int, int, int]:
     """
     Load every cached innings of ball-by-ball for one match.
 
     Returns (n_innings, n_balls_total, n_legal_balls).
     Returns (0, 0, 0) if no rv_match metadata or no balls JSON exists.
+
+    Player IDs come from parsing `l_desc` ("X to Y: ...") and matching
+    names against `pc_match_players` — RV's own `batter_id`/`bowler_id`
+    fields use a different namespace (11M-range vs PC's 4M-range), so
+    they can't be used directly. Falls back to RV's numeric ids only
+    when the name-match fails (rare; logs the residual via the count
+    of NULLs in the `balls` table).
 
     `team_batting_club_id` / `team_bowling_club_id` are resolved via the
     rv_match `is_home` flag cross-referenced with the match's home/away
@@ -531,6 +540,13 @@ def insert_balls(
         rv = json.loads(rv_path.read_text())
     except Exception:
         return (0, 0, 0)
+
+    # Build per-team name indices once.
+    pc_match_players = pc_match_players or []
+    home_p = [p for p in pc_match_players if p["team_side"] == "home"]
+    away_p = [p for p in pc_match_players if p["team_side"] == "away"]
+    home_idx = _rv.build_name_index(home_p)
+    away_idx = _rv.build_name_index(away_p)
     is_home_for_seq: dict[int, bool] = {}
     for inn in rv.get("innings", []) or []:
         seq = _to_int(inn.get("innings_order"))
@@ -557,10 +573,36 @@ def insert_balls(
         if not isinstance(balls, list) or not balls:
             continue
         n_innings += 1
+        bat_idx = home_idx if is_home_batting else away_idx
+        bowl_idx = away_idx if is_home_batting else home_idx
         for b in balls:
-            ext = b.get("extras_type")
-            ext_int = _to_int(ext)
-            is_legal = 0 if ext_int in (1, 2) else 1
+            l_desc = b.get("l_desc") or ""
+            parsed = _rv.parse_l_desc(l_desc)
+
+            # Prefer parsed l_desc for everything (runs / extras / wicket
+            # / players). Fall back to the raw RV fields when the parse
+            # fails or names don't resolve.
+            if parsed:
+                runs_bat = parsed["runs_bat"]
+                runs_extra = parsed["runs_extra"]
+                ext_int = parsed["extras_type"]
+                is_legal = parsed["is_legal_ball"]
+                batter_pc = _rv.resolve_name(parsed["batter_name"], bat_idx)
+                bowler_pc = _rv.resolve_name(parsed["bowler_name"], bowl_idx)
+                if parsed["is_wicket"] and parsed["dismissed_name"]:
+                    dismissed_pc = _rv.resolve_name(
+                        parsed["dismissed_name"], bat_idx
+                    )
+                else:
+                    dismissed_pc = None
+            else:
+                runs_bat = _to_int(b.get("runs_bat")) or 0
+                runs_extra = _to_int(b.get("runs_extra")) or 0
+                ext_raw = b.get("extras_type")
+                ext_int = _to_int(ext_raw)
+                is_legal = 0 if ext_int in (1, 2) else 1
+                batter_pc = bowler_pc = dismissed_pc = None
+
             cur.execute(
                 """INSERT OR REPLACE INTO balls VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                 (
@@ -569,16 +611,16 @@ def insert_balls(
                     _to_int(b.get("over_no")),
                     _to_int(b.get("ball_no")),
                     _to_int(b.get("ball_no_disp")),
-                    _to_int(b.get("batter_id")),
-                    _to_int(b.get("batter_id_ns")),
-                    _to_int(b.get("bowler_id")),
+                    batter_pc,
+                    None,             # non_striker_id — not derivable from l_desc
+                    bowler_pc,
                     bat_club,
                     bowl_club,
-                    _to_int(b.get("runs_bat")) or 0,
-                    _to_int(b.get("runs_extra")) or 0,
+                    runs_bat,
+                    runs_extra,
                     ext_int,
                     is_legal,
-                    _to_int(b.get("dismissed_batter_id")),
+                    dismissed_pc,
                     _to_str(b.get("s_desc")),
                     _to_str(b.get("l_desc")),
                 ),
@@ -825,20 +867,20 @@ def main() -> int:
         if mid is not None:
             home_club = _to_str(md.get("home_club_id"))
             away_club = _to_str(md.get("away_club_id"))
-            _, n_b, _ = insert_balls(cur, mid, home_club, away_club)
+            pc_mp = [
+                {"team_side": r[0], "player_id": r[1], "player_name": r[2]}
+                for r in cur.execute(
+                    "SELECT team_side, player_id, player_name "
+                    "FROM match_players WHERE match_id = ?",
+                    (mid,),
+                ).fetchall()
+            ]
+            _, n_b, _ = insert_balls(cur, mid, home_club, away_club, pc_mp)
             if n_b:
                 bbb_rv += 1
                 bbb_balls += n_b
             else:
                 # RV had nothing; try NV Play if we cached its scorecard.
-                pc_mp = [
-                    {"team_side": r[0], "player_id": r[1], "player_name": r[2]}
-                    for r in cur.execute(
-                        "SELECT team_side, player_id, player_name "
-                        "FROM match_players WHERE match_id = ?",
-                        (mid,),
-                    ).fetchall()
-                ]
                 _, n_b2, _ = insert_balls_nvplay(
                     cur, mid, home_club, away_club, pc_mp
                 )
