@@ -1998,7 +1998,8 @@ def render_html(d):
     if hero_tiles:
         parts.append("<div class='stats'>")
         for n, lbl in hero_tiles:
-            parts.append(f"<div class='stat'><div class='n'>{_esc(n)}</div>"
+            # `n` is already-safe HTML (digits/percent or pre-escaped form pills).
+            parts.append(f"<div class='stat'><div class='n'>{n}</div>"
                          f"<div class='lbl'>{_esc(lbl)}</div></div>")
         parts.append("</div>")
     parts.append("</div>")
@@ -2322,48 +2323,47 @@ def render_html(d):
 
 
 def _hero_stats(d, target_set):
-    """Build [(value, label), ...] tiles for the top of the hero block.
+    """Build [(value_html, label), ...] tiles for the hero strip.
 
-    Picks: current league position (if found), this-season W-L-D from the
-    current season's matches, and last-3-seasons total played count."""
+    Three tiles, in order:
+      1. Current league position
+      2. Form across the last 5 played matches (coloured W/L/D pills,
+         oldest → newest)
+      3. Win rate across the last 20 played matches
+    """
     tiles = []
-    # Current league pos
+
+    # 1. Current league pos
     if d.get("league_table"):
         for r in d["league_table"]:
             if r["team_id"] in d["target_team_ids"]:
                 pos = r.get("position")
                 if pos:
-                    tiles.append((f"{pos}", "League pos"))
+                    tiles.append((_esc(pos), "League pos"))
                 break
 
-    # This-season record (from season_summary, current season is the last entry).
-    # Fall back to the previous season's headline if the current season has no
-    # played league matches yet (e.g. early-May before opening day).
-    if d["season_summary"]:
-        cur = d["season_summary"][-1]
-        prev = d["season_summary"][-2] if len(d["season_summary"]) > 1 else None
-        if cur["P"] > 0:
-            tiles.append((f"{cur['W']}-{cur['L']}-{cur['D']}",
-                          f"{cur['season']} L W-L-D"))
-            tiles.append((f"{cur['win_pct']:.0f}%", f"{cur['season']} win rate"))
-        elif prev and prev["P"] > 0:
-            tiles.append((f"{prev['W']}-{prev['L']}-{prev['D']}",
-                          f"{prev['season']} L W-L-D"))
-            tiles.append((f"{prev['win_pct']:.0f}%",
-                          f"{prev['season']} win rate"))
+    # 2. Form — last 5 played matches, oldest → newest, as coloured pills.
+    # `d["recent"]` is already sorted newest-first.
+    recent = d.get("recent") or []
+    if recent:
+        last5 = list(reversed(recent[:5]))   # oldest → newest
+        pills = "".join(
+            f"<span class='form-pill {result_for(m['result'], m['result_applied_to'], target_set)}'>"
+            f"{result_for(m['result'], m['result_applied_to'], target_set)}</span>"
+            for m in last5
+        )
+        tiles.append((f"<span class='pill-row'>{pills}</span>", "Last 5"))
 
-    # H2H tally — only show if there's a played meeting
-    if d.get("h2h"):
-        w = l_ = dr = 0
-        for m in d["h2h"]:
-            r = result_for(m["result"], m["result_applied_to"], target_set)
-            if r == "W": w += 1
-            elif r == "L": l_ += 1
-            else: dr += 1
-        if w + l_ + dr > 0:
-            short = re.sub(r",.*$", "", d["vs_club_name"]).strip()[:12]
-            tiles.append((f"{w}-{l_}-{dr}", f"vs {short} all-time"))
-    return tiles[:4]
+        # 3. Win rate over the last 20 (or however many we have)
+        last20 = recent[:20]
+        if last20:
+            wins = sum(1 for m in last20
+                       if result_for(m["result"], m["result_applied_to"],
+                                     target_set) == "W")
+            pct = 100 * wins / len(last20)
+            tiles.append((f"{pct:.0f}%",
+                          f"Last {len(last20)} win rate"))
+    return tiles[:3]
 
 
 def wld_chart_block(rows):

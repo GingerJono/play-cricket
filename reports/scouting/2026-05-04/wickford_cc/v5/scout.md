@@ -1,4 +1,4 @@
-# Scout — Wickford CC 1st XI (v4)
+# Scout — Wickford CC 1st XI (v5)
 
 _All sections: 1st XI only, League + Cup unless noted. Compared vs Rainham CC, Essex 1st XI. Today 2026-05-04._
 
