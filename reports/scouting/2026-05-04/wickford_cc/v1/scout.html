@@ -122,12 +122,33 @@ tr:last-child td{border-bottom:none}
 .bar2 span.us{background:linear-gradient(180deg,#3b82f6,#1d4ed8)}
 .bar2 span.them{background:linear-gradient(180deg,#ef4444,#b91c1c)}
 
-/* Top-N stat tables — highlight the podium rows */
-table.dense th,table.dense td{padding:4px 5px;font-size:11px}
-tr.top-rank td{background:#fffbe8 !important;font-weight:700}
-tr.top-rank:nth-child(2) td{background:#fff4cc !important}
-tr.top-rank:nth-child(3) td{background:#f4e6cb !important}
-tr.top-rank:nth-child(4) td{background:#eceff5 !important}
+/* Top-N players: name on its own row, stats below — keeps long names
+   from squashing the numeric grid on narrow phone widths. */
+table.players{margin:6px 0 4px}
+table.players thead th{font-size:10px;padding:4px 4px;color:var(--muted);
+  background:#f7f8fc;border-bottom:1px solid var(--line-2);
+  text-transform:uppercase;letter-spacing:.05em}
+table.players tr.p-name td{padding:8px 8px 2px;border-top:1px solid var(--line);
+  border-bottom:none;text-align:left;background:#fff;
+  white-space:normal;word-break:normal}
+table.players tr.p-stat td{padding:2px 4px 9px;border-bottom:none;
+  font-size:11.5px;background:#fff}
+table.players tr.p-name + tr.p-stat td{padding-top:1px}
+table.players tr.p-name td .rk{display:inline-flex;align-items:center;
+  justify-content:center;width:20px;height:20px;border-radius:6px;
+  background:#e6ecf9;color:var(--accent);font-weight:800;font-size:10.5px;
+  margin-right:8px;vertical-align:middle}
+table.players tr.p-name td .nm{font-weight:700;font-size:13.5px;color:var(--ink);
+  letter-spacing:-.005em;vertical-align:middle}
+/* Podium tints span both rows of each top-3 player. */
+table.players tr.top1 td{background:#fff4cc !important}
+table.players tr.top1 .rk{background:#f3d568;color:#7a5300}
+table.players tr.top2 td{background:#eef0f5 !important}
+table.players tr.top2 .rk{background:#cdd2dc;color:#3e4757}
+table.players tr.top3 td{background:#f6e7d4 !important}
+table.players tr.top3 .rk{background:#e0b988;color:#6e3f12}
+/* Fade in a subtle separator before the next player */
+table.players tbody tr.p-stat + tr.p-name td{border-top:1px solid var(--line)}
 
 /* Recent-match list — scores wrap to a second line if they don't fit */
 .recent-list{margin:6px 0 2px;display:flex;flex-direction:column;gap:6px}
@@ -231,40 +252,42 @@ a:hover{text-decoration:underline}
 </div>
 <div class='card'>
 <h2><span class='num'>2</span>Top run scorers · 3 seasons</h2>
-<table class='dense'><tr><th>#</th><th class='l'>Player</th><th>M</th><th>I</th><th>NO</th><th>Runs</th><th>HS</th><th>Avg</th><th>SR</th><th>50</th><th>100</th><th>Pos</th></tr>
-<tr class='top-rank'><td>1</td><td class='l'>Jatin Kukreja</td><td>17</td><td>17</td><td>3</td><td><b>1084</b></td><td>146</td><td>77.43</td><td>110.1</td><td>5</td><td>5</td><td>4</td></tr>
-<tr class='top-rank'><td>2</td><td class='l'>Zisan Abedin</td><td>32</td><td>32</td><td>3</td><td><b>900</b></td><td>114</td><td>31.03</td><td>81.6</td><td>3</td><td>1</td><td>4</td></tr>
-<tr class='top-rank'><td>3</td><td class='l'>Frankie Mckenna</td><td>33</td><td>33</td><td>3</td><td><b>856</b></td><td>112</td><td>28.53</td><td>70.2</td><td>2</td><td>1</td><td>5</td></tr>
-<tr><td>4</td><td class='l'>Jack Stead</td><td>26</td><td>26</td><td>5</td><td><b>638</b></td><td>89</td><td>30.38</td><td>79.9</td><td>5</td><td>0</td><td>5</td></tr>
-<tr><td>5</td><td class='l'>Tom Merritt</td><td>28</td><td>28</td><td>1</td><td><b>573</b></td><td>64</td><td>21.22</td><td>57.7</td><td>1</td><td>0</td><td>1</td></tr>
-<tr><td>6</td><td class='l'>Adam Deller</td><td>12</td><td>12</td><td>2</td><td><b>293</b></td><td>89</td><td>29.30</td><td>57.2</td><td>2</td><td>0</td><td>7</td></tr>
-<tr><td>7</td><td class='l'>Tom Matthew</td><td>16</td><td>16</td><td>1</td><td><b>246</b></td><td>40</td><td>16.40</td><td>63.7</td><td>0</td><td>0</td><td>2</td></tr>
-<tr><td>8</td><td class='l'>Chirag Desai</td><td>21</td><td>21</td><td>3</td><td><b>220</b></td><td>46</td><td>12.22</td><td>49.4</td><td>0</td><td>0</td><td>1</td></tr>
-<tr><td>9</td><td class='l'>Tony Munyonga</td><td>7</td><td>7</td><td>1</td><td><b>178</b></td><td>56</td><td>29.67</td><td>62.6</td><td>2</td><td>0</td><td>3</td></tr>
-<tr><td>10</td><td class='l'>John Grimes</td><td>20</td><td>20</td><td>6</td><td><b>177</b></td><td>33</td><td>12.64</td><td>59.0</td><td>0</td><td>0</td><td>8</td></tr>
-<tr><td>11</td><td class='l'>Ronnie McKenna</td><td>2</td><td>2</td><td>1</td><td><b>164</b></td><td>82</td><td>164.00</td><td>146.4</td><td>2</td><td>0</td><td>3</td></tr>
-<tr><td>12</td><td class='l'>Alexander Moss</td><td>10</td><td>10</td><td>0</td><td><b>150</b></td><td>38</td><td>15.00</td><td>53.4</td><td>0</td><td>0</td><td>2</td></tr>
-<tr><td>13</td><td class='l'>Elliot Yorston</td><td>14</td><td>14</td><td>4</td><td><b>123</b></td><td>22</td><td>12.30</td><td>64.1</td><td>0</td><td>0</td><td>10</td></tr>
-<tr><td>14</td><td class='l'>Greg Mendham</td><td>8</td><td>8</td><td>0</td><td><b>112</b></td><td>51</td><td>14.00</td><td>52.5</td><td>1</td><td>0</td><td>2</td></tr>
-<tr><td>15</td><td class='l'>Connor Etchells</td><td>8</td><td>8</td><td>1</td><td><b>108</b></td><td>37</td><td>15.43</td><td>75.0</td><td>0</td><td>0</td><td>7</td></tr>
-</table>
+<table class='players'>
+<thead><tr><th>M</th><th>I</th><th>NO</th><th>Runs</th><th>HS</th><th>Avg</th><th>SR</th><th>50</th><th>100</th><th>Pos</th></tr></thead><tbody>
+<tr class='p-name top1'><td colspan='10' class='l'><span class='rk'>1</span><span class='nm'>Jatin Kukreja</span></td></tr><tr class='p-stat top1'><td>17</td><td>17</td><td>3</td><td><b>1084</b></td><td>146</td><td>77.43</td><td>110.1</td><td>5</td><td>5</td><td>4</td></tr>
+<tr class='p-name top2'><td colspan='10' class='l'><span class='rk'>2</span><span class='nm'>Zisan Abedin</span></td></tr><tr class='p-stat top2'><td>32</td><td>32</td><td>3</td><td><b>900</b></td><td>114</td><td>31.03</td><td>81.6</td><td>3</td><td>1</td><td>4</td></tr>
+<tr class='p-name top3'><td colspan='10' class='l'><span class='rk'>3</span><span class='nm'>Frankie Mckenna</span></td></tr><tr class='p-stat top3'><td>33</td><td>33</td><td>3</td><td><b>856</b></td><td>112</td><td>28.53</td><td>70.2</td><td>2</td><td>1</td><td>5</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>4</span><span class='nm'>Jack Stead</span></td></tr><tr class='p-stat'><td>26</td><td>26</td><td>5</td><td><b>638</b></td><td>89</td><td>30.38</td><td>79.9</td><td>5</td><td>0</td><td>5</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>5</span><span class='nm'>Tom Merritt</span></td></tr><tr class='p-stat'><td>28</td><td>28</td><td>1</td><td><b>573</b></td><td>64</td><td>21.22</td><td>57.7</td><td>1</td><td>0</td><td>1</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>6</span><span class='nm'>Adam Deller</span></td></tr><tr class='p-stat'><td>12</td><td>12</td><td>2</td><td><b>293</b></td><td>89</td><td>29.30</td><td>57.2</td><td>2</td><td>0</td><td>7</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>7</span><span class='nm'>Tom Matthew</span></td></tr><tr class='p-stat'><td>16</td><td>16</td><td>1</td><td><b>246</b></td><td>40</td><td>16.40</td><td>63.7</td><td>0</td><td>0</td><td>2</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>8</span><span class='nm'>Chirag Desai</span></td></tr><tr class='p-stat'><td>21</td><td>21</td><td>3</td><td><b>220</b></td><td>46</td><td>12.22</td><td>49.4</td><td>0</td><td>0</td><td>1</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>9</span><span class='nm'>Tony Munyonga</span></td></tr><tr class='p-stat'><td>7</td><td>7</td><td>1</td><td><b>178</b></td><td>56</td><td>29.67</td><td>62.6</td><td>2</td><td>0</td><td>3</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>10</span><span class='nm'>John Grimes</span></td></tr><tr class='p-stat'><td>20</td><td>20</td><td>6</td><td><b>177</b></td><td>33</td><td>12.64</td><td>59.0</td><td>0</td><td>0</td><td>8</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>11</span><span class='nm'>Ronnie McKenna</span></td></tr><tr class='p-stat'><td>2</td><td>2</td><td>1</td><td><b>164</b></td><td>82</td><td>164.00</td><td>146.4</td><td>2</td><td>0</td><td>3</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>12</span><span class='nm'>Alexander Moss</span></td></tr><tr class='p-stat'><td>10</td><td>10</td><td>0</td><td><b>150</b></td><td>38</td><td>15.00</td><td>53.4</td><td>0</td><td>0</td><td>2</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>13</span><span class='nm'>Elliot Yorston</span></td></tr><tr class='p-stat'><td>14</td><td>14</td><td>4</td><td><b>123</b></td><td>22</td><td>12.30</td><td>64.1</td><td>0</td><td>0</td><td>10</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>14</span><span class='nm'>Greg Mendham</span></td></tr><tr class='p-stat'><td>8</td><td>8</td><td>0</td><td><b>112</b></td><td>51</td><td>14.00</td><td>52.5</td><td>1</td><td>0</td><td>2</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>15</span><span class='nm'>Connor Etchells</span></td></tr><tr class='p-stat'><td>8</td><td>8</td><td>1</td><td><b>108</b></td><td>37</td><td>15.43</td><td>75.0</td><td>0</td><td>0</td><td>7</td></tr>
+</tbody></table>
 </div>
 <div class='card'>
 <h2><span class='num'>3</span>Top wicket takers · 3 seasons</h2>
-<table class='dense'><tr><th>#</th><th class='l'>Bowler</th><th>M</th><th>Ov</th><th>Md</th><th>R</th><th>W</th><th>Avg</th><th>Econ</th><th>Best</th><th>5wi</th><th>4wi</th></tr>
-<tr class='top-rank'><td>1</td><td class='l'>Zisan Abedin</td><td>29</td><td>273.4</td><td>20</td><td>1142</td><td><b>42</b></td><td>27.19</td><td>4.17</td><td>5/32</td><td>2</td><td>0</td></tr>
-<tr class='top-rank'><td>2</td><td class='l'>John Grimes</td><td>26</td><td>204</td><td>10</td><td>942</td><td><b>38</b></td><td>24.79</td><td>4.62</td><td>4/45</td><td>0</td><td>2</td></tr>
-<tr class='top-rank'><td>3</td><td class='l'>Jatin Kukreja</td><td>14</td><td>133.5</td><td>13</td><td>578</td><td><b>29</b></td><td>19.93</td><td>4.32</td><td>6/28</td><td>2</td><td>0</td></tr>
-<tr><td>4</td><td class='l'>Porag Hasan</td><td>16</td><td>124.5</td><td>16</td><td>550</td><td><b>20</b></td><td>27.50</td><td>4.41</td><td>3/31</td><td>0</td><td>0</td></tr>
-<tr><td>5</td><td class='l'>Chirag Desai</td><td>19</td><td>147.2</td><td>15</td><td>587</td><td><b>20</b></td><td>29.35</td><td>3.98</td><td>3/36</td><td>0</td><td>0</td></tr>
-<tr><td>6</td><td class='l'>Josh Spooner</td><td>9</td><td>69.1</td><td>9</td><td>359</td><td><b>14</b></td><td>25.64</td><td>5.19</td><td>3/42</td><td>0</td><td>0</td></tr>
-<tr><td>7</td><td class='l'>Andrew Metcalfe</td><td>11</td><td>76</td><td>6</td><td>394</td><td><b>12</b></td><td>32.83</td><td>5.18</td><td>3/35</td><td>0</td><td>0</td></tr>
-<tr><td>8</td><td class='l'>Connor Etchells</td><td>6</td><td>34.5</td><td>4</td><td>149</td><td><b>9</b></td><td>16.56</td><td>4.28</td><td>6/27</td><td>1</td><td>0</td></tr>
-<tr><td>9</td><td class='l'>Tony Munyonga</td><td>7</td><td>57</td><td>7</td><td>232</td><td><b>9</b></td><td>25.78</td><td>4.07</td><td>3/34</td><td>0</td><td>0</td></tr>
-<tr><td>10</td><td class='l'>Elliot Yorston</td><td>13</td><td>62.5</td><td>1</td><td>300</td><td><b>9</b></td><td>33.33</td><td>4.77</td><td>3/52</td><td>0</td><td>0</td></tr>
-<tr><td>11</td><td class='l'>Adam Deller</td><td>7</td><td>38.3</td><td>0</td><td>199</td><td><b>8</b></td><td>24.88</td><td>5.17</td><td>3/31</td><td>0</td><td>0</td></tr>
-<tr><td>12</td><td class='l'>Hayden Briggs</td><td>6</td><td>32</td><td>0</td><td>171</td><td><b>6</b></td><td>28.50</td><td>5.34</td><td>1/9</td><td>0</td><td>0</td></tr>
-</table>
+<table class='players'>
+<thead><tr><th>M</th><th>Ov</th><th>Md</th><th>R</th><th>W</th><th>Avg</th><th>Econ</th><th>Best</th><th>5wi</th><th>4wi</th></tr></thead><tbody>
+<tr class='p-name top1'><td colspan='10' class='l'><span class='rk'>1</span><span class='nm'>Zisan Abedin</span></td></tr><tr class='p-stat top1'><td>29</td><td>273.4</td><td>20</td><td>1142</td><td><b>42</b></td><td>27.19</td><td>4.17</td><td>5/32</td><td>2</td><td>0</td></tr>
+<tr class='p-name top2'><td colspan='10' class='l'><span class='rk'>2</span><span class='nm'>John Grimes</span></td></tr><tr class='p-stat top2'><td>26</td><td>204</td><td>10</td><td>942</td><td><b>38</b></td><td>24.79</td><td>4.62</td><td>4/45</td><td>0</td><td>2</td></tr>
+<tr class='p-name top3'><td colspan='10' class='l'><span class='rk'>3</span><span class='nm'>Jatin Kukreja</span></td></tr><tr class='p-stat top3'><td>14</td><td>133.5</td><td>13</td><td>578</td><td><b>29</b></td><td>19.93</td><td>4.32</td><td>6/28</td><td>2</td><td>0</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>4</span><span class='nm'>Porag Hasan</span></td></tr><tr class='p-stat'><td>16</td><td>124.5</td><td>16</td><td>550</td><td><b>20</b></td><td>27.50</td><td>4.41</td><td>3/31</td><td>0</td><td>0</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>5</span><span class='nm'>Chirag Desai</span></td></tr><tr class='p-stat'><td>19</td><td>147.2</td><td>15</td><td>587</td><td><b>20</b></td><td>29.35</td><td>3.98</td><td>3/36</td><td>0</td><td>0</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>6</span><span class='nm'>Josh Spooner</span></td></tr><tr class='p-stat'><td>9</td><td>69.1</td><td>9</td><td>359</td><td><b>14</b></td><td>25.64</td><td>5.19</td><td>3/42</td><td>0</td><td>0</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>7</span><span class='nm'>Andrew Metcalfe</span></td></tr><tr class='p-stat'><td>11</td><td>76</td><td>6</td><td>394</td><td><b>12</b></td><td>32.83</td><td>5.18</td><td>3/35</td><td>0</td><td>0</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>8</span><span class='nm'>Connor Etchells</span></td></tr><tr class='p-stat'><td>6</td><td>34.5</td><td>4</td><td>149</td><td><b>9</b></td><td>16.56</td><td>4.28</td><td>6/27</td><td>1</td><td>0</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>9</span><span class='nm'>Tony Munyonga</span></td></tr><tr class='p-stat'><td>7</td><td>57</td><td>7</td><td>232</td><td><b>9</b></td><td>25.78</td><td>4.07</td><td>3/34</td><td>0</td><td>0</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>10</span><span class='nm'>Elliot Yorston</span></td></tr><tr class='p-stat'><td>13</td><td>62.5</td><td>1</td><td>300</td><td><b>9</b></td><td>33.33</td><td>4.77</td><td>3/52</td><td>0</td><td>0</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>11</span><span class='nm'>Adam Deller</span></td></tr><tr class='p-stat'><td>7</td><td>38.3</td><td>0</td><td>199</td><td><b>8</b></td><td>24.88</td><td>5.17</td><td>3/31</td><td>0</td><td>0</td></tr>
+<tr class='p-name'><td colspan='10' class='l'><span class='rk'>12</span><span class='nm'>Hayden Briggs</span></td></tr><tr class='p-stat'><td>6</td><td>32</td><td>0</td><td>171</td><td><b>6</b></td><td>28.50</td><td>5.34</td><td>1/9</td><td>0</td><td>0</td></tr>
+</tbody></table>
 </div>
 <div class='card'>
 <h2><span class='num'>4</span>Head-to-head vs Rainham CC, Essex 1st XI</h2>
