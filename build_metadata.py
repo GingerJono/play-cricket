@@ -2,25 +2,27 @@
 """
 Generate the static opposition-metadata pages under `app/metadata/`.
 
-Site shape — kept SPA-ish to avoid a 14k-file commit:
-
-  app/metadata/clubs.html           Generated overview of every club
-  app/metadata/club/<club_id>.html  Per-club roster (~277 pages, small)
+  app/metadata/clubs.html           Generated overview of every relevant club
+  app/metadata/club/<club_id>.html  Per-club roster (one card per player)
   app/metadata/player.html          ONE template, reads ?id=<player_id>
                                     from the URL and fetches
-                                    app/data/players/<id>.json
-  app/data/players/<player_id>.json Small per-player record
-                                    (metadata + match list + video flag)
+                                    app/data/players.json
+  app/data/players.json             Bundled per-player records (~3MB)
   app/static/app.css                Shared stylesheet (written by _app_lib)
   app/static/player.js              Player-page logic + submit form
 
-The submit form has NO backend. Plain JS builds a structured plain-text
+Universe is restricted to **opposition we actually scout**: Rainham 1st
+XI in League games or non-T20 Cup games (`_app_lib.first_xi_match_ids`).
+A club / player only shows up if they appear on a `match_players` row
+for one of those matches.
+
+Submit form has NO backend. Plain JS builds a structured plain-text
 body and opens either a `mailto:` or `wa.me/` link. The user (Jono)
 receives it on Android, pastes it into Claude Code, and Claude writes a
 JSON file under `data/metadata/submissions/`.
 
 Reads:  data/rainham.db, data/metadata/{players,videos,submissions}/
-Writes: app/metadata/..., app/data/players/, app/static/player.js
+Writes: app/metadata/..., app/data/players.json, app/static/player.js
 """
 
 from __future__ import annotations
@@ -33,8 +35,6 @@ from html import escape
 import _app_lib as L
 
 
-# Submission destinations — set via env vars. Both end up baked into
-# the generated player.js so the submitter never needs to type them.
 SUBMIT_EMAIL = os.environ.get("RCC_SUBMIT_EMAIL", "")
 SUBMIT_WHATSAPP = os.environ.get("RCC_SUBMIT_WHATSAPP", "")
 
@@ -118,21 +118,52 @@ def overlay_status(player_id: int, base_status: str,
     return base_status
 
 
+# --------------------------------------------------------- universe scope --
+
+# Match the data-repo window so fixture / club / player counts stay in
+# sync across the site.
+SEASONS_BACK = 10
+
+
+def relevant_match_ids(conn) -> set[int]:
+    """1st XI / League + non-T20 Cup, last 10 seasons, played-only."""
+    import datetime as dt
+    season_min = dt.date.today().year - SEASONS_BACK + 1
+    return set(L.first_xi_match_ids(conn, season_min=season_min))
+
+
+def relevant_club_player_pairs(
+    conn, match_ids: set[int]
+) -> dict[str, set[int]]:
+    """For each non-Rainham club, the set of player_ids seen on a relevant fixture."""
+    if not match_ids:
+        return {}
+    cur = conn.cursor()
+    qmarks = ",".join("?" * len(match_ids))
+    rows = cur.execute(f"""
+        SELECT mp.club_id, mp.player_id
+        FROM match_players mp
+        WHERE mp.match_id IN ({qmarks})
+          AND mp.club_id <> '{L.RAINHAM_CLUB_ID}'
+          AND mp.club_id <> ''
+          AND mp.player_id IS NOT NULL
+    """, list(match_ids)).fetchall()
+    out: dict[str, set[int]] = {}
+    for r in rows:
+        out.setdefault(r["club_id"], set()).add(int(r["player_id"]))
+    return out
+
+
 # --------------------------------------------------------- per-player JSON --
 
 def player_record(conn, pid: int, aliases, clubs_by_player,
                   videos: set[int], all_meta) -> dict:
-    """The compact JSON the player.html template fetches."""
     cur = conn.cursor()
     name = (aliases.get(pid) or [f"#{pid}"])[0]
     seen_clubs = clubs_by_player.get(pid, [])
     meta_file = all_meta.get(pid) or {}
     meta = meta_file.get("metadata") or {}
 
-    # Only include matches that HAVE video evidence — those are the only
-    # ones the player page actually surfaces (in the evidence table and
-    # in the form's match-picker). Skipping the rest keeps the JSON
-    # files small for the 14k-player set.
     rows = cur.execute("""
         SELECT m.match_id AS mid, m.match_date AS d,
                CASE WHEN mp.team_side = 'home' THEN m.away_club_name
@@ -170,40 +201,37 @@ def player_record(conn, pid: int, aliases, clubs_by_player,
 
 # ----------------------------------------------------------------- pages --
 
-def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
-                      pending: dict[int, int]) -> int:
-    cur = conn.cursor()
-    rows = cur.execute(f"""
-        SELECT mp.club_id AS cid, c.club_name AS cname,
-               COUNT(DISTINCT mp.player_id) AS n_players
-        FROM match_players mp
-        LEFT JOIN clubs c ON c.club_id = mp.club_id
-        WHERE mp.club_id <> '{L.RAINHAM_CLUB_ID}' AND mp.club_id <> ''
-        GROUP BY mp.club_id, c.club_name
-        ORDER BY n_players DESC
-    """).fetchall()
-
-    body = ['<h1>Opposition clubs</h1>',
-            '<p class="lead">Browse the roster of every club Rainham has '
-            'played. Click a club name to view their players and submit '
-            'metadata. Status pills count distinct <code>player_id</code>s.</p>',
-            '<table><thead><tr>'
-            '<th>Club</th>'
-            '<th class="num">Players</th>'
-            '<th class="num">Complete</th>'
-            '<th class="num">Partial</th>'
-            '<th class="num">Not captured</th>'
-            '<th class="num">Needs review</th>'
-            '</tr></thead><tbody>']
-
+def fixture_summary_for_hero(
+    conn, match_ids: set[int]
+) -> tuple[list[tuple[str, str]], dict[int, int]]:
+    """Returns (hero stats list, per-season fixture count)."""
+    if not match_ids:
+        return ([("0", "fixtures"), ("0", "clubs"), ("0", "players")], {})
+    qmarks = ",".join("?" * len(match_ids))
+    season_counts = {}
+    rows = conn.execute(f"""
+        SELECT season, COUNT(*) AS n
+        FROM matches WHERE match_id IN ({qmarks})
+        GROUP BY season
+    """, list(match_ids)).fetchall()
     for r in rows:
-        cid = r["cid"]
-        pids = [
-            int(x[0]) for x in cur.execute(
-                "SELECT DISTINCT player_id FROM match_players WHERE club_id = ?",
-                (cid,)
-            ).fetchall() if x[0] is not None
-        ]
+        season_counts[int(r["season"] or 0)] = int(r["n"])
+    return season_counts
+
+
+def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
+                      pending: dict[int, int],
+                      match_ids: set[int],
+                      players_by_club: dict[str, set[int]]) -> int:
+    cur = conn.cursor()
+    # Sort clubs by total players (desc) so the busiest opposition is first.
+    rows = []
+    for cid, pids in players_by_club.items():
+        cname_row = cur.execute(
+            "SELECT club_name FROM clubs WHERE club_id = ?", (cid,)
+        ).fetchone()
+        cname = (cname_row["club_name"] if cname_row else cid) or cid
+        # Status counts for this club's relevant players
         n_complete = n_partial = n_notcap = n_review = 0
         for pid in pids:
             base = L.metadata_status((all_meta.get(pid) or {}).get("metadata"))
@@ -216,132 +244,193 @@ def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
                 n_review += 1
             else:
                 n_notcap += 1
-        cname = r["cname"] or cid
-        body.append(
-            "<tr>"
-            f'<td><a href="club/{escape(cid)}.html">{escape(cname)}</a></td>'
-            f'<td class="num">{r["n_players"]}</td>'
-            f'<td class="num">{n_complete}</td>'
-            f'<td class="num">{n_partial}</td>'
-            f'<td class="num">{n_notcap}</td>'
-            f'<td class="num">{n_review}</td>'
-            "</tr>"
+        rows.append({
+            "cid": cid, "cname": cname, "n": len(pids),
+            "n_complete": n_complete, "n_partial": n_partial,
+            "n_notcap": n_notcap, "n_review": n_review,
+        })
+    rows.sort(key=lambda r: r["n"], reverse=True)
+
+    # Hero stats
+    n_clubs = len(rows)
+    n_players_total = sum(r["n"] for r in rows)
+    n_complete_total = sum(r["n_complete"] for r in rows)
+    season_counts = fixture_summary_for_hero(conn, match_ids)
+    n_fixtures = sum(season_counts.values())
+
+    chips = "".join(
+        f'<span class="season-chip">'
+        f'<span class="y">{s}</span> {n}'
+        f'</span>'
+        for s, n in sorted(season_counts.items(), reverse=True)[:6]
+    )
+
+    body = [
+        L.hero(
+            "Opposition clubs",
+            crumbs=[
+                ("Rainham CC", "../index.html"),
+                ("Clubs", ""),
+            ],
+            lead=("Every club Rainham 1st XI has played in League or "
+                  "non-T20 Cup fixtures across the last 10 seasons. Tap "
+                  "a club to see its players and start filling in their "
+                  "metadata."),
+            stats=[
+                (str(n_fixtures), "fixtures"),
+                (str(n_clubs), "clubs"),
+                (str(n_players_total), "players"),
+                (str(n_complete_total), "complete"),
+            ],
+            extra_html=f'<div class="season-chips">{chips}</div>',
+        ),
+        '<div class="card">',
+        '<h2>Clubs</h2>',
+        '<p class="note">Sorted by squad size — the most-encountered '
+        'opposition first.</p>',
+        '<div class="row-list">',
+    ]
+
+    for r in rows:
+        chips_html = (
+            f'<span class="chip c">{r["n_complete"]}✓</span>'
+            f'<span class="chip p">{r["n_partial"]}</span>'
+            f'<span class="chip">{r["n_notcap"]}</span>'
+            + (f'<span class="chip r">{r["n_review"]}!</span>'
+               if r["n_review"] else "")
         )
-    body.append("</tbody></table>")
+        body.append(
+            f'<a class="row-link" href="club/{escape(r["cid"])}.html">'
+            f'<div class="name">{escape(r["cname"])}'
+            f'<div class="rollup" style="margin-top:4px">{chips_html}</div>'
+            f'</div>'
+            f'<div class="right"><span class="count">{r["n"]} players</span></div>'
+            f'</a>'
+        )
+    body.append('</div></div>')
 
     out = L.APP_DIR / "metadata" / "clubs.html"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(L.page("Opposition clubs", "".join(body),
+    out.write_text(L.page("".join(body),
+        title="Opposition clubs",
         css_href="../static/app.css",
-        crumbs=[
-            ("Data repository", "../index.html"),
-            ("Opposition clubs", ""),
-        ]))
+    ))
     return len(rows)
 
 
 def build_club_pages(conn, all_meta, aliases, clubs_by_player,
-                     videos: set[int], pending: dict[int, int]) -> int:
+                     videos: set[int], pending: dict[int, int],
+                     players_by_club: dict[str, set[int]],
+                     match_ids: set[int]) -> int:
     cur = conn.cursor()
-    rows = cur.execute(f"""
-        SELECT DISTINCT mp.club_id AS cid, c.club_name AS cname
-        FROM match_players mp
-        LEFT JOIN clubs c ON c.club_id = mp.club_id
-        WHERE mp.club_id <> '{L.RAINHAM_CLUB_ID}' AND mp.club_id <> ''
-    """).fetchall()
     n_pages = 0
-    for r in rows:
-        cid = r["cid"]
-        cname = r["cname"] or cid
-        players = cur.execute("""
-            SELECT mp.player_id AS pid,
-                   COUNT(DISTINCT mp.match_id) AS n_matches,
-                   MAX(m.match_date) AS last_seen
-            FROM match_players mp
-            JOIN matches m ON m.match_id = mp.match_id
-            WHERE mp.club_id = ? AND mp.player_id IS NOT NULL
-            GROUP BY mp.player_id
-            ORDER BY n_matches DESC
-        """, (cid,)).fetchall()
+    qmark_matches = ",".join("?" * len(match_ids)) if match_ids else "NULL"
 
-        # Pre-fetch the set of match_ids each player has, to know if any
-        # of them have video evidence.
-        all_pids = [int(p["pid"]) for p in players]
-        video_by_pid: dict[int, bool] = {}
-        if all_pids:
-            qmarks = ",".join("?" * len(all_pids))
-            mp_rows = cur.execute(f"""
-                SELECT player_id, match_id
-                FROM match_players
-                WHERE player_id IN ({qmarks})
-            """, all_pids).fetchall()
-            for mr in mp_rows:
-                if int(mr["match_id"]) in videos:
-                    video_by_pid[int(mr["player_id"])] = True
+    for cid, pids in players_by_club.items():
+        cname_row = cur.execute(
+            "SELECT club_name FROM clubs WHERE club_id = ?", (cid,)
+        ).fetchone()
+        cname = (cname_row["club_name"] if cname_row else cid) or cid
+
+        # Per-player stats: # of relevant fixtures vs Rainham + last seen
+        # + does any of their relevant fixtures have video evidence?
+        pid_stats: list[dict] = []
+        for pid in pids:
+            stat_row = cur.execute(f"""
+                SELECT COUNT(*) AS n, MAX(m.match_date) AS last_seen
+                FROM match_players mp
+                JOIN matches m ON m.match_id = mp.match_id
+                WHERE mp.player_id = ?
+                  AND mp.club_id = ?
+                  AND mp.match_id IN ({qmark_matches})
+            """, (pid, cid, *match_ids)).fetchone()
+            has_video = False
+            if videos:
+                has_video = bool(cur.execute("""
+                    SELECT 1 FROM match_players
+                    WHERE player_id = ? AND match_id IN (
+                        SELECT value FROM (SELECT ?))
+                    LIMIT 1
+                """, (pid, 0)).fetchone()) and any(
+                    int(m["match_id"]) in videos for m in cur.execute(
+                        "SELECT match_id FROM match_players WHERE player_id = ?",
+                        (pid,)
+                    ).fetchall()
+                )
+            pid_stats.append({
+                "pid": pid,
+                "name": (aliases.get(pid) or [f"#{pid}"])[0],
+                "n": stat_row["n"] or 0,
+                "last_seen": stat_row["last_seen"] or "",
+                "ymd": L.date_yyyymmdd(stat_row["last_seen"] or ""),
+                "has_video": has_video,
+            })
+        # Sort by appearances vs us (desc), then most-recent.
+        pid_stats.sort(key=lambda x: (x["n"], x["ymd"]), reverse=True)
+
+        # Status rollup (re-using the same logic as the index)
+        n_c = n_p = n_n = n_r = 0
+        for pid in pids:
+            base = L.metadata_status((all_meta.get(pid) or {}).get("metadata"))
+            s = overlay_status(pid, base, pending)
+            if s == "complete":   n_c += 1
+            elif s == "partial":  n_p += 1
+            elif s in ("needs review", "conflicting"): n_r += 1
+            else: n_n += 1
 
         body = [
-            f"<h1>{escape(cname)}</h1>",
-            f'<p class="lead">{len(players)} distinct players on '
-            f'<code>{escape(cid)}</code>. Click a name to view metadata '
-            'and submit additions.</p>',
-            '<table><thead><tr>'
-            '<th>Player</th>'
-            '<th>Status</th>'
-            '<th class="num">Apps</th>'
-            '<th>Last seen</th>'
-            '<th>Video</th>'
-            '</tr></thead><tbody>'
+            L.hero(
+                cname,
+                crumbs=[
+                    ("Rainham CC", "../../index.html"),
+                    ("Clubs", "../clubs.html"),
+                    (cname, ""),
+                ],
+                lead=(f"Players seen on {escape(cname)} when they faced our "
+                      f"1st XI in League or non-T20 Cup fixtures."),
+                stats=[
+                    (str(len(pids)), "players"),
+                    (str(n_c), "complete"),
+                    (str(n_p), "partial"),
+                    (str(n_n), "missing"),
+                ],
+            ),
+            '<div class="card">',
+            '<h2>Roster</h2>',
+            '<p class="note">Sorted by number of appearances against our '
+            '1st XI. Tap a name to view metadata or submit additions.</p>',
+            '<div class="row-list">',
         ]
-        for p in players:
-            pid = int(p["pid"])
-            name = (aliases.get(pid) or [f"#{pid}"])[0]
-            base = L.metadata_status((all_meta.get(pid) or {}).get("metadata"))
-            status = overlay_status(pid, base, pending)
-            video_pill = ('<span class="tag yes">🎬</span>'
-                          if video_by_pid.get(pid)
-                          else '<span class="muted">—</span>')
+
+        for s in pid_stats:
+            base = L.metadata_status((all_meta.get(s["pid"]) or {}).get("metadata"))
+            status = overlay_status(s["pid"], base, pending)
+            video_chip = ('<span class="tag yes">🎬</span>' if s["has_video"]
+                          else "")
             body.append(
-                "<tr>"
-                f'<td><a href="../player.html?id={pid}">{escape(name)}</a></td>'
-                f"<td>{L.status_pill(status)}</td>"
-                f'<td class="num">{p["n_matches"]}</td>'
-                f'<td>{escape(p["last_seen"] or "")}</td>'
-                f"<td>{video_pill}</td>"
-                "</tr>"
+                f'<a class="row-link" href="../player.html?id={s["pid"]}">'
+                f'<div class="name">{escape(s["name"])}'
+                f'<div class="meta" style="font-size:10.5px;color:var(--muted);'
+                f'margin-top:2px">{s["n"]} app vs us · '
+                f'last seen {escape(s["last_seen"])}</div></div>'
+                f'<div class="right">{video_chip}{L.status_pill(status)}</div>'
+                f'</a>'
             )
-        body.append("</tbody></table>")
+        body.append("</div></div>")
 
         out = L.APP_DIR / "metadata" / "club" / f"{cid}.html"
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(L.page(cname, "".join(body),
-            css_href="../../static/app.css",
-            crumbs=[
-                ("Data repository", "../../index.html"),
-                ("Opposition clubs", "../clubs.html"),
-                (cname, ""),
-            ]))
+        out.write_text(L.page("".join(body), title=cname,
+            css_href="../../static/app.css"))
         n_pages += 1
     return n_pages
 
 
 def build_player_data(conn, all_meta, aliases, clubs_by_player,
-                      videos: set[int]) -> int:
-    """
-    Single bundled `app/data/players.json` keyed by player_id.
-
-    Why bundled? 14k tiny per-player files would burn ~56 MB in 4K
-    filesystem blocks and be a chore to navigate in git. The bundled
-    file is ~3 MB on disk, compresses to ~700 KB over HTTP, and is
-    cached by the browser after the first hit.
-    """
-    cur = conn.cursor()
-    pids = sorted({
-        int(x[0]) for x in cur.execute(f"""
-            SELECT DISTINCT player_id FROM match_players
-            WHERE club_id <> '{L.RAINHAM_CLUB_ID}' AND club_id <> ''
-                  AND player_id IS NOT NULL
-        """).fetchall()
-    })
+                      videos: set[int],
+                      players_by_club: dict[str, set[int]]) -> int:
+    """Single bundled players.json keyed by player_id."""
+    pids = sorted({pid for pids in players_by_club.values() for pid in pids})
     bundle: dict[str, dict] = {}
     for pid in pids:
         bundle[str(pid)] = player_record(
@@ -354,44 +443,46 @@ def build_player_data(conn, all_meta, aliases, clubs_by_player,
 
 
 def write_player_template_and_js() -> None:
-    """One static `player.html` shell + a separate player.js with the form logic."""
     L.APP_DIR.joinpath("metadata").mkdir(parents=True, exist_ok=True)
 
-    # Template. The page reads ?id= from the URL, fetches the JSON,
-    # then renders into the marked div. Crumbs are static; the title
-    # is rewritten by JS.
+    # The page is rendered entirely from JS once the bundle loads.
     body = (
+        '<header class="hero" id="hero">'
+        '<div class="crumbs">'
+        '<a href="../index.html">Rainham CC</a>'
+        '<span class="sep">&rsaquo;</span>'
+        '<a href="clubs.html">Clubs</a>'
+        '<span class="sep">&rsaquo;</span>'
+        '<span>Player</span>'
+        '</div>'
         '<h1 id="player-name">Loading…</h1>'
         '<p class="lead" id="player-status"></p>'
+        '</header>'
+        '<main>'
         '<div id="meta-box"></div>'
         '<div id="video-box"></div>'
         '<div id="form-box"></div>'
+        '</main>'
     )
-    page_html = L.page("Player metadata", body,
+    page_html = L.page(body, title="Player metadata",
         css_href="../static/app.css",
-        crumbs=[
-            ("Data repository", "../index.html"),
-            ("Opposition clubs", "clubs.html"),
-            ("Player", ""),
-        ],
         extra_body='<script src="../static/player.js"></script>',
     )
     (L.APP_DIR / "metadata" / "player.html").write_text(page_html)
 
-    # The JS lives next to app.css under app/static/
-    js = PLAYER_JS_TEMPLATE
-    js = js.replace("__SUBMIT_EMAIL__", json.dumps(SUBMIT_EMAIL))
-    js = js.replace("__SUBMIT_WHATSAPP__", json.dumps(SUBMIT_WHATSAPP))
+    js = (PLAYER_JS_TEMPLATE
+          .replace("__SUBMIT_EMAIL__", json.dumps(SUBMIT_EMAIL))
+          .replace("__SUBMIT_WHATSAPP__", json.dumps(SUBMIT_WHATSAPP)))
     (L.APP_DIR / "static" / "player.js").write_text(js)
 
 
 PLAYER_JS_TEMPLATE = r"""
 // Player metadata page — runtime renderer + submission form.
 //
-// Reads ?id=<player_id> from the URL, fetches
-// ../data/players/<id>.json, and builds the page. The submit form has
-// NO backend; it composes a structured plain-text body and opens either
-// a mailto: or wa.me/ link.
+// Reads ?id=<player_id> from the URL, fetches ../data/players.json
+// (one bundled file, ~3 MB, browser-cached after first hit) and looks
+// the player up by id. The submit form has NO backend; it composes a
+// structured plain-text body and opens either a mailto: or wa.me/ link.
 (function() {
   const SUBMIT_EMAIL = __SUBMIT_EMAIL__;
   const SUBMIT_WHATSAPP = __SUBMIT_WHATSAPP__;
@@ -403,8 +494,6 @@ PLAYER_JS_TEMPLATE = r"""
     return;
   }
 
-  // One bundled JSON for every player; cached by the browser after
-  // the first hit. Look the player up by id once it lands.
   fetch('../data/players.json')
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
     .then(bundle => {
@@ -479,88 +568,93 @@ PLAYER_JS_TEMPLATE = r"""
   function render(p) {
     document.title = p.name + ' — metadata';
     const nameEl = document.getElementById('player-name');
-    nameEl.innerHTML = '';
-    nameEl.appendChild(document.createTextNode(p.name + ' '));
-    const sub = el('span', {class: 'muted', style: 'font-size:14px'});
-    sub.textContent = '#' + p.player_id;
-    nameEl.appendChild(sub);
+    nameEl.textContent = p.name;
 
     const stEl = document.getElementById('player-status');
     stEl.innerHTML = '';
-    stEl.appendChild(document.createTextNode('Status: '));
+    stEl.appendChild(document.createTextNode('#' + p.player_id + ' · '));
     stEl.appendChild(statusPill(statusOf(p.metadata)));
     if (p.seen_clubs && p.seen_clubs.length) {
-      stEl.appendChild(document.createTextNode(' · clubs seen: '));
+      stEl.appendChild(document.createTextNode(' · '));
+      const clubsBit = el('span', {style: 'opacity:.85'});
       p.seen_clubs.forEach((c, i) => {
-        if (i) stEl.appendChild(document.createTextNode(', '));
-        const a = el('a', {href: 'club/' + c.club_id + '.html'});
+        if (i) clubsBit.appendChild(document.createTextNode(', '));
+        const a = el('a', {href: 'club/' + c.club_id + '.html',
+                           style: 'color:#fff'});
         a.textContent = c.club_name;
-        stEl.appendChild(a);
+        clubsBit.appendChild(a);
       });
+      stEl.appendChild(clubsBit);
     }
 
     // Current metadata
     const mb = document.getElementById('meta-box');
-    mb.appendChild(el('h2', null, ['Current metadata']));
+    const card = el('div', {class: 'card'});
+    card.appendChild(el('h2', null, ['Current metadata']));
     const m = p.metadata || {};
     const fields = ['batting_hand','bowling_type','pace_type','spin_type',
                     'bowling_arm','angle_to_rhb'];
     const populated = fields.filter(k => m[k]);
     if (!populated.length) {
-      mb.appendChild(el('p', {class: 'note'}, ['No metadata captured yet.']));
+      card.appendChild(el('p', {class: 'note'}, ['No metadata captured yet.']));
     } else {
-      const row = el('div', {class: 'row', style: 'flex-wrap:wrap'});
+      const grid = el('div', {class: 'meta-grid'});
       populated.forEach(k => {
-        const cell = el('div', null, [
-          el('label', null, [FIELD_LABELS[k]]),
-          el('div', null, [String(m[k])]),
-        ]);
-        row.appendChild(cell);
+        grid.appendChild(el('div', null, [
+          el('div', {class: 'k'}, [FIELD_LABELS[k]]),
+          el('div', {class: 'v'}, [String(m[k])]),
+        ]));
       });
-      mb.appendChild(row);
-      if (m.notes) mb.appendChild(el('p', {class: 'note'}, [m.notes]));
+      card.appendChild(grid);
+      if (m.notes) card.appendChild(el('p', {class: 'note'}, [m.notes]));
     }
+    mb.appendChild(card);
 
     // Video evidence
     const vb = document.getElementById('video-box');
-    vb.appendChild(el('h2', null, ['Video evidence']));
+    const vCard = el('div', {class: 'card'});
+    vCard.appendChild(el('h2', null, ['Video evidence']));
     const withVideos = (p.evidence_matches || []);
     if (!withVideos.length) {
-      vb.appendChild(el('p', {class: 'note'}, [
+      vCard.appendChild(el('p', {class: 'note'}, [
         'No videos recorded for matches involving this player yet. ' +
-        '(Video links live in data/metadata/videos/<match_id>.json.)'
+        'Video links live in data/metadata/videos/<match_id>.json.'
       ]));
     } else {
-      const tbl = el('table');
-      tbl.innerHTML =
-        '<thead><tr><th>Date</th><th>Opp</th><th>Videos</th></tr></thead>';
-      const tb = el('tbody');
+      const list = el('div', {class: 'fix-list'});
       withVideos.forEach(mt => {
-        const tr = el('tr');
-        tr.appendChild(el('td', null, [mt.date]));
-        tr.appendChild(el('td', null, [mt.opp]));
-        const td = el('td');
-        mt.videos.forEach((v, i) => {
-          if (i) td.appendChild(document.createTextNode(' · '));
-          const a = el('a', {href: v.url, target: '_blank'});
+        const card = el('div', {class: 'fix'});
+        const r1 = el('div', {class: 'row1'});
+        const left = el('div', {class: 'left'});
+        left.appendChild(el('div', {class: 'date'}, [mt.date]));
+        left.appendChild(el('div', {class: 'opp'}, ['vs ' + mt.opp]));
+        r1.appendChild(left);
+        const right = el('div', {class: 'right'});
+        right.appendChild(el('span', {class: 'tag yes'},
+          ['🎬 ' + mt.videos.length]));
+        r1.appendChild(right);
+        card.appendChild(r1);
+        mt.videos.forEach(v => {
+          const a = el('a', {href: v.url, target: '_blank',
+                              style: 'display:block;font-size:12px;' +
+                                     'margin-top:3px;font-weight:600'});
           a.textContent = v.label || 'watch';
-          td.appendChild(a);
+          card.appendChild(a);
         });
-        tr.appendChild(td);
-        tb.appendChild(tr);
+        list.appendChild(card);
       });
-      tbl.appendChild(tb);
-      vb.appendChild(tbl);
+      vCard.appendChild(list);
     }
+    vb.appendChild(vCard);
 
-    // Submit form
     renderForm(p);
   }
 
   function renderForm(p) {
     const fb = document.getElementById('form-box');
-    fb.appendChild(el('h2', null, ['Submit metadata']));
-    fb.appendChild(el('p', {class: 'note'}, [
+    const card = el('div', {class: 'card'});
+    card.appendChild(el('h2', null, ['Submit metadata']));
+    card.appendChild(el('p', {class: 'note'}, [
       'Fill in what you know. The button below opens your email or ' +
       'WhatsApp with a structured message; Jono receives it and adds ' +
       'it to the queue. Nothing is sent until you press the button in ' +
@@ -580,9 +674,8 @@ PLAYER_JS_TEMPLATE = r"""
       });
       return sel;
     }
-
     function row(items) {
-      const r = el('div', {class: 'row'});
+      const r = el('div', {class: 'field-row'});
       items.forEach(it => r.appendChild(it));
       return r;
     }
@@ -605,7 +698,7 @@ PLAYER_JS_TEMPLATE = r"""
 
     const vidMatches = (p.evidence_matches || []);
     const evid = el('select', {id: 'f-evidence', name: 'evidence_match_ids',
-                               multiple: 'multiple', size: '5'});
+                               multiple: 'multiple', size: '4'});
     if (vidMatches.length) {
       vidMatches.forEach(mt => {
         const lbl = mt.date + ' — ' + mt.opp + ' (' + mt.videos.length +
@@ -617,8 +710,7 @@ PLAYER_JS_TEMPLATE = r"""
       o.setAttribute('disabled', 'disabled');
       evid.appendChild(o);
     }
-    form.appendChild(el('label', null,
-      ['Evidence matches (Cmd/Ctrl-click for multi)']));
+    form.appendChild(el('label', null, ['Evidence matches (multi-select)']));
     form.appendChild(evid);
 
     form.appendChild(el('label', null, ['Notes / reasoning (optional)']));
@@ -632,7 +724,7 @@ PLAYER_JS_TEMPLATE = r"""
       placeholder: 'e.g. Jane Smith',
     }));
 
-    const btnRow = el('div', {style: 'margin-top:14px'});
+    const btnRow = el('div', {class: 'btn-row'});
     const mailBtn = el('a', {href: '#', id: 'sendMail', class: 'btn'},
                        ['Send via email']);
     const waBtn   = el('a', {href: '#', id: 'sendWA', class: 'btn secondary'},
@@ -640,12 +732,11 @@ PLAYER_JS_TEMPLATE = r"""
     btnRow.appendChild(mailBtn);
     btnRow.appendChild(waBtn);
     form.appendChild(btnRow);
-    form.appendChild(el('p', {class: 'note'}, [
-      'Receiving address: ',
-      el('code', {id: 'addrPreview'}),
-    ]));
+    form.appendChild(el('p', {class: 'note', style: 'margin-top:10px'},
+      ['Receiving address: ', el('code', {id: 'addrPreview'})]));
 
-    document.getElementById('form-box').appendChild(form);
+    card.appendChild(form);
+    fb.appendChild(card);
 
     document.getElementById('addrPreview').textContent =
       SUBMIT_EMAIL ? SUBMIT_EMAIL :
@@ -706,18 +797,26 @@ def build() -> int:
     videos = L.matches_with_videos()
     pending = pending_submissions_by_player()
 
+    match_ids = relevant_match_ids(conn)
+    if not match_ids:
+        print("No relevant 1st-XI fixtures found — abort.", file=sys.stderr)
+        return 1
+    players_by_club = relevant_club_player_pairs(conn, match_ids)
+
     print("Building app/metadata/clubs.html ...", flush=True)
-    n = build_clubs_index(conn, all_meta, aliases, clubs_by_player, pending)
+    n = build_clubs_index(conn, all_meta, aliases, clubs_by_player,
+                          pending, match_ids, players_by_club)
     print(f"  {n} clubs listed", flush=True)
 
     print("Building app/metadata/club/<club_id>.html ...", flush=True)
     n = build_club_pages(conn, all_meta, aliases, clubs_by_player,
-                         videos, pending)
+                         videos, pending, players_by_club, match_ids)
     print(f"  {n} club pages", flush=True)
 
-    print("Building app/data/players/<player_id>.json ...", flush=True)
-    n = build_player_data(conn, all_meta, aliases, clubs_by_player, videos)
-    print(f"  {n} player JSON files", flush=True)
+    print("Building app/data/players.json bundle ...", flush=True)
+    n = build_player_data(conn, all_meta, aliases, clubs_by_player,
+                          videos, players_by_club)
+    print(f"  {n} players in bundle", flush=True)
 
     print("Writing app/metadata/player.html template + app/static/player.js ...",
           flush=True)

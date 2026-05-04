@@ -29,6 +29,58 @@ SUBMISSIONS_META_DIR = META_DIR / "submissions"
 APP_DIR = ROOT / "app"
 
 RAINHAM_CLUB_ID = "5251"
+RAINHAM_FIRST_XI_TEAM_ID = "51207"   # Saturday 1st XI
+
+# competition_name patterns that mark a Cup as a T20 / 20-over format —
+# we exclude these per the user's spec ("League games + Cup games where
+# they are not T20"). Match on lowercased competition_name; the `%`
+# placeholders are SQL LIKE wildcards.
+T20_NAME_PATTERNS = (
+    "%t20%", "%twenty20%", "%twenty 20%", "%20/20%", "%20-20%",
+    "%smash%",            # 'Essex SMASH T20 ...'
+)
+
+
+def first_xi_fixture_where(*, alias: str = "m",
+                            include_unplayed: bool = False) -> tuple[str, list]:
+    """
+    Returns (sql_fragment, params) suitable for a WHERE clause that
+    filters `matches` (aliased as `alias`) down to the fixtures we
+    care about for the metadata project:
+
+      * Rainham 1st XI on either side
+      * League games (always) OR Cup games whose competition_name does
+        NOT match any T20 / 20-over pattern
+      * (default) result <> ''  — i.e. played
+
+    Caller is responsible for adding `WHERE` / `AND` glue.
+    """
+    a = alias
+    parts = [
+        f"({a}.home_team_id = ? OR {a}.away_team_id = ?)",
+        f"("
+        f"  {a}.competition_type = 'League'"
+        f"  OR ({a}.competition_type = 'Cup' AND "
+        + " AND ".join(
+            f"lower({a}.competition_name) NOT LIKE ?" for _ in T20_NAME_PATTERNS
+        )
+        + "))",
+    ]
+    params: list = [RAINHAM_FIRST_XI_TEAM_ID, RAINHAM_FIRST_XI_TEAM_ID]
+    params.extend(T20_NAME_PATTERNS)
+    if not include_unplayed:
+        parts.append(f"{a}.result <> ''")
+    return " AND ".join(parts), params
+
+
+def first_xi_match_ids(conn, *, include_unplayed: bool = False,
+                        season_min: int | None = None) -> list[int]:
+    """List of match_ids matching the 1st-XI / League+non-T20-Cup filter."""
+    sql_filter, params = first_xi_fixture_where(include_unplayed=include_unplayed)
+    sql = f"SELECT match_id FROM matches m WHERE {sql_filter}"
+    if season_min is not None:
+        sql += " AND m.season >= ?"; params.append(season_min)
+    return [int(r[0]) for r in conn.execute(sql, params).fetchall()]
 
 # ---------------------------------------------------------------------- DB --
 
@@ -149,78 +201,200 @@ def season_of(ddmmyyyy: str) -> int | None:
 # -------------------------------------------------------------- HTML chrome --
 
 CSS = """
-:root {
-  --bg: #0f1218;
-  --surface: #161b22;
-  --surface-2: #1f2630;
-  --border: #2a313c;
-  --text: #e6edf3;
-  --muted: #8b97a8;
-  --accent: #2da44e;
-  --warn: #d29922;
-  --bad: #f85149;
-  --link: #58a6ff;
-  --pill-bg: #21262d;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-               Helvetica, Arial, sans-serif;
+:root{
+  --bg:#f3f4f8;
+  --card:#ffffff;
+  --ink:#10172a;
+  --muted:#5a657a;
+  --line:#e6e9f0;
+  --line-2:#d4d9e4;
+  --accent:#1d4ed8;
+  --accent-2:#0ea5a5;
+  --w:#15803d;
+  --l:#b91c1c;
+  --d:#6b7280;
+  --nr:#b08a2e;
+  --hi:#fff7d6;
+  --shadow:0 1px 2px rgba(16,23,42,.04),0 4px 14px rgba(16,23,42,.06);
 }
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text); }
-.container { max-width: 1100px; margin: 0 auto; padding: 16px; }
-header { padding: 16px; border-bottom: 1px solid var(--border);
-         background: var(--surface); }
-header .title { font-size: 18px; font-weight: 600; }
-header .crumbs { font-size: 13px; color: var(--muted); margin-top: 4px; }
-header a { color: var(--link); text-decoration: none; }
-header a:hover { text-decoration: underline; }
-h1 { font-size: 22px; margin: 0 0 8px; }
-h2 { font-size: 17px; margin: 24px 0 8px;
-     border-bottom: 1px solid var(--border); padding-bottom: 4px; }
-p.lead { color: var(--muted); margin: 0 0 16px; font-size: 14px; }
-.tag { display: inline-block; padding: 1px 8px; border-radius: 99px;
-       font-size: 11px; background: var(--pill-bg); color: var(--text);
-       border: 1px solid var(--border); }
-.tag.complete { background: #1a3d23; border-color: #2da44e; color: #7ee787; }
-.tag.partial { background: #3d2c00; border-color: #d29922; color: #f0c674; }
-.tag.notcap  { background: #2a2a2a; border-color: var(--border); color: var(--muted); }
-.tag.review  { background: #1f2a44; border-color: #58a6ff; color: #79c0ff; }
-.tag.conflict{ background: #3a1a1a; border-color: #f85149; color: #ffa198; }
-.tag.yes { color: #7ee787; }
-.tag.no  { color: var(--muted); }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th, td { padding: 6px 8px; text-align: left;
-         border-bottom: 1px solid var(--border); white-space: nowrap; }
-th { color: var(--muted); font-weight: 500; font-size: 11px;
-     text-transform: uppercase; letter-spacing: 0.04em; }
-tr:hover td { background: var(--surface-2); }
-td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-.coverage-bar { display: inline-block; width: 60px; height: 6px;
-                background: var(--surface-2); border-radius: 3px;
-                vertical-align: middle; margin-right: 6px; overflow: hidden; }
-.coverage-bar > span { display: block; height: 100%; background: var(--accent); }
-.coverage-bar.zero > span { background: var(--bad); }
-.coverage-bar.low > span { background: var(--warn); }
-a { color: var(--link); }
-.muted { color: var(--muted); }
-.btn { display: inline-block; padding: 6px 14px; border-radius: 6px;
-       background: var(--accent); color: #fff !important; text-decoration: none;
-       font-size: 13px; font-weight: 500; margin-right: 6px; }
-.btn.secondary { background: var(--surface-2); color: var(--text) !important;
-                 border: 1px solid var(--border); }
-form { background: var(--surface); padding: 16px; border-radius: 8px;
-       border: 1px solid var(--border); margin-top: 16px; }
-label { display: block; margin: 8px 0 2px; font-size: 12px;
-        color: var(--muted); }
-input, select, textarea {
-  width: 100%; padding: 6px 8px; background: var(--surface-2);
-  color: var(--text); border: 1px solid var(--border); border-radius: 4px;
-  font-size: 14px; font-family: inherit;
-}
-textarea { min-height: 60px; resize: vertical; }
-.row { display: flex; gap: 12px; }
-.row > div { flex: 1; }
-.note { font-size: 12px; color: var(--muted); margin-top: 4px; }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{padding:12px 12px 24px;
+     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,
+                'Helvetica Neue',Arial,sans-serif;
+     font-size:14px;line-height:1.4;color:var(--ink);
+     background:linear-gradient(180deg,#eef1f7 0,#f3f4f8 240px);
+     max-width:540px;margin:0 auto;
+     -webkit-font-smoothing:antialiased}
+
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Hero header + breadcrumbs */
+.hero{background:linear-gradient(135deg,#0f1f4a 0%,#1d4ed8 100%);
+      color:#fff;border-radius:14px;padding:14px 16px 16px;
+      box-shadow:var(--shadow);margin:0 0 14px;position:relative;
+      overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(circle at 90% -10%,rgba(255,255,255,.18),transparent 50%);
+  pointer-events:none}
+.hero .crumbs{font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;
+              opacity:.8;font-weight:600;margin-bottom:2px}
+.hero .crumbs a{color:#fff;opacity:.85}
+.hero .crumbs a:hover{opacity:1;text-decoration:underline}
+.hero .crumbs .sep{opacity:.55;margin:0 4px}
+.hero h1{font-size:22px;margin:0 0 6px;font-weight:800;line-height:1.15;
+         letter-spacing:-.01em}
+.hero p.lead{font-size:12px;margin:0;opacity:.92;color:#e6ecff;
+             line-height:1.4}
+.hero .stats{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}
+.hero .stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+            border-radius:9px;padding:6px 10px;backdrop-filter:blur(2px);
+            min-width:70px;flex:1}
+.hero .stat .n{font-size:16px;font-weight:700;line-height:1;
+               font-variant-numeric:tabular-nums}
+.hero .stat .lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;
+                 opacity:.78;margin-top:3px}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+      padding:12px 14px;margin:0 0 12px;box-shadow:var(--shadow)}
+.card > h2:first-child{margin-top:0}
+
+h2{font-size:15px;margin:18px 0 8px;padding:0 0 7px;
+   border-bottom:1px solid var(--line);font-weight:700;letter-spacing:-.005em;
+   color:var(--ink)}
+h3{font-size:12.5px;margin:14px 0 6px;color:var(--muted);
+   text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+p{font-size:13px;margin:4px 0 8px}
+p.meta,p.note{color:var(--muted);font-size:11.5px;margin:0 0 10px}
+p.note{font-size:12px}
+
+/* Status pills (metadata complete / partial / not captured / etc.) */
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:10.5px;
+     font-weight:700;letter-spacing:.02em;line-height:15px;border:1px solid transparent}
+.tag.complete{background:#dcfce7;border-color:#86efac;color:#15803d}
+.tag.partial {background:#fef3c7;border-color:#fcd34d;color:#92400e}
+.tag.notcap  {background:#eef0f6;border-color:var(--line-2);color:var(--muted)}
+.tag.review  {background:#dbeafe;border-color:#93c5fd;color:#1d4ed8}
+.tag.conflict{background:#fee2e2;border-color:#fca5a5;color:#b91c1c}
+.tag.yes     {background:#dcfce7;border-color:#86efac;color:#15803d;padding:2px 7px}
+.tag.no      {background:#eef0f6;border-color:var(--line-2);color:var(--muted);padding:2px 7px}
+
+/* Result pill for the data repo (W/L/D…) */
+.pill{display:inline-block;padding:1px 7px;border-radius:9px;
+      font-size:10.5px;font-weight:700;color:#fff;min-width:18px;
+      text-align:center;line-height:15px}
+.pill.W{background:var(--w)}
+.pill.L{background:var(--l)}
+.pill.D,.pill.T{background:var(--d)}
+.pill.NR,.pill.A{background:var(--nr)}
+
+/* Coverage bar (used in the data-repo fixture cards) */
+.cov-row{display:flex;align-items:center;gap:8px;margin:3px 0;font-size:11.5px}
+.cov-row .lbl{flex:0 0 60px;font-size:10px;color:var(--muted);font-weight:700;
+              text-transform:uppercase;letter-spacing:.06em}
+.cov-row .bar{flex:1;height:6px;background:#eef0f6;border-radius:3px;overflow:hidden;
+              box-shadow:inset 0 0 0 1px rgba(0,0,0,.04)}
+.cov-row .bar > span{display:block;height:100%;background:linear-gradient(180deg,#3b82f6,#1d4ed8)}
+.cov-row .bar.zero > span{background:linear-gradient(180deg,#94a3b8,#64748b)}
+.cov-row .bar.low  > span{background:linear-gradient(180deg,#f59e0b,#b45309)}
+.cov-row .num{flex:0 0 38px;text-align:right;font-variant-numeric:tabular-nums;
+              color:var(--ink);font-weight:700}
+
+/* Fixture cards (data-repo and per-player) */
+.fix-list{display:flex;flex-direction:column;gap:8px;margin:6px 0 0}
+.fix{background:#fff;border:1px solid var(--line);border-radius:10px;
+     padding:10px 12px;box-shadow:var(--shadow)}
+.fix .row1{display:flex;justify-content:space-between;align-items:flex-start;
+           gap:8px;margin-bottom:4px}
+.fix .row1 .left{display:flex;flex-direction:column;gap:1px;min-width:0}
+.fix .date{font-size:10.5px;color:var(--muted);font-weight:700;
+           text-transform:uppercase;letter-spacing:.05em}
+.fix .opp{font-size:13px;font-weight:700;color:var(--ink);
+          white-space:normal;word-break:break-word;line-height:1.25}
+.fix .opp a{color:var(--ink);border-bottom:1px dotted var(--line-2)}
+.fix .opp a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.fix .right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.fix .meta{font-size:10.5px;color:var(--muted);margin:1px 0 4px}
+
+/* List rows (clubs, players) */
+.row-list{display:flex;flex-direction:column;gap:6px;margin:4px 0 0}
+.row-link{display:flex;align-items:center;justify-content:space-between;
+          gap:10px;background:#fff;border:1px solid var(--line);
+          border-radius:9px;padding:10px 12px;box-shadow:var(--shadow);
+          color:var(--ink);text-decoration:none}
+.row-link:hover{border-color:var(--line-2);text-decoration:none}
+.row-link .name{font-weight:700;font-size:13.5px;min-width:0;
+                white-space:normal;word-break:break-word;line-height:1.25;flex:1}
+.row-link .right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.row-link .count{font-size:10.5px;color:var(--muted);font-weight:700;
+                 font-variant-numeric:tabular-nums}
+
+/* Per-club status rollup chips */
+.rollup{display:flex;gap:5px;flex-wrap:wrap;font-size:10px}
+.rollup .chip{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;
+              background:#eef0f6;border:1px solid var(--line-2);border-radius:99px;
+              font-weight:700;color:var(--muted);
+              font-variant-numeric:tabular-nums}
+.rollup .chip.c{background:#dcfce7;border-color:#86efac;color:#15803d}
+.rollup .chip.p{background:#fef3c7;border-color:#fcd34d;color:#92400e}
+.rollup .chip.r{background:#dbeafe;border-color:#93c5fd;color:#1d4ed8}
+
+/* Forms (player metadata submit) */
+form{background:#fff;border:1px solid var(--line);border-radius:12px;
+     padding:14px;box-shadow:var(--shadow);margin-top:8px}
+label{display:block;margin:8px 0 3px;font-size:10.5px;color:var(--muted);
+      font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+input,select,textarea{width:100%;padding:8px 10px;background:#fff;
+  color:var(--ink);border:1px solid var(--line-2);border-radius:8px;
+  font-size:14px;font-family:inherit}
+select[multiple]{padding:4px}
+textarea{min-height:64px;resize:vertical}
+.field-row{display:flex;gap:10px}
+.field-row > div{flex:1}
+.btn{display:inline-block;padding:9px 16px;border-radius:8px;
+     background:var(--accent);color:#fff !important;text-decoration:none;
+     font-size:13px;font-weight:700;letter-spacing:.01em;
+     box-shadow:0 1px 0 rgba(0,0,0,.04),0 4px 12px rgba(29,78,216,.18);
+     border:1px solid #1e40af;margin-right:8px;text-align:center}
+.btn:hover{background:#1e40af;text-decoration:none;color:#fff}
+.btn.secondary{background:#10b981;border-color:#047857;
+               box-shadow:0 1px 0 rgba(0,0,0,.04),0 4px 12px rgba(16,185,129,.18)}
+.btn.secondary:hover{background:#047857}
+.btn-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn-row .btn{flex:1;min-width:140px}
+
+/* Metadata read-out (current values on the player page) */
+.meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+           gap:8px 12px;margin:4px 0 0}
+.meta-grid .k{font-size:10px;text-transform:uppercase;letter-spacing:.06em;
+              color:var(--muted);font-weight:700}
+.meta-grid .v{font-size:13.5px;font-weight:700;color:var(--ink);
+              margin-top:2px}
+
+/* Tables — used sparingly on mobile (compact + horizontally scrollable) */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6px -2px}
+table{width:100%;border-collapse:collapse;font-size:11.5px;
+      font-variant-numeric:tabular-nums}
+th,td{padding:6px 6px;border-bottom:1px solid var(--line);text-align:left;
+      white-space:nowrap}
+th{background:#f7f8fc;font-weight:700;color:var(--muted);
+   border-bottom:1px solid var(--line-2);font-size:10px;
+   text-transform:uppercase;letter-spacing:.05em}
+td.num,th.num{text-align:right}
+tr:nth-child(even) td{background:#fafbfd}
+tr:last-child td{border-bottom:none}
+
+/* Per-season summary chips on the data-repo hero */
+.season-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:11px}
+.season-chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+             border-radius:99px;padding:3px 9px;font-size:10.5px;font-weight:700;
+             color:#fff;font-variant-numeric:tabular-nums;
+             display:inline-flex;align-items:baseline;gap:4px}
+.season-chip .y{opacity:.75;font-size:9.5px;letter-spacing:.06em}
 """
+
 
 
 def write_static_assets() -> None:
@@ -230,23 +404,54 @@ def write_static_assets() -> None:
     (static_dir / "app.css").write_text(CSS)
 
 
-def page(title: str, body_html: str, *,
-         crumbs: list[tuple[str, str]] | None = None,
-         css_href: str = "static/app.css",
-         extra_head: str = "",
-         extra_body: str = "") -> str:
+def hero(title: str, *, crumbs: list[tuple[str, str]] | None = None,
+         lead: str = "", stats: list[tuple[str, str]] | None = None,
+         extra_html: str = "") -> str:
     """
-    Wrap `body_html` in the standard <html> shell.
-
-    `css_href` is the relative path to the stylesheet from the page's
-    own location — pass `"../static/app.css"` for a page two levels deep.
+    The blue gradient hero block at the top of every page. `stats` is a
+    list of (number, label) chips; `extra_html` is appended inside the
+    hero (used for the per-season chips on the data repo).
     """
     crumbs = crumbs or []
-    crumb_html = " &rsaquo; ".join(
-        f'<a href="{escape(href)}">{escape(label)}</a>' if href
-        else f"<span>{escape(label)}</span>"
-        for label, href in crumbs
+    if crumbs:
+        crumb_html = (
+            '<div class="crumbs">'
+            + '<span class="sep">&rsaquo;</span>'.join(
+                f'<a href="{escape(href)}">{escape(label)}</a>' if href
+                else f"<span>{escape(label)}</span>"
+                for label, href in crumbs
+            )
+            + "</div>"
+        )
+    else:
+        crumb_html = ""
+    stats_html = ""
+    if stats:
+        stats_html = '<div class="stats">' + "".join(
+            f'<div class="stat"><div class="n">{escape(n)}</div>'
+            f'<div class="lbl">{escape(lbl)}</div></div>'
+            for n, lbl in stats
+        ) + "</div>"
+    lead_html = f'<p class="lead">{lead}</p>' if lead else ""
+    return (
+        f'<header class="hero">'
+        f"{crumb_html}"
+        f"<h1>{escape(title)}</h1>"
+        f"{lead_html}"
+        f"{stats_html}"
+        f"{extra_html}"
+        f"</header>"
     )
+
+
+def page(body_html: str, *, title: str = "Rainham CC",
+         css_href: str = "static/app.css",
+         extra_head: str = "", extra_body: str = "") -> str:
+    """
+    Outer <html> shell. Body content (including any hero header) is
+    rendered by the caller — this keeps mobile layout one column, no
+    sticky header.
+    """
     return (
         "<!doctype html>\n"
         f'<html><head><meta charset="utf-8">'
@@ -254,11 +459,7 @@ def page(title: str, body_html: str, *,
         f"<title>{escape(title)}</title>"
         f'<link rel="stylesheet" href="{escape(css_href)}">'
         f"{extra_head}</head><body>"
-        f'<header><div class="container">'
-        f'<div class="title">Rainham CC — opposition data</div>'
-        f'<div class="crumbs">{crumb_html}</div>'
-        f"</div></header>"
-        f'<main class="container">{body_html}</main>'
+        f"{body_html}"
         f"{extra_body}</body></html>"
     )
 
