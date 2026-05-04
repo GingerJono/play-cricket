@@ -122,36 +122,32 @@ tr:last-child td{border-bottom:none}
 .bar2 span.us{background:linear-gradient(180deg,#3b82f6,#1d4ed8)}
 .bar2 span.them{background:linear-gradient(180deg,#ef4444,#b91c1c)}
 
-/* Top-N stat lists (batter / bowler highlight cards) */
-.top-list{display:flex;flex-direction:column;gap:6px;margin:8px 0 4px}
-.top-row{display:flex;align-items:center;gap:10px;padding:6px 8px;
-         background:#fafbfd;border:1px solid var(--line);border-radius:8px}
-.top-row .rank{flex:0 0 22px;height:22px;border-radius:6px;background:#e6ecf9;
-               color:var(--accent);font-weight:800;font-size:11px;
-               display:flex;align-items:center;justify-content:center}
-.top-row .rank.gold{background:#fff4cc;color:#a07300}
-.top-row .rank.silver{background:#eef1f5;color:#4b5566}
-.top-row .rank.bronze{background:#f3e0ce;color:#8b5b1c}
-.top-row .name{flex:1;font-weight:700;font-size:12.5px;
-               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.top-row .big{font-size:14px;font-weight:800;color:var(--ink);
-              font-variant-numeric:tabular-nums}
-.top-row .sub{font-size:10.5px;color:var(--muted);
-              font-variant-numeric:tabular-nums}
+/* Top-N stat tables — highlight the podium rows */
+table.dense th,table.dense td{padding:4px 5px;font-size:11px}
+tr.top-rank td{background:#fffbe8 !important;font-weight:700}
+tr.top-rank:nth-child(2) td{background:#fff4cc !important}
+tr.top-rank:nth-child(3) td{background:#f4e6cb !important}
+tr.top-rank:nth-child(4) td{background:#eceff5 !important}
 
-/* Recent-match list */
-.recent-list{margin:6px 0 2px;display:flex;flex-direction:column;gap:5px}
-.r-row{display:flex;align-items:center;gap:8px;padding:7px 9px;
-       border:1px solid var(--line);border-radius:8px;background:#fff}
-.r-row .date{flex:0 0 64px;font-size:10.5px;color:var(--muted);font-weight:600}
-.r-row .opp{flex:1;font-size:12px;font-weight:600;
-            white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.r-row .scores{font-size:10.5px;color:var(--muted);
-               font-variant-numeric:tabular-nums;text-align:right;
-               white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-               max-width:170px}
-.r-row .venue{flex:0 0 18px;font-size:10px;font-weight:700;
+/* Recent-match list — scores wrap to a second line if they don't fit */
+.recent-list{margin:6px 0 2px;display:flex;flex-direction:column;gap:6px}
+.r-row{display:grid;grid-template-columns:64px 32px 18px 1fr;
+       grid-template-rows:auto auto;
+       gap:3px 8px;padding:8px 10px;
+       border:1px solid var(--line);border-radius:8px;background:#fff;
+       align-items:center}
+.r-row .date{grid-column:1;grid-row:1;font-size:10.5px;color:var(--muted);
+             font-weight:700}
+.r-row .pill{grid-column:2;grid-row:1;justify-self:start}
+.r-row .venue{grid-column:3;grid-row:1;font-size:10.5px;font-weight:700;
               text-align:center;color:var(--muted)}
+.r-row .opp{grid-column:4;grid-row:1;font-size:12.5px;font-weight:700;
+            white-space:normal;word-break:break-word;line-height:1.25}
+.r-row .scores{grid-column:1 / -1;grid-row:2;
+               font-size:11px;color:var(--muted);
+               font-variant-numeric:tabular-nums;line-height:1.35;
+               white-space:normal;word-break:break-word}
+.r-row .scores b{color:var(--ink)}
 
 /* Toss split bar */
 .choice-bar{height:22px;background:#eef0f6;border-radius:6px;
@@ -234,29 +230,40 @@ a:hover{text-decoration:underline}
 </div>
 <div class='card'>
 <h2><span class='num'>2</span>Top run scorers · 3 seasons</h2>
-<div class='top-list'>
-<div class='top-row'><div class='rank gold'>1</div><div class='name'>Fahad Khan</div><div class='big'>844</div><div class='sub'>runs · 28M · avg 30.1 · HS 143 · 4×50 · 1×100</div></div>
-<div class='top-row'><div class='rank silver'>2</div><div class='name'>Nageswara Nallabothu</div><div class='big'>664</div><div class='sub'>runs · 16M · avg 44.3 · HS 159 · 3×50 · 2×100</div></div>
-<div class='top-row'><div class='rank bronze'>3</div><div class='name'>Prajwal Reddy</div><div class='big'>589</div><div class='sub'>runs · 21M · avg 34.6 · HS 79 · 3×50 · 0×100</div></div>
-<div class='top-row'><div class='rank '>4</div><div class='name'>Basim Shaukat Khan</div><div class='big'>558</div><div class='sub'>runs · 26M · avg 27.9 · HS 93 · 3×50 · 0×100</div></div>
-<div class='top-row'><div class='rank '>5</div><div class='name'>Syed Waseem</div><div class='big'>557</div><div class='sub'>runs · 33M · avg 16.9 · HS 91 · 1×50 · 0×100</div></div>
-<div class='top-row'><div class='rank '>6</div><div class='name'>Parimeet Jadav</div><div class='big'>531</div><div class='sub'>runs · 14M · avg 59.0 · HS 153 · 1×50 · 2×100</div></div>
-<div class='top-row'><div class='rank '>7</div><div class='name'>Nimesh Mistry</div><div class='big'>450</div><div class='sub'>runs · 16M · avg 32.1 · HS 91 · 2×50 · 0×100</div></div>
-<div class='top-row'><div class='rank '>8</div><div class='name'>MV Rao MV Rao</div><div class='big'>336</div><div class='sub'>runs · 14M · avg 28.0 · HS 110 · 0×50 · 1×100</div></div>
-</div>
+<table class='dense'><tr><th>#</th><th class='l'>Player</th><th>M</th><th>I</th><th>NO</th><th>Runs</th><th>HS</th><th>Avg</th><th>SR</th><th>50</th><th>100</th><th>Pos</th></tr>
+<tr class='top-rank'><td>1</td><td class='l'>Fahad Khan</td><td>28</td><td>28</td><td>0</td><td><b>844</b></td><td>143</td><td>30.14</td><td>91.8</td><td>4</td><td>1</td><td>2</td></tr>
+<tr class='top-rank'><td>2</td><td class='l'>Nageswara Nallabothu</td><td>16</td><td>16</td><td>1</td><td><b>664</b></td><td>159</td><td>44.27</td><td>137.6</td><td>3</td><td>2</td><td>4</td></tr>
+<tr class='top-rank'><td>3</td><td class='l'>Prajwal Reddy</td><td>21</td><td>21</td><td>4</td><td><b>589</b></td><td>79</td><td>34.65</td><td>106.1</td><td>3</td><td>0</td><td>4</td></tr>
+<tr><td>4</td><td class='l'>Basim Shaukat Khan</td><td>26</td><td>26</td><td>6</td><td><b>558</b></td><td>93</td><td>27.90</td><td>66.3</td><td>3</td><td>0</td><td>3</td></tr>
+<tr><td>5</td><td class='l'>Syed Waseem</td><td>33</td><td>33</td><td>0</td><td><b>557</b></td><td>91</td><td>16.88</td><td>74.0</td><td>1</td><td>0</td><td>1</td></tr>
+<tr><td>6</td><td class='l'>Parimeet Jadav</td><td>14</td><td>14</td><td>5</td><td><b>531</b></td><td>153</td><td>59.00</td><td>118.3</td><td>1</td><td>2</td><td>3</td></tr>
+<tr><td>7</td><td class='l'>Nimesh Mistry</td><td>16</td><td>16</td><td>2</td><td><b>450</b></td><td>91</td><td>32.14</td><td>86.5</td><td>2</td><td>0</td><td>3</td></tr>
+<tr><td>8</td><td class='l'>MV Rao MV Rao</td><td>14</td><td>14</td><td>2</td><td><b>336</b></td><td>110</td><td>28.00</td><td>111.6</td><td>0</td><td>1</td><td>7</td></tr>
+<tr><td>9</td><td class='l'>Daksh Ramchandra Reddy Chirra</td><td>11</td><td>11</td><td>2</td><td><b>254</b></td><td>60</td><td>28.22</td><td>80.9</td><td>2</td><td>0</td><td>5</td></tr>
+<tr><td>10</td><td class='l'>Yash Dhanak</td><td>11</td><td>11</td><td>1</td><td><b>235</b></td><td>52</td><td>23.50</td><td>69.3</td><td>1</td><td>0</td><td>4</td></tr>
+<tr><td>11</td><td class='l'>Pradyumna Yadma</td><td>15</td><td>15</td><td>1</td><td><b>212</b></td><td>35</td><td>15.14</td><td>96.4</td><td>0</td><td>0</td><td>2</td></tr>
+<tr><td>12</td><td class='l'>sai krishna chennaboina</td><td>9</td><td>9</td><td>3</td><td><b>169</b></td><td>69</td><td>28.17</td><td>82.0</td><td>1</td><td>0</td><td>3</td></tr>
+<tr><td>13</td><td class='l'>Sk Narmula</td><td>11</td><td>11</td><td>1</td><td><b>145</b></td><td>47</td><td>14.50</td><td>63.9</td><td>0</td><td>0</td><td>5</td></tr>
+<tr><td>14</td><td class='l'>Meet Patel(Bala)</td><td>9</td><td>9</td><td>2</td><td><b>126</b></td><td>35</td><td>18.00</td><td>84.0</td><td>0</td><td>0</td><td>8</td></tr>
+<tr><td>15</td><td class='l'>Upendar Peddy</td><td>3</td><td>3</td><td>0</td><td><b>124</b></td><td>81</td><td>41.33</td><td>119.2</td><td>1</td><td>0</td><td>4</td></tr>
+</table>
 </div>
 <div class='card'>
 <h2><span class='num'>3</span>Top wicket takers · 3 seasons</h2>
-<div class='top-list'>
-<div class='top-row'><div class='rank gold'>1</div><div class='name'>Rakesh Chowdary Tallapaneni</div><div class='big'>66</div><div class='sub'>wkts · 23M · avg 10.2 · econ 3.89 · BB 7/35 · 4×5wi</div></div>
-<div class='top-row'><div class='rank silver'>2</div><div class='name'>Ven Kompella</div><div class='big'>41</div><div class='sub'>wkts · 33M · avg 21.3 · econ 6.30 · BB 5/15 · 2×5wi</div></div>
-<div class='top-row'><div class='rank bronze'>3</div><div class='name'>MV Rao MV Rao</div><div class='big'>30</div><div class='sub'>wkts · 16M · avg 12.3 · econ 3.92 · BB 5/16 · 2×5wi</div></div>
-<div class='top-row'><div class='rank '>4</div><div class='name'>Yash Dhanak</div><div class='big'>23</div><div class='sub'>wkts · 12M · avg 11.9 · econ 3.84 · BB 7/16 · 1×5wi</div></div>
-<div class='top-row'><div class='rank '>5</div><div class='name'>Jaydeep Dhorada</div><div class='big'>21</div><div class='sub'>wkts · 17M · avg 16.1 · econ 3.43 · BB 4/32</div></div>
-<div class='top-row'><div class='rank '>6</div><div class='name'>Basim Shaukat Khan</div><div class='big'>21</div><div class='sub'>wkts · 23M · avg 21.1 · econ 4.11 · BB 5/28 · 1×5wi</div></div>
-<div class='top-row'><div class='rank '>7</div><div class='name'>Nageswara Nallabothu</div><div class='big'>20</div><div class='sub'>wkts · 14M · avg 15.4 · econ 4.79 · BB 3/10</div></div>
-<div class='top-row'><div class='rank '>8</div><div class='name'>Sri Arun Ayyappa</div><div class='big'>13</div><div class='sub'>wkts · 9M · avg 11.2 · econ 3.65 · BB 4/11</div></div>
-</div>
+<table class='dense'><tr><th>#</th><th class='l'>Bowler</th><th>M</th><th>Ov</th><th>Md</th><th>R</th><th>W</th><th>Avg</th><th>Econ</th><th>Best</th><th>5wi</th><th>4wi</th></tr>
+<tr class='top-rank'><td>1</td><td class='l'>Rakesh Chowdary Tallapaneni</td><td>23</td><td>173.2</td><td>22</td><td>674</td><td><b>66</b></td><td>10.21</td><td>3.89</td><td>7/35</td><td>4</td><td>4</td></tr>
+<tr class='top-rank'><td>2</td><td class='l'>Ven Kompella</td><td>33</td><td>138.5</td><td>4</td><td>874</td><td><b>41</b></td><td>21.32</td><td>6.30</td><td>5/15</td><td>2</td><td>1</td></tr>
+<tr class='top-rank'><td>3</td><td class='l'>MV Rao MV Rao</td><td>16</td><td>94.2</td><td>16</td><td>370</td><td><b>30</b></td><td>12.33</td><td>3.92</td><td>5/16</td><td>2</td><td>0</td></tr>
+<tr><td>4</td><td class='l'>Yash Dhanak</td><td>12</td><td>71.2</td><td>12</td><td>274</td><td><b>23</b></td><td>11.91</td><td>3.84</td><td>7/16</td><td>1</td><td>1</td></tr>
+<tr><td>5</td><td class='l'>Jaydeep Dhorada</td><td>17</td><td>98.4</td><td>10</td><td>338</td><td><b>21</b></td><td>16.10</td><td>3.43</td><td>4/32</td><td>0</td><td>1</td></tr>
+<tr><td>6</td><td class='l'>Basim Shaukat Khan</td><td>23</td><td>108</td><td>18</td><td>444</td><td><b>21</b></td><td>21.14</td><td>4.11</td><td>5/28</td><td>1</td><td>0</td></tr>
+<tr><td>7</td><td class='l'>Nageswara Nallabothu</td><td>14</td><td>64.2</td><td>4</td><td>308</td><td><b>20</b></td><td>15.40</td><td>4.79</td><td>3/10</td><td>0</td><td>0</td></tr>
+<tr><td>8</td><td class='l'>Sri Arun Ayyappa</td><td>9</td><td>40</td><td>5</td><td>146</td><td><b>13</b></td><td>11.23</td><td>3.65</td><td>4/11</td><td>0</td><td>1</td></tr>
+<tr><td>9</td><td class='l'>Boballa Rajesh Reddy</td><td>9</td><td>44.5</td><td>3</td><td>233</td><td><b>12</b></td><td>19.42</td><td>5.20</td><td>5/51</td><td>1</td><td>0</td></tr>
+<tr><td>10</td><td class='l'>Meet Patel(Bala)</td><td>9</td><td>43.2</td><td>1</td><td>235</td><td><b>11</b></td><td>21.36</td><td>5.42</td><td>4/89</td><td>0</td><td>1</td></tr>
+<tr><td>11</td><td class='l'>Parimeet Jadav</td><td>12</td><td>61</td><td>8</td><td>226</td><td><b>10</b></td><td>22.60</td><td>3.70</td><td>2/5</td><td>0</td><td>0</td></tr>
+<tr><td>12</td><td class='l'>Lavathishanth Tharmalingam</td><td>5</td><td>19.1</td><td>0</td><td>84</td><td><b>7</b></td><td>12.00</td><td>4.38</td><td>3/20</td><td>0</td><td>0</td></tr>
+</table>
 </div>
 <div class='card'>
 <h2><span class='num'>4</span>Head-to-head vs Rainham CC, Essex 1st XI</h2>
@@ -270,26 +277,26 @@ a:hover{text-decoration:underline}
 <div class='card'>
 <h2><span class='num'>5</span>Last 20 1st XI matches (L+C)</h2>
 <div class='recent-list'>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7246944'>25/04/2026</a></div><span class='pill L'>L</span><div class='venue'>A</div><div class='opp'>Redbridge CC</div><div class='scores'>Spartans 120/10 (31.5) · Redbridge 121/5 (34.2)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7189910'>06/09/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Essex Lions CC</div><div class='scores'>Spartans 154/9 (20.0) · Essex Lions 128/9 (20.0)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082239'>30/08/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Aztecs CC</div><div class='scores'>Spartans 247/6 (41.0) · Aztecs, Ilford 155/10 (37.3)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7178861'>28/08/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>London Avengers CC</div><div class='scores'>Spartans 152/7 (18.0) · London Avengers 134/5 (18.0)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082235'>23/08/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>Millwall Stars CC</div><div class='scores'>Millwall Stars 63/10 (21.2) · Spartans 69/1 (5.2)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082231'>16/08/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>Roding Valley CC</div><div class='scores'>Spartans 289/10 (40.4) · Roding Valley 176/9 (31)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082224'>09/08/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Tower Hamlets CC</div><div class='scores'>Spartans 283/10 (40.3) · Tower Hamlets 77/10 (15.1)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082220'>02/08/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>Waltham Forest CC</div><div class='scores'>Spartans 202/9 (47.0) · Waltham Forest 119/10 (25.4)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7163566'>28/07/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Goodmayes United  CC</div><div class='scores'>Goodmayes United  132/10 (18) · Spartans 135/6 (15.4)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082214'>26/07/2025</a></div><span class='pill L'>L</span><div class='venue'>A</div><div class='opp'>Aztecs CC</div><div class='scores'>Spartans 105/10 (26.4) · Aztecs, Ilford 109/7 (29.2)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082208'>19/07/2025</a></div><span class='pill D'>D</span><div class='venue'>H</div><div class='opp'>Millwall Stars CC</div><div class='scores'>Spartans 175/2 (18.0) · Millwall Stars 130/4 (24.0)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082203'>12/07/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Roding Valley CC</div><div class='scores'>Spartans 262/8 (45.0) · Roding Valley 128/9 (27.5)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082201'>05/07/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>Tower Hamlets CC</div><div class='scores'>Tower Hamlets 145/10 (37.1) · Spartans 149/3 (29.0)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082193'>28/06/2025</a></div><span class='pill D'>D</span><div class='venue'>H</div><div class='opp'>Essex Lions CC</div><div class='scores'>Essex Lions 317/4 (48.0) · Spartans 220/8 (46.0)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7148132'>25/06/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Neo CC</div><div class='scores'>Neo 118/10 (19.3) · Spartans 122/7 (19.1)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082188'>21/06/2025</a></div><span class='pill D'>D</span><div class='venue'>H</div><div class='opp'>East London Titans Sporting Club</div><div class='scores'>East London Titans Sporting Club 303/9 (48.0) · Spartans 220/7 (43.0)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082183'>14/06/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>Neo CC</div><div class='scores'>Neo 188/10 (39.5) · Spartans 191/3 (37.2)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082178'>07/06/2025</a></div><span class='pill A'>A</span><div class='venue'>H</div><div class='opp'>Victoria Park CC</div><div class='scores'>Spartans 173/10 (38.2) · Victoria Park 48/1 (10.0)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082175'>31/05/2025</a></div><span class='pill L'>L</span><div class='venue'>A</div><div class='opp'>Essex Lions CC</div><div class='scores'>Essex Lions 304/6 (45.0) · Spartans 202/10 (36.5)</div></div>
-<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7128306'>26/05/2025</a></div><span class='pill L'>L</span><div class='venue'>A</div><div class='opp'>Victoria Park CC</div><div class='scores'>Victoria Park 167/10 (37.1) · Spartans 120/10 (30.4)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7246944'>25/04/2026</a></div><span class='pill L'>L</span><div class='venue'>A</div><div class='opp'>Redbridge CC</div><div class='scores'>Spartans 120/10 (31.5) &middot; Redbridge 121/5 (34.2)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7189910'>06/09/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Essex Lions CC</div><div class='scores'>Spartans 154/9 (20.0) &middot; Essex Lions 128/9 (20.0)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082239'>30/08/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Aztecs CC</div><div class='scores'>Spartans 247/6 (41.0) &middot; Aztecs, Ilford 155/10 (37.3)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7178861'>28/08/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>London Avengers CC</div><div class='scores'>Spartans 152/7 (18.0) &middot; London Avengers 134/5 (18.0)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082235'>23/08/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>Millwall Stars CC</div><div class='scores'>Millwall Stars 63/10 (21.2) &middot; Spartans 69/1 (5.2)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082231'>16/08/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>Roding Valley CC</div><div class='scores'>Spartans 289/10 (40.4) &middot; Roding Valley 176/9 (31)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082224'>09/08/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Tower Hamlets CC</div><div class='scores'>Spartans 283/10 (40.3) &middot; Tower Hamlets 77/10 (15.1)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082220'>02/08/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>Waltham Forest CC</div><div class='scores'>Spartans 202/9 (47.0) &middot; Waltham Forest 119/10 (25.4)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7163566'>28/07/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Goodmayes United  CC</div><div class='scores'>Goodmayes United  132/10 (18) &middot; Spartans 135/6 (15.4)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082214'>26/07/2025</a></div><span class='pill L'>L</span><div class='venue'>A</div><div class='opp'>Aztecs CC</div><div class='scores'>Spartans 105/10 (26.4) &middot; Aztecs, Ilford 109/7 (29.2)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082208'>19/07/2025</a></div><span class='pill D'>D</span><div class='venue'>H</div><div class='opp'>Millwall Stars CC</div><div class='scores'>Spartans 175/2 (18.0) &middot; Millwall Stars 130/4 (24.0)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082203'>12/07/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Roding Valley CC</div><div class='scores'>Spartans 262/8 (45.0) &middot; Roding Valley 128/9 (27.5)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082201'>05/07/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>Tower Hamlets CC</div><div class='scores'>Tower Hamlets 145/10 (37.1) &middot; Spartans 149/3 (29.0)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082193'>28/06/2025</a></div><span class='pill D'>D</span><div class='venue'>H</div><div class='opp'>Essex Lions CC</div><div class='scores'>Essex Lions 317/4 (48.0) &middot; Spartans 220/8 (46.0)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7148132'>25/06/2025</a></div><span class='pill W'>W</span><div class='venue'>H</div><div class='opp'>Neo CC</div><div class='scores'>Neo 118/10 (19.3) &middot; Spartans 122/7 (19.1)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082188'>21/06/2025</a></div><span class='pill D'>D</span><div class='venue'>H</div><div class='opp'>East London Titans Sporting Club</div><div class='scores'>East London Titans Sporting Club 303/9 (48.0) &middot; Spartans 220/7 (43.0)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082183'>14/06/2025</a></div><span class='pill W'>W</span><div class='venue'>A</div><div class='opp'>Neo CC</div><div class='scores'>Neo 188/10 (39.5) &middot; Spartans 191/3 (37.2)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082178'>07/06/2025</a></div><span class='pill A'>A</span><div class='venue'>H</div><div class='opp'>Victoria Park CC</div><div class='scores'>Spartans 173/10 (38.2) &middot; Victoria Park 48/1 (10.0)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7082175'>31/05/2025</a></div><span class='pill L'>L</span><div class='venue'>A</div><div class='opp'>Essex Lions CC</div><div class='scores'>Essex Lions 304/6 (45.0) &middot; Spartans 202/10 (36.5)</div></div>
+<div class='r-row'><div class='date'><a href='https://play-cricket.com/website/results/7128306'>26/05/2025</a></div><span class='pill L'>L</span><div class='venue'>A</div><div class='opp'>Victoria Park CC</div><div class='scores'>Victoria Park 167/10 (37.1) &middot; Spartans 120/10 (30.4)</div></div>
 </div>
 </div>
 <div class='card'>
@@ -307,37 +314,13 @@ a:hover{text-decoration:underline}
 </div>
 <div class='card'>
 <h2><span class='num'>7</span>Web &amp; video links</h2>
-<p class='warn'><b>How to verify a match video.</b> The Play-Cricket API doesn't expose match video URLs. The right way to find one: <b>loop the last 20 fixtures</b> below, search YouTube for each <i>(club + opponent + date)</i>, then for any plausible hit <b>open the top 2-3 results</b> and judge whether it looks like the match — full-day livestreams are typically <b>2-7 hours long</b> and posted within a day or two of the fixture by the home club's channel. Anything not eyeballed should stay tagged <i>speculative</i>.</p>
 <h3>Official / club channels</h3>
 <div class='link-list'>
 <div class='link-row'><span class='kind official'>Official</span><a href='https://spartansessex.play-cricket.com/home'>Play-Cricket club page</a></div>
 <div class='link-row'><span class='kind official'>Official</span><a href='https://www.thespartanscricketclub.com/'>Club website</a></div>
 <div class='link-row'><span class='kind official'>Official</span><a href='https://www.instagram.com/spartanscricket/'>Instagram (@spartanscricket)</a></div>
 </div>
-<h3>Per-match YouTube searches (20 fixtures)</h3>
-<p class='subtle'>One per recent match. Click each, scan the top 2-3 hits — match-length livestream from around the fixture date = candidate.</p>
-<div class='link-list'>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Redbridge+CC%22+cricket+2026'>YouTube search — 25/04/2026 vs Redbridge CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Essex+Lions+CC%22+cricket+2025'>YouTube search — 06/09/2025 vs Essex Lions CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Aztecs+CC%22+cricket+2025'>YouTube search — 30/08/2025 vs Aztecs CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22London+Avengers+CC%22+cricket+2025'>YouTube search — 28/08/2025 vs London Avengers CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Millwall+Stars+CC%22+cricket+2025'>YouTube search — 23/08/2025 vs Millwall Stars CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Roding+Valley+CC%22+cricket+2025'>YouTube search — 16/08/2025 vs Roding Valley CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Tower+Hamlets+CC%22+cricket+2025'>YouTube search — 09/08/2025 vs Tower Hamlets CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Waltham+Forest+CC%22+cricket+2025'>YouTube search — 02/08/2025 vs Waltham Forest CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Goodmayes+United++CC%22+cricket+2025'>YouTube search — 28/07/2025 vs Goodmayes United  CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Aztecs+CC%22+cricket+2025'>YouTube search — 26/07/2025 vs Aztecs CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Millwall+Stars+CC%22+cricket+2025'>YouTube search — 19/07/2025 vs Millwall Stars CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Roding+Valley+CC%22+cricket+2025'>YouTube search — 12/07/2025 vs Roding Valley CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Tower+Hamlets+CC%22+cricket+2025'>YouTube search — 05/07/2025 vs Tower Hamlets CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Essex+Lions+CC%22+cricket+2025'>YouTube search — 28/06/2025 vs Essex Lions CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Neo+CC%22+cricket+2025'>YouTube search — 25/06/2025 vs Neo CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22East+London+Titans+Sporting+Club%22+cricket+2025'>YouTube search — 21/06/2025 vs East London Titans Sporting Club</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Neo+CC%22+cricket+2025'>YouTube search — 14/06/2025 vs Neo CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Victoria+Park+CC%22+cricket+2025'>YouTube search — 07/06/2025 vs Victoria Park CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Essex+Lions+CC%22+cricket+2025'>YouTube search — 31/05/2025 vs Essex Lions CC</a></div>
-<div class='link-row'><span class='kind probe'>Probe</span><a href='https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Victoria+Park+CC%22+cricket+2025'>YouTube search — 26/05/2025 vs Victoria Park CC</a></div>
-</div>
+<p class='subtle'>No match videos verified yet for this club. The assistant will work through the fixtures in section 5 and add verified links here in the next version.</p>
 <h3>Speculative — name match only, NOT verified</h3>
 <div class='link-list'>
 <div class='link-row'><span class='kind speculative'>Specul.</span><a href='https://www.youtube.com/@essexspartans8127'>YouTube channel '@essexspartans8127' — name match, NOT verified</a></div>

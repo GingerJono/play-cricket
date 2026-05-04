@@ -132,34 +132,12 @@ _Reference: lost toss → outcome: 19 played, 12W / 4L / 3D — win rate 63%._
 
 ## 7. Web / video links
 
-> ⚠️ **How to verify a match video.** The Play-Cricket API doesn't expose match video URLs. To find one, **loop the last 20 fixtures** above, run a YouTube search for each `(club + opponent + date)`, then for any plausible hit **open the top 2-3 results** and judge whether it really is the match — full-day livestreams are typically **2-7 hours long** and posted within a day or two of the fixture, almost always by the home club's channel. Anything that hasn't been eyeballed stays tagged _(speculative)_.
-
 **Official / club channels**
 - [Play-Cricket club page](https://spartansessex.play-cricket.com/home)
 - [Club website](https://www.thespartanscricketclub.com/)
 - [Instagram (@spartanscricket)](https://www.instagram.com/spartanscricket/)
 
-**Per-match YouTube search probes** (one click per fixture)
-- [YouTube search — 25/04/2026 vs Redbridge CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Redbridge+CC%22+cricket+2026)
-- [YouTube search — 06/09/2025 vs Essex Lions CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Essex+Lions+CC%22+cricket+2025)
-- [YouTube search — 30/08/2025 vs Aztecs CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Aztecs+CC%22+cricket+2025)
-- [YouTube search — 28/08/2025 vs London Avengers CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22London+Avengers+CC%22+cricket+2025)
-- [YouTube search — 23/08/2025 vs Millwall Stars CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Millwall+Stars+CC%22+cricket+2025)
-- [YouTube search — 16/08/2025 vs Roding Valley CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Roding+Valley+CC%22+cricket+2025)
-- [YouTube search — 09/08/2025 vs Tower Hamlets CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Tower+Hamlets+CC%22+cricket+2025)
-- [YouTube search — 02/08/2025 vs Waltham Forest CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Waltham+Forest+CC%22+cricket+2025)
-- [YouTube search — 28/07/2025 vs Goodmayes United  CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Goodmayes+United++CC%22+cricket+2025)
-- [YouTube search — 26/07/2025 vs Aztecs CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Aztecs+CC%22+cricket+2025)
-- [YouTube search — 19/07/2025 vs Millwall Stars CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Millwall+Stars+CC%22+cricket+2025)
-- [YouTube search — 12/07/2025 vs Roding Valley CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Roding+Valley+CC%22+cricket+2025)
-- [YouTube search — 05/07/2025 vs Tower Hamlets CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Tower+Hamlets+CC%22+cricket+2025)
-- [YouTube search — 28/06/2025 vs Essex Lions CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Essex+Lions+CC%22+cricket+2025)
-- [YouTube search — 25/06/2025 vs Neo CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Neo+CC%22+cricket+2025)
-- [YouTube search — 21/06/2025 vs East London Titans Sporting Club](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22East+London+Titans+Sporting+Club%22+cricket+2025)
-- [YouTube search — 14/06/2025 vs Neo CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Neo+CC%22+cricket+2025)
-- [YouTube search — 07/06/2025 vs Victoria Park CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Victoria+Park+CC%22+cricket+2025)
-- [YouTube search — 31/05/2025 vs Essex Lions CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Essex+Lions+CC%22+cricket+2025)
-- [YouTube search — 26/05/2025 vs Victoria Park CC](https://www.youtube.com/results?search_query=%22Spartans+CC%22+%22Victoria+Park+CC%22+cricket+2025)
+_No match videos verified yet for this club. The assistant will loop the fixtures in section 5 (curl the YouTube search for each, judge the top hits, and paste any verified video into `CLUB_LINKS["<club_id>"]["verified_videos"]` in `scout.py`), then re-run the report. See `CLAUDE.md → "Hunt for match videos"`._
 
 **Speculative — name match only, NOT verified**
 - [YouTube channel '@essexspartans8127' — name match, NOT verified](https://www.youtube.com/@essexspartans8127) _(speculative)_

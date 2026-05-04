@@ -101,7 +101,7 @@ def discover_scouting():
                     "category": "scouting",
                     "date": date_dir.name,
                     "title": _slug_to_title(slug_dir.name),
-                    "subtitle": "(unversioned)",
+                    "subtitle": "legacy",
                     "dir": slug_dir,
                     "artefacts": arts,
                     "versions": [],
@@ -245,31 +245,37 @@ body{margin:0;padding:18px 16px 60px;font-family:-apple-system,
 .hero h1{font-size:26px;margin:4px 0 6px;font-weight:800;letter-spacing:-.01em}
 .hero p{margin:0;font-size:13.5px;opacity:.88;max-width:640px}
 .cat{margin:0 0 26px}
+.cat.empty-cat{opacity:.6}
 .cat > h2{font-size:16px;margin:0 0 10px;padding:0 0 8px;
   border-bottom:1px solid var(--line);font-weight:700;
   display:flex;align-items:center;gap:10px}
 .cat > h2 .count{background:#e6ecf9;color:var(--accent);font-size:11.5px;
   font-weight:700;padding:2px 9px;border-radius:9px}
+.cat.empty-cat > h2 .count{background:#f0f1f5;color:var(--muted)}
 .cat > p.blurb{margin:0 0 12px;color:var(--muted);font-size:12.5px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
   gap:12px}
 .r{background:var(--card);border:1px solid var(--line);border-radius:12px;
-  padding:12px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;
-  gap:6px}
-.r .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.r .date{font-size:11px;font-weight:700;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.06em}
-.r .ver{font-size:10.5px;font-weight:700;background:#eef0f6;color:var(--muted);
-  padding:1px 7px;border-radius:6px;letter-spacing:.04em}
-.r h3{margin:0;font-size:14.5px;font-weight:700;letter-spacing:-.005em;
-  word-break:break-word}
+  padding:13px 15px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+  gap:8px;min-height:122px}
+.r .meta{display:flex;align-items:center;gap:8px;font-size:11px;
+  color:var(--muted);font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase}
+.r .meta .date{color:var(--muted)}
+.r .meta .ver{background:#e6ecf9;color:var(--accent);padding:1px 7px;
+  border-radius:6px;letter-spacing:.04em;font-size:10.5px}
+.r .meta .legacy{background:#f0eede;color:#a07300;padding:1px 7px;
+  border-radius:6px;letter-spacing:.04em;font-size:10.5px;
+  text-transform:none;font-weight:700}
+.r h3{margin:0;font-size:15px;font-weight:700;letter-spacing:-.005em;
+  word-break:break-word;line-height:1.25}
 .r .links{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
 .r .links a{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;
-  padding:4px 9px;border-radius:7px;font-size:11.5px;font-weight:700;
+  padding:4px 10px;border-radius:7px;font-size:11.5px;font-weight:700;
   text-decoration:none;border:1px solid var(--line);background:#fafbfd;
   color:var(--accent)}
 .r .links a:hover{background:#eef2fb}
-.r .links a.png{background:#eef1fb;color:var(--accent)}
+.r .links a.png{background:#eef1fb;color:var(--accent);border-color:#d4dcf3}
 .r .links a.html{background:#eaf5ec;color:#15803d;border-color:#cde6d2}
 .r .links a.md{background:#f1ecfb;color:#5b21b6;border-color:#dccdf3}
 .empty{padding:14px;background:#fff;border:1px dashed var(--line);
@@ -286,12 +292,20 @@ def _link(rel_path, kind):
 
 
 def _render_card(r):
-    rel_dir = r["dir"].relative_to(REPORTS_DIR).as_posix()
-    sub = f" · {_esc(r['subtitle'])}" if r["subtitle"] else ""
     parts = ["<div class='r'>"]
-    parts.append("<div class='top'>"
-                 f"<span class='date'>{_esc(r['date'])}{sub}</span>"
-                 f"<span class='ver'>{_esc(r['category'])}</span></div>")
+    parts.append("<div class='meta'>")
+    parts.append(f"<span class='date'>{_esc(r['date'])}</span>")
+    sub = (r["subtitle"] or "").strip()
+    if sub:
+        # vN gets the accent pill; "(unversioned)"-style notes get a softer one.
+        if re.match(r"^v\d", sub):
+            head, _, tail = sub.partition(" · ")
+            parts.append(f"<span class='ver'>{_esc(head)}</span>")
+            if tail:
+                parts.append(f"<span>{_esc(tail)}</span>")
+        else:
+            parts.append(f"<span class='legacy'>{_esc(sub)}</span>")
+    parts.append("</div>")
     parts.append(f"<h3>{_esc(r['title'])}</h3>")
     arts = r["artefacts"]
     parts.append("<div class='links'>")
@@ -324,7 +338,8 @@ def render(by_cat) -> str:
     for cat, items in by_cat.items():
         label = CATEGORY_LABELS.get(cat, cat.replace("-", " ").title())
         blurb = CATEGORY_BLURBS.get(cat, "")
-        parts.append("<section class='cat'>")
+        cls = " empty-cat" if not items else ""
+        parts.append(f"<section class='cat{cls}'>")
         parts.append(f"<h2>{_esc(label)} "
                      f"<span class='count'>{len(items)}</span></h2>")
         if blurb:

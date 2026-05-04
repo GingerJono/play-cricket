@@ -137,8 +137,6 @@ _Reference: lost toss → outcome: 13 played, 5W / 5L / 2D / 1NR — win rate 38
 
 ## 7. Web / video links
 
-> ⚠️ **How to verify a match video.** The Play-Cricket API doesn't expose match video URLs. To find one, **loop the last 20 fixtures** above, run a YouTube search for each `(club + opponent + date)`, then for any plausible hit **open the top 2-3 results** and judge whether it really is the match — full-day livestreams are typically **2-7 hours long** and posted within a day or two of the fixture, almost always by the home club's channel. Anything that hasn't been eyeballed stays tagged _(speculative)_.
-
 **Official / club channels**
 - [Play-Cricket club page](https://wickford.play-cricket.com/home)
 - [Club website](https://www.wickfordcc.co.uk/)
@@ -149,25 +147,3 @@ _Reference: lost toss → outcome: 13 played, 5W / 5L / 2D / 1NR — win rate 38
 **Verified match videos**
 - [Wickford livestream (user-supplied, exact match TBC)](https://www.youtube.com/live/GN-Ou--1pwg)
 - [Bentley CC 1st XI v Wickford CC Saturday 1st XI (Div 3 Round 18, 7 Sep 2024)](https://www.youtube.com/watch?v=EltwYIp1e6o)
-
-**Per-match YouTube search probes** (one click per fixture)
-- [YouTube search — 02/05/2026 vs Brentwood CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Brentwood+CC%22+cricket+2026)
-- [YouTube search — 25/04/2026 vs Belhus CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Belhus+CC%22+cricket+2026)
-- [YouTube search — 06/09/2025 vs Rainham CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Rainham+CC%22+cricket+2025)
-- [YouTube search — 30/08/2025 vs Harlow Town CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Harlow+Town+CC%22+cricket+2025)
-- [YouTube search — 23/08/2025 vs Frenford CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Frenford+CC%22+cricket+2025)
-- [YouTube search — 16/08/2025 vs Hawks CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Hawks+CC%22+cricket+2025)
-- [YouTube search — 09/08/2025 vs Benfleet CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Benfleet+CC%22+cricket+2025)
-- [YouTube search — 02/08/2025 vs Hawks CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Hawks+CC%22+cricket+2025)
-- [YouTube search — 26/07/2025 vs Frenford CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Frenford+CC%22+cricket+2025)
-- [YouTube search — 19/07/2025 vs Harlow Town CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Harlow+Town+CC%22+cricket+2025)
-- [YouTube search — 12/07/2025 vs Roding Valley CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Roding+Valley+CC%22+cricket+2025)
-- [YouTube search — 05/07/2025 vs Redbridge CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Redbridge+CC%22+cricket+2025)
-- [YouTube search — 28/06/2025 vs South Woodford CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22South+Woodford+CC%22+cricket+2025)
-- [YouTube search — 21/06/2025 vs Rainham CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Rainham+CC%22+cricket+2025)
-- [YouTube search — 14/06/2025 vs Walthamstow CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Walthamstow+CC%22+cricket+2025)
-- [YouTube search — 07/06/2025 vs Walthamstow CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Walthamstow+CC%22+cricket+2025)
-- [YouTube search — 31/05/2025 vs Benfleet CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Benfleet+CC%22+cricket+2025)
-- [YouTube search — 24/05/2025 vs South Woodford CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22South+Woodford+CC%22+cricket+2025)
-- [YouTube search — 17/05/2025 vs Redbridge CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Redbridge+CC%22+cricket+2025)
-- [YouTube search — 10/05/2025 vs Roding Valley CC](https://www.youtube.com/results?search_query=%22Wickford+CC%22+%22Roding+Valley+CC%22+cricket+2025)
