@@ -24,6 +24,8 @@ ROOT = Path(__file__).resolve().parent
 RAW_DIR = ROOT / "data" / "raw"
 MATCHES_DIR = RAW_DIR / "matches"
 MATCH_DETAIL_DIR = RAW_DIR / "match_detail"
+RV_MATCH_DIR = RAW_DIR / "rv_match"
+BALLS_DIR = RAW_DIR / "balls"
 DB_PATH = ROOT / "data" / "rainham.db"
 
 SCHEMA = """
@@ -34,6 +36,8 @@ DROP TABLE IF EXISTS innings;
 DROP TABLE IF EXISTS batting;
 DROP TABLE IF EXISTS bowling;
 DROP TABLE IF EXISTS fall_of_wickets;
+DROP TABLE IF EXISTS balls;
+DROP TABLE IF EXISTS match_bbb;
 
 CREATE TABLE clubs (
     club_id    TEXT PRIMARY KEY,
@@ -168,6 +172,44 @@ CREATE TABLE fall_of_wickets (
     PRIMARY KEY (match_id, innings_seq, wicket)
 );
 
+-- One row per delivery. innings_seq matches our existing innings_seq
+-- (1-based ordinal in playing order); equal to ResultsVault's
+-- `innings_order`. ball_no is the raw delivery number (counts wides /
+-- no-balls); ball_no_disp is the legal-balls-only display number.
+-- ball_no is the within-over sequence (1..N including wides/no-balls);
+-- it resets each over. Unique key needs the over too.
+CREATE TABLE balls (
+    match_id              INTEGER,
+    innings_seq           INTEGER,
+    over_no               INTEGER,
+    ball_no               INTEGER,
+    ball_no_disp          INTEGER,
+    batter_id             INTEGER,
+    non_striker_id        INTEGER,
+    bowler_id             INTEGER,
+    team_batting_club_id  TEXT,
+    team_bowling_club_id  TEXT,
+    runs_bat              INTEGER,
+    runs_extra            INTEGER,
+    extras_type           INTEGER,    -- 1=NB 2=Wide 3=B 4=LB 5=NB+B 6=NB+LB
+    is_legal_ball         INTEGER,    -- 0 if extras_type IN (1,2)
+    dismissed_batter_id   INTEGER,
+    s_desc                TEXT,
+    l_desc                TEXT,
+    PRIMARY KEY (match_id, innings_seq, over_no, ball_no)
+);
+
+-- Lookup table: which matches have ball-by-ball data loaded.
+-- Populated alongside `balls`; lets reports filter cheaply without a
+-- COUNT(*) over balls.
+CREATE TABLE match_bbb (
+    match_id     INTEGER PRIMARY KEY,
+    rv_match_id  INTEGER,
+    n_innings    INTEGER,
+    n_balls      INTEGER,
+    n_legal      INTEGER
+);
+
 CREATE INDEX idx_batting_player        ON batting(batsman_id);
 CREATE INDEX idx_batting_club          ON batting(team_batting_club_id);
 CREATE INDEX idx_bowling_player        ON bowling(bowler_id);
@@ -178,6 +220,11 @@ CREATE INDEX idx_match_players_club    ON match_players(club_id);
 CREATE INDEX idx_matches_season        ON matches(season);
 CREATE INDEX idx_matches_home_club     ON matches(home_club_id);
 CREATE INDEX idx_matches_away_club     ON matches(away_club_id);
+CREATE INDEX idx_balls_bowler          ON balls(bowler_id, match_id);
+CREATE INDEX idx_balls_batter          ON balls(batter_id, match_id);
+CREATE INDEX idx_balls_match           ON balls(match_id, innings_seq, over_no);
+CREATE INDEX idx_balls_bat_club        ON balls(team_batting_club_id);
+CREATE INDEX idx_balls_bowl_club       ON balls(team_bowling_club_id);
 """
 
 
@@ -455,6 +502,132 @@ def insert_innings(cur: sqlite3.Cursor, md: dict) -> None:
             )
 
 
+def insert_balls(
+    cur: sqlite3.Cursor,
+    match_id: int,
+    home_club_id: str,
+    away_club_id: str,
+) -> tuple[int, int, int]:
+    """
+    Load every cached innings of ball-by-ball for one match.
+
+    Returns (n_innings, n_balls_total, n_legal_balls).
+    Returns (0, 0, 0) if no rv_match metadata or no balls JSON exists.
+
+    `team_batting_club_id` / `team_bowling_club_id` are resolved via the
+    rv_match `is_home` flag cross-referenced with the match's home/away
+    club_ids.
+    """
+    rv_path = RV_MATCH_DIR / f"{match_id}.json"
+    balls_dir = BALLS_DIR / str(match_id)
+    if not rv_path.exists() or not balls_dir.exists():
+        return (0, 0, 0)
+    try:
+        rv = json.loads(rv_path.read_text())
+    except Exception:
+        return (0, 0, 0)
+    is_home_for_seq: dict[int, bool] = {}
+    for inn in rv.get("innings", []) or []:
+        seq = _to_int(inn.get("innings_order"))
+        if seq is not None:
+            is_home_for_seq[seq] = bool(inn.get("is_home"))
+
+    n_innings = 0
+    n_balls = 0
+    n_legal = 0
+    for inn_path in sorted(balls_dir.glob("*.json")):
+        try:
+            inn_seq = int(inn_path.stem)
+        except ValueError:
+            continue
+        is_home_batting = is_home_for_seq.get(inn_seq)
+        if is_home_batting is None:
+            continue
+        bat_club = home_club_id if is_home_batting else away_club_id
+        bowl_club = away_club_id if is_home_batting else home_club_id
+        try:
+            balls = json.loads(inn_path.read_text())
+        except Exception:
+            continue
+        if not isinstance(balls, list) or not balls:
+            continue
+        n_innings += 1
+        for b in balls:
+            ext = b.get("extras_type")
+            ext_int = _to_int(ext)
+            is_legal = 0 if ext_int in (1, 2) else 1
+            cur.execute(
+                """INSERT OR REPLACE INTO balls VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (
+                    match_id,
+                    inn_seq,
+                    _to_int(b.get("over_no")),
+                    _to_int(b.get("ball_no")),
+                    _to_int(b.get("ball_no_disp")),
+                    _to_int(b.get("batter_id")),
+                    _to_int(b.get("batter_id_ns")),
+                    _to_int(b.get("bowler_id")),
+                    bat_club,
+                    bowl_club,
+                    _to_int(b.get("runs_bat")) or 0,
+                    _to_int(b.get("runs_extra")) or 0,
+                    ext_int,
+                    is_legal,
+                    _to_int(b.get("dismissed_batter_id")),
+                    _to_str(b.get("s_desc")),
+                    _to_str(b.get("l_desc")),
+                ),
+            )
+            n_balls += 1
+            n_legal += is_legal
+    if n_balls:
+        cur.execute(
+            "INSERT OR REPLACE INTO match_bbb VALUES (?,?,?,?,?)",
+            (match_id, _to_int(rv.get("rv_match_id")),
+             n_innings, n_balls, n_legal),
+        )
+    return (n_innings, n_balls, n_legal)
+
+
+def validate_balls(cur: sqlite3.Cursor) -> None:
+    """
+    Cross-check per-innings ball totals against the scorecard total.
+    SUM(runs_bat + runs_extra) per (match, innings_seq) should equal
+    `innings.runs - innings.extra_penalty_runs`. Any delta > 5% aborts.
+    """
+    rows = cur.execute("""
+        SELECT b.match_id, b.innings_seq,
+               SUM(b.runs_bat + b.runs_extra) AS bbb_runs,
+               i.runs - COALESCE(i.extra_penalty_runs, 0) AS card_runs
+        FROM balls b
+        JOIN innings i USING (match_id, innings_seq)
+        GROUP BY b.match_id, b.innings_seq
+    """).fetchall()
+    if not rows:
+        return
+    deltas = []
+    for mid, seq, bbb, card in rows:
+        if card is None or card == 0:
+            continue
+        d = abs((bbb or 0) - card) / max(card, 1)
+        deltas.append((d, mid, seq, bbb, card))
+    deltas.sort(reverse=True)
+    if not deltas:
+        return
+    worst = deltas[0]
+    print(f"  bbb validation: {len(deltas)} innings; "
+          f"worst delta {worst[0]*100:.1f}% "
+          f"(match {worst[1]} inn {worst[2]}: bbb={worst[3]} card={worst[4]})",
+          flush=True)
+    fails = [d for d in deltas if d[0] > 0.05]
+    if fails:
+        print(f"  WARNING: {len(fails)} innings with > 5% delta; first 5:",
+              flush=True)
+        for d in fails[:5]:
+            print(f"    match {d[1]} inn {d[2]}: bbb={d[3]} card={d[4]} "
+                  f"({d[0]*100:.1f}%)", flush=True)
+
+
 def main() -> int:
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     if DB_PATH.exists():
@@ -491,6 +664,8 @@ def main() -> int:
 
     loaded = 0
     skipped_empty = 0
+    bbb_matches = 0
+    bbb_balls = 0
     for path in detail_files:
         md = load_match_detail(path)
         if md is None:
@@ -502,12 +677,24 @@ def main() -> int:
         insert_match(cur, md, season_hint)
         insert_match_players(cur, md)
         insert_innings(cur, md)
+        if mid is not None:
+            n_inn, n_b, _ = insert_balls(
+                cur, mid,
+                _to_str(md.get("home_club_id")),
+                _to_str(md.get("away_club_id")),
+            )
+            if n_b:
+                bbb_matches += 1
+                bbb_balls += n_b
         loaded += 1
         if loaded % 500 == 0:
             print(f"  loaded {loaded}", flush=True)
 
     conn.commit()
     print(f"Loaded {loaded} matches; skipped {skipped_empty} empty payloads", flush=True)
+    print(f"Ball-by-ball: {bbb_matches} matches, {bbb_balls} balls", flush=True)
+    if bbb_matches:
+        validate_balls(cur)
 
     cur.execute("SELECT COUNT(*) FROM clubs")
     print(f"clubs:          {cur.fetchone()[0]}")
@@ -523,6 +710,10 @@ def main() -> int:
     print(f"fall_of_wickets:{cur.fetchone()[0]}")
     cur.execute("SELECT COUNT(*) FROM match_players")
     print(f"match_players:  {cur.fetchone()[0]}")
+    cur.execute("SELECT COUNT(*) FROM balls")
+    print(f"balls:          {cur.fetchone()[0]}")
+    cur.execute("SELECT COUNT(*) FROM match_bbb")
+    print(f"match_bbb:      {cur.fetchone()[0]}")
 
     conn.close()
     print(f"Wrote {DB_PATH}")

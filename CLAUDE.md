@@ -22,6 +22,12 @@ DB to grow / be refreshed → see _Workflow_ below.
 ```
 stats/
   fetch.py           pulls Play-Cricket JSON; --site-id and --division-ids
+  fetch_balls.py     pulls ball-by-ball from the ResultsVault backend
+                     (the API behind Play-Cricket's match-centre widget).
+                     Not exposed by the public play-cricket API; see
+                     `BALL_BY_BALL.md` for the auth + endpoint trail.
+  _rv_token.js       auto-generated node helper used by fetch_balls.py
+                     to compute the X-IAS-API-REQUEST auth header.
   build_db.py        loads cached JSON into SQLite (data/rainham.db)
   scout.py           generic opposition scouting report (any club).
                      Emits md / html / a long mobile-friendly png inside a
@@ -33,6 +39,13 @@ stats/
   streaks_and_fifties.py Rainham-specific report (writes to reports/ad-hoc/)
   oneill_vs_hothi.py     example head-to-head    (writes to reports/ad-hoc/)
   PLAN.md            full schema + scoring rules + caveats
+  BALL_BY_BALL.md    deep-dive on the ResultsVault BBB scrape
+  _app_lib.py        shared chrome / CSS / DB helpers for the two
+                     `app/` builders below
+  build_data_repo.py generates the `app/index.html` data-repository page
+                     (10-year game list with BBB + coverage % columns)
+  build_metadata.py  generates the `app/metadata/...` opposition browse
+                     / submit pages
   data/
     README.md
     rainham.db       SQLite DB (committed)
@@ -40,6 +53,26 @@ stats/
       matches/<site_id>/<season>.json   per-season fixture lists
       match_detail/<match_id>.json      full scorecards (shared)
       league_table/<division_id>.json   cached league tables (shared)
+      rv_match/<match_id>.json          ResultsVault metadata + innings
+                                        index (rv_match_id, result_ids)
+      balls/<match_id>/<innings>.json   ball-by-ball stream, untouched
+                                        upstream payload
+    metadata/                        (committed)
+      players/<player_id>.json       canonical, player-keyed
+      videos/<match_id>.json         match-keyed video evidence
+      submissions/<sub_id>.json      pending|approved|rejected log
+  app/                               (generated, committed; sibling of `reports/`)
+    index.html                       data-repository page (10-year game list)
+    data/players.json                bundled per-player data (~3MB,
+                                     fetched once by player.html)
+    metadata/
+      clubs.html                     browse opposition clubs
+      club/<club_id>.html            per-club roster (~277 pages)
+      player.html                    ONE template that reads ?id=<pid>
+                                     and renders from data/players.json
+    static/
+      app.css                        shared stylesheet
+      player.js                      player-page logic + submit form
   reports/
     index.html       generated overview of every report (committed)
     scouting/<YYYY-MM-DD>/<slug>/v<N>/scout.{md,html,png}
@@ -332,3 +365,316 @@ comparison would have caught it. Don't skip that step.
   convert to `yyyymmdd` for ordering / filtering.
 - Don't trust `result` alone — also check `result_applied_to` to know
   whose perspective the W/L is from. See `result_for(...)` in `scout.py`.
+
+## Roadmap: opposition metadata + BBB coverage
+
+Goal: capture batting / bowling profiles for opposition players (so we
+can slice Rainham performance by RHB vs LHB, pace vs spin, left-arm vs
+right-arm, etc.) and expose ball-by-ball coverage on a public page.
+
+**No web backend.** Everything is committed JSON / SQLite. Submissions
+are `mailto:` / WhatsApp links built in pure JS — the static site never
+POSTs anywhere. The user (Jono) receives the message, pastes it into
+Claude Code (Android), and Claude writes the JSON.
+
+### Build order (status: 1–4 ✅, 5 in progress)
+
+1. **Balls into the DB** ✅ — `build_db.py` now loads
+   `data/raw/balls/<match_id>/<innings_order>.json` into a `balls`
+   table + `match_bbb` lookup, with per-innings `SUM(runs)` validation.
+2. **Bulk-fetch BBB** ✅ — `fetch_balls.py --site-id 5251 --season N`
+   over 2017–2026 cached ~95k balls from ~376 matches (~29 % of
+   played fixtures; 2022 onwards averages ~17 %, 2017–2019 ~1 %).
+3. **Static `app/index.html`** ✅ — `build_data_repo.py` writes the
+   10-year game list with BBB + coverage columns. Coverage starts at
+   0 % everywhere; that's expected.
+4. **Metadata model + pages** ✅ — `build_metadata.py` writes
+   `clubs.html`, the 277 `club/<id>.html` pages, the `player.html`
+   template + bundled `data/players.json`, and the mailto / WhatsApp
+   form (destinations baked from env vars at build time).
+5. **Bootstrap metadata** — Jono works through the queue manually via
+   Claude Code: Claude writes `data/metadata/players/<id>.json` for
+   players Jono already knows, then re-runs `build_metadata.py`.
+
+Each step is independently committable; nothing in step N blocks N+1
+from being designed.
+
+### 1. Balls in SQLite
+
+Add to `build_db.py`:
+
+```sql
+CREATE TABLE balls (
+  match_id              INTEGER,
+  innings_seq           INTEGER,    -- our existing innings_seq, NOT innings_number
+  ball_no               INTEGER,    -- raw sequence (counts NB/wides)
+  ball_no_disp          INTEGER,    -- legal-balls-only display number
+  over_no               INTEGER,
+  batter_id             INTEGER,
+  non_striker_id        INTEGER,
+  bowler_id             INTEGER,
+  team_batting_club_id  TEXT,
+  team_bowling_club_id  TEXT,
+  runs_bat              INTEGER,
+  runs_extra            INTEGER,
+  extras_type           INTEGER,    -- 1=NB 2=Wide 3=B 4=LB 5=NB+B 6=NB+LB
+  is_legal_ball         INTEGER,    -- 0 if extras_type IN (1,2)
+  dismissed_batter_id   INTEGER,
+  s_desc                TEXT,
+  l_desc                TEXT,
+  PRIMARY KEY (match_id, innings_seq, ball_no)
+);
+CREATE INDEX idx_balls_bowler ON balls(bowler_id, match_id);
+CREATE INDEX idx_balls_batter ON balls(batter_id, match_id);
+CREATE INDEX idx_balls_match  ON balls(match_id, innings_seq, over_no);
+```
+
+Loader rules:
+- Walk `data/raw/balls/<match_id>/<innings_order>.json`. The file's
+  `innings_order` IS our `innings_seq` (1-based, in playing order).
+- Resolve `team_batting_club_id` / `team_bowling_club_id` from
+  `data/raw/rv_match/<match_id>.json` (`innings[].is_home`) cross-
+  referenced with `matches.home_club_id` / `away_club_id`.
+- `is_legal_ball = 0 if extras_type IN (1, 2) else 1`.
+- Validation: `SUM(runs_bat + runs_extra)` per innings should equal
+  `innings.runs - innings.penalty_runs`. Log the worst delta on load,
+  abort if any delta > 5%.
+
+### 2. Bulk-fetch BBB
+
+```bash
+for s in 2017 2018 2019 2020 2021 2022 2023 2024 2025 2026; do
+  python3 fetch_balls.py --site-id 5251 --season "$s" --workers 6
+done
+python3 build_db.py
+```
+
+Older seasons trail off — paper-scoring was more common pre-2021. The
+data-repo page surfaces this honestly (BBB column = ✓ / ✗).
+
+### 3. Player metadata model (player-keyed)
+
+`player_id` is stable across clubs; the metadata follows the player.
+A player who has played for 3 clubs has **one** record, not three.
+
+```
+data/metadata/players/<player_id>.json
+{
+  "player_id":    11189264,
+  "display_name": "M Barber",
+  "aliases":      ["M Barber", "Matthew Barber"],   // history of names seen
+  "seen_clubs":   [{"club_id": "113390", "club_name": "Upminster CC"}],
+  "metadata": {
+    "batting_hand":  "right" | "left" | "unknown",
+    "bowling_type":  "pace" | "spin" | "none" | "unknown",
+    "pace_type":     "fast" | "medium" | "slow" | "unknown" | null,
+    "spin_type":     "wrist" | "finger" | "unknown" | null,
+    "bowling_arm":   "right" | "left" | "unknown" | null,
+    "angle_to_rhb":  "over" | "round" | "varies" | "unknown" | null,
+    "notes":         ""
+  },
+  "approved_at":   "2026-05-04T12:34:56Z",
+  "approved_from": "sub-uuid",
+  "approved_by":   "jono"
+}
+```
+
+`aliases` and `seen_clubs` are derived (rebuilt by `build_app.py` from
+`match_players`); never hand-edit them.
+
+**Status rules**:
+- **complete** — all required fields populated (literal `"unknown"`
+  counts as populated). Required = `batting_hand`, `bowling_type`,
+  plus `bowling_arm` + `angle_to_rhb` + (`pace_type` if pace, else
+  `spin_type` if spin) when `bowling_type ∈ {pace, spin}`.
+- **partial** — any required field missing.
+- **not captured** — no file exists.
+- **needs review** — at least one submission with `status = "pending"`.
+- **conflicting** — ≥ 2 pending submissions disagree on any field.
+
+### 4. Video evidence (match-keyed)
+
+```
+data/metadata/videos/<match_id>.json
+{
+  "match_id": 7674154,
+  "match_date": "03/05/2026",
+  "home_club_name": "Upminster CC",
+  "away_club_name": "Rainham CC, Essex",
+  "videos": [
+    {"url": "...", "label": "Full innings, 1st XI v Upminster",
+     "verified_at": "2026-05-04T..."}
+  ]
+}
+```
+
+Migrate `CLUB_LINKS[*]["verified_videos"]` in `scout.py` into these
+files (one entry per match), so videos are facts about a game and
+reusable across reports / metadata pages. Surface them on a player page
+by joining `match_players` → `videos`.
+
+### 5. Submission flow (mailto / WhatsApp)
+
+The page `app/metadata/player/<player_id>.html`:
+- Shows current metadata + every match the player appears in that has
+  video evidence.
+- Has a form with all metadata fields + free-text notes + a multi-pick
+  for `evidence_match_ids`.
+- Submit is **plain JS** — no `fetch`, no backend. The button builds a
+  structured plain-text body and opens either:
+    - `mailto:<jono>?subject=Player+metadata...&body=<urlencoded>`
+    - `https://wa.me/<number>?text=<urlencoded>`
+
+Body format (stable, easy for Claude to parse):
+
+```
+PLAYER METADATA SUBMISSION
+player_id: 11189264
+player_name: M Barber
+batting_hand: right
+bowling_type: pace
+pace_type: medium
+spin_type:
+bowling_arm: right
+angle_to_rhb: over
+evidence_match_ids: 7674154, 7677034
+notes: Saw him in the U13 game, RHB, RA medium-fast
+submitted_by: <name>
+```
+
+Jono pastes this into Claude Code on Android: "process this submission".
+Claude writes:
+
+```
+data/metadata/submissions/<uuid>.json
+{
+  "id": "sub-...",
+  "submitted_at": "2026-05-04T...",
+  "submitted_by": "<from message>",
+  "via": "mailto" | "whatsapp" | "claude-code",
+  "player_id": 11189264,
+  "metadata": { ...same shape as player file... },
+  "evidence_match_ids": [7674154, 7677034],
+  "notes": "...",
+  "status": "pending",
+  "reviewed_at": null,
+  "reviewer_note": null
+}
+```
+
+Why this works without infra: every submitter has email or WhatsApp.
+The static site only needs to *generate* a link; sending and receiving
+go through standard apps. Jono is the single trust boundary.
+
+### 6. Approval flow (manual, Claude-Code-driven)
+
+No static admin UI. The flow is:
+
+1. Jono lists pending: "show pending submissions". Claude reads
+   `data/metadata/submissions/*.json` where `status = "pending"`.
+2. Jono says: `approve sub-xyz` (or `approve all from <person>`).
+   Claude merges `submission.metadata` into the canonical
+   `data/metadata/players/<player_id>.json` (creating it if missing),
+   sets `status = "approved"`, fills `approved_at` / `approved_from`,
+   and commits.
+3. Jono says: `reject sub-xyz with note "wrong player"`. Claude flips
+   `status = "rejected"`, writes the reviewer note, and commits.
+4. After every batch, run `python3 build_app.py` so the static pages
+   reflect the new state.
+
+### 7. Static frontend (`app/`)
+
+Pure HTML + vanilla JS. No build step, no Node, no React. Sibling of
+`reports/`, **not** a child. **Two builders** + a shared library — they
+share the DB connection, the CSS, the page chrome, and the metadata
+status function, but otherwise have nothing in common, so splitting
+them keeps each script focused:
+
+```bash
+# Always rebuild the DB first (loader picks up fresh raw/balls/ data)
+python3 build_db.py
+
+# Page 1 — data repository
+python3 build_data_repo.py
+
+# Pages 2..N — metadata browse + submit
+RCC_SUBMIT_EMAIL=jono@example.com \
+RCC_SUBMIT_WHATSAPP=447700900123 \
+  python3 build_metadata.py
+```
+
+`_app_lib.py` is shared: CSS, page wrapper, `metadata_status()`, the
+SQLite helper. **Don't** inline app-specific logic into it; keep it
+"chrome only". Each builder is independently runnable.
+
+#### Build outputs
+
+`app/index.html` — **data repository / 10-year game list**.
+- One row per played Rainham fixture in the last 10 seasons (today's
+  date is the cutoff for "played").
+- Columns: date, Rainham team, opposition, fmt, result, **BBB ✓/✗**,
+  **opp batting cov %**, **opp bowling cov %**.
+- Coverage % uses the SQL in §coverage formulas below; both columns
+  sit at 0 % until the metadata queue is bootstrapped, which is fine.
+
+`app/metadata/clubs.html` — every opposition club Rainham has played,
+with `complete / partial / not captured / needs review` rollups.
+
+`app/metadata/club/<club_id>.html` — per-club roster (~277 small
+pages). Static because the count is bounded and it makes deep-link
+sharing easier.
+
+`app/metadata/player.html` + `app/data/players.json` —
+- ONE static template (~700 bytes) reads `?id=<player_id>` from the
+  URL, fetches the bundled `app/data/players.json` (~3 MB, cached by
+  the browser after the first hit), and renders the player record +
+  the mailto / WhatsApp submit form.
+- Why bundled instead of per-player files? 14k tiny per-player files
+  would burn ~56 MB in 4 KB filesystem blocks and be a chore to
+  navigate in git; the bundle compresses to ~700 KB over HTTP.
+
+`app/static/app.css` and `app/static/player.js` — written once by the
+builders. The submit form's destinations (`SUBMIT_EMAIL`,
+`SUBMIT_WHATSAPP`) are baked into `player.js` from the env vars at
+build time, **not** stored in committed source.
+
+#### Coverage formulas
+
+```sql
+-- batting coverage for the OPPOSITION on a single Rainham match
+SELECT
+  1.0 * SUM(CASE WHEN batter_id IN <covered_player_ids> THEN 1 ELSE 0 END)
+      / COUNT(*) AS bat_cov
+FROM balls
+WHERE match_id = :mid
+  AND team_batting_club_id <> '5251'
+  AND is_legal_ball = 1;
+
+-- bowling coverage: same WHERE, swap batter_id -> bowler_id and
+-- team_batting_club_id -> team_bowling_club_id.
+```
+
+`<covered_player_ids>` = the set of `player_id`s whose
+`data/metadata/players/<id>.json` resolves to status `complete`.
+
+#### GitHub Pages deploy
+
+`.github/workflows/static.yml` deploys the whole repo to Pages on
+**push to `main` only** (no PR / branch builds). To preview locally,
+just `python3 -m http.server` from the repo root and browse
+`http://localhost:8000/app/`. Branch pushes don't redeploy — merge to
+`main` when you want to ship.
+
+### Don'ts (metadata-specific)
+
+- **Don't** key player metadata by club. Same `player_id` ⇒ one record,
+  no matter how many clubs they've played for. The "browse by club"
+  view is just an axis on top of the same player records.
+- **Don't** key video evidence by player. It's a fact about a *match*;
+  surface per-player by joining through `match_players`.
+- **Don't** add a backend, even a "small one". The mailto / WhatsApp
+  trick is the architecture, not a workaround.
+- **Don't** auto-merge submissions. Approval is always Jono via Claude
+  Code.
+- **Don't** put any of the `app/` content under `reports/`. Different
+  category, different generator (`build_app.py`, not `build_index.py`).
