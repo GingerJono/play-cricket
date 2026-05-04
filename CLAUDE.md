@@ -23,8 +23,10 @@ DB to grow / be refreshed → see _Workflow_ below.
 stats/
   fetch.py           pulls Play-Cricket JSON; --site-id and --division-ids
   build_db.py        loads cached JSON into SQLite (data/rainham.db)
-  scout.py           generic opposition scouting report (any club)
-                     emits both <slug>.md and a mobile-friendly <slug>.html
+  scout.py           generic opposition scouting report (any club).
+                     Emits md / html / a long mobile-friendly png inside a
+                     versioned `v<N>/` directory so the same club can be
+                     reported on multiple times in a single day.
   top_run_scorers.py     Rainham-specific report
   streaks_and_fifties.py Rainham-specific report
   oneill_vs_hothi.py     example head-to-head
@@ -99,14 +101,23 @@ Read one of them as a template. Always:
 
 ### Scouting an opposition club
 
-The output is dated and namespaced by club:
+The output is dated, namespaced by club, **and versioned per day** so a
+club can have multiple iterations on the same day (e.g. v1 first cut, v2
+after the user asks for tweaks):
 ```
-stats/reports/<YYYY-MM-DD>/<slug>/scout.md
-stats/reports/<YYYY-MM-DD>/<slug>/scout.html  ← mobile-optimised
+stats/reports/<YYYY-MM-DD>/<slug>/v1/scout.md
+stats/reports/<YYYY-MM-DD>/<slug>/v1/scout.html  ← mobile-optimised
+stats/reports/<YYYY-MM-DD>/<slug>/v1/scout.png   ← long single-image PNG
+stats/reports/<YYYY-MM-DD>/<slug>/v2/...
+stats/reports/<YYYY-MM-DD>/<slug>/latest         → symlink to highest v
 ```
 
-The HTML version is what the user shares — open on a phone, scroll-screenshot,
-paste into WhatsApp.
+`scout.py` auto-increments the `vN` folder each run; pass `--version N`
+to overwrite a specific version, or `--no-png` to skip the PNG render.
+
+The PNG is what the user shares — it's already a single mobile-friendly
+"scrolling screenshot" rendered straight from the HTML, so just attach it
+to WhatsApp.
 
 The user will name a club ("Spartans", "Hornchurch", etc.). Steps:
 
@@ -158,33 +169,68 @@ The user will name a club ("Spartans", "Hornchurch", etc.). Steps:
      1st XI L+C.
    - **4. Head-to-head vs Rainham 1st XI** in cache, with upcoming
      fixtures listed.
-   - **5. Last 10 1st XI played matches** with innings scores and
-     a Play-Cricket match link on each date.
+   - **5. Last 20 1st XI played matches** with innings scores and
+     a Play-Cricket match link on each date. (This is the list we loop
+     through when hunting for match videos — see step 5 below.)
    - **6. Patterns** — bar charts comparing them vs Rainham 1st XI:
      bat 1st vs 2nd, home vs away, when winning the toss; plus a
      per-season batting / bowling avg comparison.
-   - **7. Web / video links** — manually curated (the API has no
-     `video_url` field on matches).
+   - **7. Web / video links** — see "Hunting for match videos" below.
+     The Play-Cricket API has no `video_url` field, so verified links
+     are added manually (`CLUB_LINKS` in `scout.py`); per-match probes
+     are auto-generated.
 
-5. Commit the new raw JSON + the rebuilt DB + the report.
+5. **Hunt for match videos** (the manual loop the per-match probes are
+   designed for). Take the 20 played fixtures listed in section 5, and
+   for each one:
+   1. Click the YouTube search probe (or run the same query yourself —
+      it's `"<club>" "<opponent>" cricket <year>`).
+   2. **Open the top 2-3 results in tabs.** Don't trust the title alone.
+   3. **Use AI judgment to confirm it's actually the match.** A real
+      hit looks like:
+      - **Length: 2-7 hours** (full innings or whole-day livestream).
+      - **Posted within ~2 days of `match_date`** (almost always the
+        same day or next day, by the home club's channel).
+      - **Title / description** mentions the two team names, the
+        ground, the date, or the league.
+      - **Channel** is one of the clubs (or a known feeder channel
+        like NV Play / Spencer Cricket).
+      Reject: highlights packages of unrelated games, T20-night
+      compilations, anything < 30 min unless it's a confirmed
+      highlights upload tied to the same match.
+   4. When a match is verified, paste the URL into the `CLUB_LINKS`
+      block in `scout.py` under that club's `verified_videos` list,
+      then re-run the report.
+6. Commit the new raw JSON + the rebuilt DB + the report.
 
-### Mobile-friendly HTML for sharing
+### Mobile-friendly HTML / PNG for sharing
 
-`scout.py` writes a `<slug>.html` next to the markdown. It's a single
-self-contained file (inline CSS, no JS, no external assets) sized for a
-~520 px viewport — open it on a phone, scroll to top, and use the
-"long screenshot" / "scrolling capture" feature in the screenshot tool
-to capture the whole report as a single image suitable for WhatsApp.
+`scout.py` writes three files per run:
 
-If you need to tweak the HTML look (fonts, table density, colour pills),
-edit `render_html()` in `scout.py` — everything is one function.
+- `scout.md` — markdown for skim-reading in the terminal.
+- `scout.html` — single self-contained file (inline CSS, tiny inline JS
+  used only to record render height for the PNG step). Designed for a
+  ~540 px viewport.
+- `scout.png` — a long single-image render of the HTML (rendered via
+  headless Chromium at exactly the document's `scrollHeight`). This is
+  the artefact the user actually shares.
+
+The PNG renderer looks for Chromium in this order: `$CHROMIUM_BINARY`,
+`/opt/pw-browsers/chromium`, then `chromium` / `chromium-browser` /
+`google-chrome` on `PATH`. If none are present, pass `--no-png` and the
+md / html are still emitted.
+
+If you need to tweak the look (fonts, table density, colour pills, hero
+tiles), edit the `CSS` constant and `render_html()` in `scout.py`.
 
 ### Adding a video link manually
 
-If the user surfaces a YouTube link or NV Play stream, paste it into the
-`data["video_links"]` block in `scout.py` for that specific club, then
-re-run. The Play-Cricket API does **not** expose per-match video URLs,
-so this is a manual list.
+When you've eyeballed a YouTube link / NV Play stream and confirmed
+it's the right match (see "Hunt for match videos" above for the
+verification heuristic), paste it into the `CLUB_LINKS` table in
+`scout.py` under that club's `verified_videos` entry, then re-run —
+this generates the next `vN`. The Play-Cricket API does **not** expose
+per-match video URLs, so this is a manual, human-curated list.
 
 ### Comparing players across clubs
 Use `oneill_vs_hothi.py` as the template. The bow/bat queries already
