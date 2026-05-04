@@ -1,0 +1,958 @@
+{
+  "match_details": [
+    {
+      "id": 5960857,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "06/06/2023",
+      "league_name": "Essex County Cricket League",
+      "league_id": "9059",
+      "competition_name": "Division 1",
+      "competition_id": "114299",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "5960857",
+      "match_date": "03/06/2023",
+      "match_time": "12:30",
+      "ground_name": "Chigwell Sports Club",
+      "ground_id": "59227",
+      "home_team_name": "2nd XI",
+      "home_team_id": "257819",
+      "home_club_name": "Spartans CC, Essex",
+      "home_club_id": "14366",
+      "away_team_name": "Saturday 1st XI",
+      "away_team_id": "135277",
+      "away_club_name": "Scintilla CC",
+      "away_club_id": "10069",
+      "umpire_1_name": "Mohammed Afzal",
+      "umpire_1_id": "5870862",
+      "umpire_2_name": "",
+      "umpire_2_id": "",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "",
+      "scorer_1_id": "",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "135277",
+      "toss": "Scintilla CC - Saturday 1st XI won the toss and elected to bat",
+      "batted_first": "135277",
+      "no_of_overs": null,
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Scintilla CC - Saturday 1st XI - Won",
+      "result_applied_to": "135277",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 257819,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "10.0",
+          "bonus_points_batting": "5.0",
+          "bonus_points_bowling": "5.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 135277,
+          "game_points": "20",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Spartans CC, Essex - 2nd XI - Won",
+          "912766#257819"
+        ],
+        [
+          "Scintilla CC - Saturday 1st XI - Won",
+          "912766#135277"
+        ],
+        [
+          "Tied",
+          912772
+        ],
+        [
+          "Cancelled",
+          912768
+        ],
+        [
+          "Abandoned",
+          912769
+        ],
+        [
+          "Spartans CC, Essex - 2nd XI - Conceded",
+          "912770#135277"
+        ],
+        [
+          "Scintilla CC - Saturday 1st XI - Conceded",
+          "912771#257819"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Sai Santosh Pujari",
+              "player_id": 5483676,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Busireddy Reddy Pratap",
+              "player_id": 5317166,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Shekar Reddy Thipireddy",
+              "player_id": 5349762,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Sai Daggubati",
+              "player_id": 4935782,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Sarath Kotamarthi",
+              "player_id": 4725299,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Ronak Kishorkumar Patel",
+              "player_id": 5356399,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "MAHENDER MANDHA",
+              "player_id": 5476126,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 8,
+              "player_name": "Nagarjuna Mangalagiri",
+              "player_id": 5032355,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Chinna Rayalu Katha",
+              "player_id": 4726759,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Sunil Chittoori",
+              "player_id": 4988667,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Vinod Mandava",
+              "player_id": 5350848,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Sajal Rahman",
+              "player_id": 5998578,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Rifat Mahmud",
+              "player_id": 5773359,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Yesin Arafat",
+              "player_id": 3098761,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Altaf Bhat",
+              "player_id": 5934231,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Saad Bidiwala",
+              "player_id": 4930106,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Muhammad Chaudhary",
+              "player_id": 5767235,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Mohit Gupta",
+              "player_id": 4485481,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Adil Ijaz",
+              "player_id": 5352793,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Bilal Khan",
+              "player_id": 5357351,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Suhail Patel",
+              "player_id": 5821976,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 11,
+              "player_name": "Adnan Walayat",
+              "player_id": 5819528,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Scintilla CC - Saturday 1st XI",
+          "team_batting_id": "135277",
+          "innings_number": 1,
+          "extra_byes": "2",
+          "extra_leg_byes": "4",
+          "extra_wides": "17",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "23",
+          "runs": "277",
+          "wickets": "10",
+          "overs": "41.2",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Adil Ijaz",
+              "batsman_id": "5352793",
+              "how_out": "ct",
+              "fielder_name": "Shekar Reddy Thipireddy",
+              "fielder_id": "5349762",
+              "bowler_name": "Busireddy Reddy Pratap",
+              "bowler_id": "5317166",
+              "runs": "79",
+              "fours": "15",
+              "sixes": "2",
+              "balls": "57"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Yesin Arafat",
+              "batsman_id": "3098761",
+              "how_out": "ct",
+              "fielder_name": "MAHENDER MANDHA",
+              "fielder_id": "5476126",
+              "bowler_name": "Busireddy Reddy Pratap",
+              "bowler_id": "5317166",
+              "runs": "1",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "4"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Adnan Walayat",
+              "batsman_id": "5819528",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Ronak Kishorkumar Patel",
+              "bowler_id": "5356399",
+              "runs": "60",
+              "fours": "5",
+              "sixes": "3",
+              "balls": "65"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Altaf Bhat",
+              "batsman_id": "5934231",
+              "how_out": "ct",
+              "fielder_name": "Busireddy Reddy Pratap",
+              "fielder_id": "5317166",
+              "bowler_name": "Vinod Mandava",
+              "bowler_id": "5350848",
+              "runs": "22",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "20"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Sajal Rahman",
+              "batsman_id": "5998578",
+              "how_out": "ct",
+              "fielder_name": "Busireddy Reddy Pratap",
+              "fielder_id": "5317166",
+              "bowler_name": "Busireddy Reddy Pratap",
+              "bowler_id": "5317166",
+              "runs": "38",
+              "fours": "3",
+              "sixes": "2",
+              "balls": "33"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Suhail Patel",
+              "batsman_id": "5821976",
+              "how_out": "run out",
+              "fielder_name": "Sai Santosh Pujari",
+              "fielder_id": "5483676",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "14",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "14"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Mohit Gupta",
+              "batsman_id": "4485481",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sai Santosh Pujari",
+              "bowler_id": "5483676",
+              "runs": "19",
+              "fours": "2",
+              "sixes": "1",
+              "balls": "14"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Muhammad Chaudhary",
+              "batsman_id": "5767235",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Vinod Mandava",
+              "bowler_id": "5350848",
+              "runs": "3",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "12"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Saad Bidiwala",
+              "batsman_id": "4930106",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Chinna Rayalu Katha",
+              "bowler_id": "4726759",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "7"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Bilal Khan",
+              "batsman_id": "5357351",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "15",
+              "fours": "0",
+              "sixes": "2",
+              "balls": "11"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Rifat Mahmud",
+              "batsman_id": "5773359",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Vinod Mandava",
+              "bowler_id": "5350848",
+              "runs": "3",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "11"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "17",
+              "wickets": 1,
+              "batsman_out_name": "Yesin Arafat",
+              "batsman_out_id": "3098761",
+              "batsman_in_name": "Adil Ijaz",
+              "batsman_in_id": "5352793",
+              "batsman_in_runs": "12"
+            },
+            {
+              "runs": "133",
+              "wickets": 2,
+              "batsman_out_name": "Adil Ijaz",
+              "batsman_out_id": "5352793",
+              "batsman_in_name": "Adnan Walayat",
+              "batsman_in_id": "5819528",
+              "batsman_in_runs": "44"
+            },
+            {
+              "runs": "176",
+              "wickets": 3,
+              "batsman_out_name": "Altaf Bhat",
+              "batsman_out_id": "5934231",
+              "batsman_in_name": "Adnan Walayat",
+              "batsman_in_id": "5819528",
+              "batsman_in_runs": "59"
+            },
+            {
+              "runs": "178",
+              "wickets": 4,
+              "batsman_out_name": "Adnan Walayat",
+              "batsman_out_id": "5819528",
+              "batsman_in_name": "Sajal Rahman",
+              "batsman_in_id": "5998578",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "212",
+              "wickets": 5,
+              "batsman_out_name": "Suhail Patel",
+              "batsman_out_id": "5821976",
+              "batsman_in_name": "Sajal Rahman",
+              "batsman_in_id": "5998578",
+              "batsman_in_runs": "19"
+            },
+            {
+              "runs": "250",
+              "wickets": 6,
+              "batsman_out_name": "Mohit Gupta",
+              "batsman_out_id": "4485481",
+              "batsman_in_name": "Sajal Rahman",
+              "batsman_in_id": "5998578",
+              "batsman_in_runs": "36"
+            },
+            {
+              "runs": "256",
+              "wickets": 7,
+              "batsman_out_name": "Muhammad Chaudhary",
+              "batsman_out_id": "5767235",
+              "batsman_in_name": "Sajal Rahman",
+              "batsman_in_id": "5998578",
+              "batsman_in_runs": "38"
+            },
+            {
+              "runs": "257",
+              "wickets": 8,
+              "batsman_out_name": "Sajal Rahman",
+              "batsman_out_id": "5998578",
+              "batsman_in_name": "Saad Bidiwala",
+              "batsman_in_id": "4930106",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "260",
+              "wickets": 9,
+              "batsman_out_name": "Saad Bidiwala",
+              "batsman_out_id": "4930106",
+              "batsman_in_name": "Bilal Khan",
+              "batsman_in_id": "5357351",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "277",
+              "wickets": 10,
+              "batsman_out_name": "Rifat Mahmud",
+              "batsman_out_id": "5773359",
+              "batsman_in_name": "Bilal Khan",
+              "batsman_in_id": "5357351",
+              "batsman_in_runs": "15"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Busireddy Reddy Pratap",
+              "bowler_id": "5317166",
+              "overs": "9.0",
+              "maidens": "0",
+              "runs": "47",
+              "wides": "3",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Vinod Mandava",
+              "bowler_id": "5350848",
+              "overs": "6.2",
+              "maidens": "0",
+              "runs": "49",
+              "wides": "4",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Sai Santosh Pujari",
+              "bowler_id": "5483676",
+              "overs": "7",
+              "maidens": "0",
+              "runs": "48",
+              "wides": "3",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Sarath Kotamarthi",
+              "bowler_id": "4725299",
+              "overs": "6",
+              "maidens": "0",
+              "runs": "56",
+              "wides": "2",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Chinna Rayalu Katha",
+              "bowler_id": "4726759",
+              "overs": "7",
+              "maidens": "1",
+              "runs": "38",
+              "wides": "3",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Ronak Kishorkumar Patel",
+              "bowler_id": "5356399",
+              "overs": "6.0",
+              "maidens": "0",
+              "runs": "33",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Spartans CC, Essex - 2nd XI",
+          "team_batting_id": "257819",
+          "innings_number": 1,
+          "extra_byes": "4",
+          "extra_leg_byes": "1",
+          "extra_wides": "16",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "21",
+          "runs": "221",
+          "wickets": "10",
+          "overs": "44.5",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Sai Santosh Pujari",
+              "batsman_id": "5483676",
+              "how_out": "run out",
+              "fielder_name": "Rifat Mahmud",
+              "fielder_id": "5773359",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "7",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "7"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Sai Daggubati",
+              "batsman_id": "4935782",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Rifat Mahmud",
+              "bowler_id": "5773359",
+              "runs": "4",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "10"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Sunil Chittoori",
+              "batsman_id": "4988667",
+              "how_out": "run out",
+              "fielder_name": "Bilal Khan",
+              "fielder_id": "5357351",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "11",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "26"
+            },
+            {
+              "position": "4",
+              "batsman_name": "MAHENDER MANDHA",
+              "batsman_id": "5476126",
+              "how_out": "ct",
+              "fielder_name": "Yesin Arafat",
+              "fielder_id": "3098761",
+              "bowler_name": "Saad Bidiwala",
+              "bowler_id": "4930106",
+              "runs": "43",
+              "fours": "6",
+              "sixes": "0",
+              "balls": "68"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Chinna Rayalu Katha",
+              "batsman_id": "4726759",
+              "how_out": "ct",
+              "fielder_name": "Yesin Arafat",
+              "fielder_id": "3098761",
+              "bowler_name": "Mohit Gupta",
+              "bowler_id": "4485481",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "1"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Busireddy Reddy Pratap",
+              "batsman_id": "5317166",
+              "how_out": "run out",
+              "fielder_name": "Mohit Gupta",
+              "fielder_id": "4485481",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "51",
+              "fours": "3",
+              "sixes": "2",
+              "balls": "59"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Vinod Mandava",
+              "batsman_id": "5350848",
+              "how_out": "ct",
+              "fielder_name": "Rifat Mahmud",
+              "fielder_id": "5773359",
+              "bowler_name": "Adnan Walayat",
+              "bowler_id": "5819528",
+              "runs": "24",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "24"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Ronak Kishorkumar Patel",
+              "batsman_id": "5356399",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Altaf Bhat",
+              "bowler_id": "5934231",
+              "runs": "25",
+              "fours": "5",
+              "sixes": "0",
+              "balls": "31"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Shekar Reddy Thipireddy",
+              "batsman_id": "5349762",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "29",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "28"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Nagarjuna Mangalagiri",
+              "batsman_id": "5032355",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Bilal Khan",
+              "bowler_id": "5357351",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "3"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Sarath Kotamarthi",
+              "batsman_id": "4725299",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Muhammad Chaudhary",
+              "bowler_id": "5767235",
+              "runs": "4",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "12"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "12",
+              "wickets": 1,
+              "batsman_out_name": "Sai Santosh Pujari",
+              "batsman_out_id": "5483676",
+              "batsman_in_name": "Sai Daggubati",
+              "batsman_in_id": "4935782",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "12",
+              "wickets": 2,
+              "batsman_out_name": "Sai Daggubati",
+              "batsman_out_id": "4935782",
+              "batsman_in_name": "Sunil Chittoori",
+              "batsman_in_id": "4988667",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "57",
+              "wickets": 3,
+              "batsman_out_name": "Sunil Chittoori",
+              "batsman_out_id": "4988667",
+              "batsman_in_name": "MAHENDER MANDHA",
+              "batsman_in_id": "5476126",
+              "batsman_in_runs": "11"
+            },
+            {
+              "runs": "58",
+              "wickets": 4,
+              "batsman_out_name": "Chinna Rayalu Katha",
+              "batsman_out_id": "4726759",
+              "batsman_in_name": "MAHENDER MANDHA",
+              "batsman_in_id": "5476126",
+              "batsman_in_runs": "25"
+            },
+            {
+              "runs": "120",
+              "wickets": 5,
+              "batsman_out_name": "MAHENDER MANDHA",
+              "batsman_out_id": "5476126",
+              "batsman_in_name": "Busireddy Reddy Pratap",
+              "batsman_in_id": "5317166",
+              "batsman_in_runs": "37"
+            },
+            {
+              "runs": "148",
+              "wickets": 6,
+              "batsman_out_name": "Busireddy Reddy Pratap",
+              "batsman_out_id": "5317166",
+              "batsman_in_name": "Vinod Mandava",
+              "batsman_in_id": "5350848",
+              "batsman_in_runs": "14"
+            },
+            {
+              "runs": "159",
+              "wickets": 7,
+              "batsman_out_name": "Vinod Mandava",
+              "batsman_out_id": "5350848",
+              "batsman_in_name": "Ronak Kishorkumar Patel",
+              "batsman_in_id": "5356399",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "205",
+              "wickets": 8,
+              "batsman_out_name": "Ronak Kishorkumar Patel",
+              "batsman_out_id": "5356399",
+              "batsman_in_name": "Shekar Reddy Thipireddy",
+              "batsman_in_id": "5349762",
+              "batsman_in_runs": "19"
+            },
+            {
+              "runs": "208",
+              "wickets": 9,
+              "batsman_out_name": "Nagarjuna Mangalagiri",
+              "batsman_out_id": "5032355",
+              "batsman_in_name": "Shekar Reddy Thipireddy",
+              "batsman_in_id": "5349762",
+              "batsman_in_runs": "20"
+            },
+            {
+              "runs": "221",
+              "wickets": 10,
+              "batsman_out_name": "Sarath Kotamarthi",
+              "batsman_out_id": "4725299",
+              "batsman_in_name": "Shekar Reddy Thipireddy",
+              "batsman_in_id": "5349762",
+              "batsman_in_runs": "29"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Rifat Mahmud",
+              "bowler_id": "5773359",
+              "overs": "5.0",
+              "maidens": "0",
+              "runs": "25",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Bilal Khan",
+              "bowler_id": "5357351",
+              "overs": "9.0",
+              "maidens": "1",
+              "runs": "44",
+              "wides": "11",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Mohit Gupta",
+              "bowler_id": "4485481",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "12",
+              "wides": "3",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Muhammad Chaudhary",
+              "bowler_id": "5767235",
+              "overs": "6.5",
+              "maidens": "0",
+              "runs": "30",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Adnan Walayat",
+              "bowler_id": "5819528",
+              "overs": "6.0",
+              "maidens": "0",
+              "runs": "45",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Saad Bidiwala",
+              "bowler_id": "4930106",
+              "overs": "5.0",
+              "maidens": "0",
+              "runs": "13",
+              "wides": "1",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Sajal Rahman",
+              "bowler_id": "5998578",
+              "overs": "2.0",
+              "maidens": "0",
+              "runs": "16",
+              "wides": "2",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Altaf Bhat",
+              "bowler_id": "5934231",
+              "overs": "7.0",
+              "maidens": "0",
+              "runs": "31",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

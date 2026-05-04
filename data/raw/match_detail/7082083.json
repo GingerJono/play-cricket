@@ -1,0 +1,967 @@
+{
+  "match_details": [
+    {
+      "id": 7082083,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "27/05/2025",
+      "league_name": "Essex and East London Cricket League",
+      "league_id": "22939",
+      "competition_name": "Division 1",
+      "competition_id": "129682",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "7082083",
+      "match_date": "24/05/2025",
+      "match_time": "12:30",
+      "ground_name": "Add New Ground",
+      "ground_id": "",
+      "home_team_name": "3rd XI",
+      "home_team_id": "386796",
+      "home_club_name": "Waltham Forest CC",
+      "home_club_id": "29231",
+      "away_team_name": "2nd XI",
+      "away_team_id": "257819",
+      "away_club_name": "Spartans CC, Essex",
+      "away_club_id": "14366",
+      "umpire_1_name": "Msh Shaon EELCL",
+      "umpire_1_id": "6694339",
+      "umpire_2_name": "",
+      "umpire_2_id": "",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "",
+      "scorer_1_id": "",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "386796",
+      "toss": "Waltham Forest CC - 3rd XI won the toss and elected to field",
+      "batted_first": "257819",
+      "no_of_overs": "45",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Spartans CC, Essex - 2nd XI - Won",
+      "result_applied_to": "257819",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 386796,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "6.0",
+          "bonus_points_batting": "3.0",
+          "bonus_points_bowling": "3.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 257819,
+          "game_points": "20",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Waltham Forest CC - 3rd XI - Won",
+          "1028726#386796"
+        ],
+        [
+          "Spartans CC, Essex - 2nd XI - Won",
+          "1028726#257819"
+        ],
+        [
+          "Draw",
+          1028728
+        ],
+        [
+          "Tied",
+          1028733
+        ],
+        [
+          "Cancelled",
+          1028729
+        ],
+        [
+          "Abandoned",
+          1028730
+        ],
+        [
+          "Waltham Forest CC - 3rd XI - Conceded",
+          "1028731#257819"
+        ],
+        [
+          "Spartans CC, Essex - 2nd XI - Conceded",
+          "1028732#386796"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Daniyal Abbasi",
+              "player_id": 6591427,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Mustafa Qureshi",
+              "player_id": 1911744,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 3,
+              "player_name": "Vinay Kumar",
+              "player_id": 6269074,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Waqas Younis",
+              "player_id": 6596627,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Akkheel Rehman",
+              "player_id": 5802943,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Jahangeer Rehman",
+              "player_id": 6617644,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Shubham Khimavat",
+              "player_id": 5397693,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Yousif Khan",
+              "player_id": 3988606,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Subhaan Ejaz",
+              "player_id": 6038993,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Anwar Zeb",
+              "player_id": 6591439,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Asif Khan",
+              "player_id": 6720482,
+              "captain": true,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Srikantha Reddy Chirra",
+              "player_id": 5042580,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Syed Ibrahim",
+              "player_id": 6201500,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Vijay kumar Varikuppala",
+              "player_id": 6567404,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 4,
+              "player_name": "Nagarjuna Mangalagiri",
+              "player_id": 5032355,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Vasanth Reddy",
+              "player_id": 6549095,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Srikanth Sharma Kompella",
+              "player_id": 4709583,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Venkatesh Singu",
+              "player_id": 5736037,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Sneh Thakkar",
+              "player_id": 6532916,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Hasen Sheik",
+              "player_id": 4940147,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Upendar Peddy",
+              "player_id": 5898038,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Shyamsunder Alooru",
+              "player_id": 4954128,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 12,
+              "player_name": "Sajid Tanveer Shaik",
+              "player_id": 6532139,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Spartans CC, Essex - 2nd XI",
+          "team_batting_id": "257819",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "0",
+          "extra_wides": "35",
+          "extra_no_balls": "2",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "37",
+          "runs": "258",
+          "wickets": "6",
+          "overs": "45.0",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "45.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Srikanth Sharma Kompella",
+              "batsman_id": "4709583",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Vinay Kumar",
+              "bowler_id": "6269074",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "7"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Syed Ibrahim",
+              "batsman_id": "6201500",
+              "how_out": "ct",
+              "fielder_name": "Jahangeer Rehman",
+              "fielder_id": "6617644",
+              "bowler_name": "Yousif Khan",
+              "bowler_id": "3988606",
+              "runs": "27",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "46"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Shyamsunder Alooru",
+              "batsman_id": "4954128",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Vinay Kumar",
+              "bowler_id": "6269074",
+              "runs": "1",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "5"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Upendar Peddy",
+              "batsman_id": "5898038",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Asif Khan",
+              "bowler_id": "6720482",
+              "runs": "38",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "43"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Nagarjuna Mangalagiri",
+              "batsman_id": "5032355",
+              "how_out": "ct",
+              "fielder_name": "Mustafa Qureshi",
+              "fielder_id": "1911744",
+              "bowler_name": "Vinay Kumar",
+              "bowler_id": "6269074",
+              "runs": "28",
+              "fours": "2",
+              "sixes": "1",
+              "balls": "46"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Vasanth Reddy",
+              "batsman_id": "6549095",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "76",
+              "fours": "9",
+              "sixes": "1",
+              "balls": "75"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Vijay kumar Varikuppala",
+              "batsman_id": "6567404",
+              "how_out": "ct",
+              "fielder_name": "Waqas Younis",
+              "fielder_id": "6596627",
+              "bowler_name": "Yousif Khan",
+              "bowler_id": "3988606",
+              "runs": "46",
+              "fours": "6",
+              "sixes": "0",
+              "balls": "41"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Srikantha Reddy Chirra",
+              "batsman_id": "5042580",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "5",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "9"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Venkatesh Singu",
+              "batsman_id": "5736037",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Sneh Thakkar",
+              "batsman_id": "6532916",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Hasen Sheik",
+              "batsman_id": "4940147",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "12",
+              "batsman_name": "Sajid Tanveer Shaik",
+              "batsman_id": "6532139",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "4",
+              "wickets": 1,
+              "batsman_out_name": "Srikanth Sharma Kompella",
+              "batsman_out_id": "4709583",
+              "batsman_in_name": "Syed Ibrahim",
+              "batsman_in_id": "6201500",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "9",
+              "wickets": 2,
+              "batsman_out_name": "Shyamsunder Alooru",
+              "batsman_out_id": "4954128",
+              "batsman_in_name": "Syed Ibrahim",
+              "batsman_in_id": "6201500",
+              "batsman_in_runs": "2"
+            },
+            {
+              "runs": "79",
+              "wickets": 3,
+              "batsman_out_name": "Upendar Peddy",
+              "batsman_out_id": "5898038",
+              "batsman_in_name": "Syed Ibrahim",
+              "batsman_in_id": "6201500",
+              "batsman_in_runs": "21"
+            },
+            {
+              "runs": "98",
+              "wickets": 4,
+              "batsman_out_name": "Syed Ibrahim",
+              "batsman_out_id": "6201500",
+              "batsman_in_name": "Nagarjuna Mangalagiri",
+              "batsman_in_id": "5032355",
+              "batsman_in_runs": "10"
+            },
+            {
+              "runs": "124",
+              "wickets": 5,
+              "batsman_out_name": "Nagarjuna Mangalagiri",
+              "batsman_out_id": "5032355",
+              "batsman_in_name": "Vasanth Reddy",
+              "batsman_in_id": "6549095",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "231",
+              "wickets": 6,
+              "batsman_out_name": "Vijay kumar Varikuppala",
+              "batsman_out_id": "6567404",
+              "batsman_in_name": "Vasanth Reddy",
+              "batsman_in_id": "6549095",
+              "batsman_in_runs": "56"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Yousif Khan",
+              "bowler_id": "3988606",
+              "overs": "9.0",
+              "maidens": "2",
+              "runs": "33",
+              "wides": "4",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Vinay Kumar",
+              "bowler_id": "6269074",
+              "overs": "6.0",
+              "maidens": "0",
+              "runs": "44",
+              "wides": "9",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Asif Khan",
+              "bowler_id": "6720482",
+              "overs": "9.0",
+              "maidens": "1",
+              "runs": "57",
+              "wides": "5",
+              "wickets": "1",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Waqas Younis",
+              "bowler_id": "6596627",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "24",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Jahangeer Rehman",
+              "bowler_id": "6617644",
+              "overs": "1.0",
+              "maidens": "0",
+              "runs": "12",
+              "wides": "4",
+              "wickets": "0",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Anwar Zeb",
+              "bowler_id": "6591439",
+              "overs": "9.0",
+              "maidens": "1",
+              "runs": "35",
+              "wides": "5",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Shubham Khimavat",
+              "bowler_id": "5397693",
+              "overs": "6.0",
+              "maidens": "0",
+              "runs": "43",
+              "wides": "6",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Subhaan Ejaz",
+              "bowler_id": "6038993",
+              "overs": "1.0",
+              "maidens": "0",
+              "runs": "10",
+              "wides": "2",
+              "wickets": "0",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Waltham Forest CC - 3rd XI",
+          "team_batting_id": "386796",
+          "innings_number": 1,
+          "extra_byes": "2",
+          "extra_leg_byes": "0",
+          "extra_wides": "15",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "17",
+          "runs": "163",
+          "wickets": "10",
+          "overs": "36.5",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "45.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Daniyal Abbasi",
+              "batsman_id": "6591427",
+              "how_out": "ct",
+              "fielder_name": "Syed Ibrahim",
+              "fielder_id": "6201500",
+              "bowler_name": "Vasanth Reddy",
+              "bowler_id": "6549095",
+              "runs": "37",
+              "fours": "3",
+              "sixes": "1",
+              "balls": "56"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Vinay Kumar",
+              "batsman_id": "6269074",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Shyamsunder Alooru",
+              "bowler_id": "4954128",
+              "runs": "8",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "15"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Subhaan Ejaz",
+              "batsman_id": "6038993",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Shyamsunder Alooru",
+              "bowler_id": "4954128",
+              "runs": "1",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "3"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Waqas Younis",
+              "batsman_id": "6596627",
+              "how_out": "ct",
+              "fielder_name": "Upendar Peddy",
+              "fielder_id": "5898038",
+              "bowler_name": "Hasen Sheik",
+              "bowler_id": "4940147",
+              "runs": "52",
+              "fours": "5",
+              "sixes": "1",
+              "balls": "77"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Mustafa Qureshi",
+              "batsman_id": "1911744",
+              "how_out": "ct",
+              "fielder_name": "Vijay kumar Varikuppala",
+              "fielder_id": "6567404",
+              "bowler_name": "Upendar Peddy",
+              "bowler_id": "5898038",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "1"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Jahangeer Rehman",
+              "batsman_id": "6617644",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Vasanth Reddy",
+              "bowler_id": "6549095",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "1"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Akkheel Rehman",
+              "batsman_id": "5802943",
+              "how_out": "ct",
+              "fielder_name": "Hasen Sheik",
+              "fielder_id": "4940147",
+              "bowler_name": "Shyamsunder Alooru",
+              "bowler_id": "4954128",
+              "runs": "16",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "27"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Anwar Zeb",
+              "batsman_id": "6591439",
+              "how_out": "ct",
+              "fielder_name": "Sneh Thakkar",
+              "fielder_id": "6532916",
+              "bowler_name": "Sneh Thakkar",
+              "bowler_id": "6532916",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "6"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Yousif Khan",
+              "batsman_id": "3988606",
+              "how_out": "ct",
+              "fielder_name": "Sajid Tanveer Shaik",
+              "fielder_id": "6532139",
+              "bowler_name": "Upendar Peddy",
+              "bowler_id": "5898038",
+              "runs": "26",
+              "fours": "2",
+              "sixes": "1",
+              "balls": "23"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Shubham Khimavat",
+              "batsman_id": "5397693",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sneh Thakkar",
+              "bowler_id": "6532916",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "11"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Asif Khan",
+              "batsman_id": "6720482",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "2"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "19",
+              "wickets": 1,
+              "batsman_out_name": "Vinay Kumar",
+              "batsman_out_id": "6269074",
+              "batsman_in_name": "Daniyal Abbasi",
+              "batsman_in_id": "6591427",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "26",
+              "wickets": 2,
+              "batsman_out_name": "Subhaan Ejaz",
+              "batsman_out_id": "6038993",
+              "batsman_in_name": "Daniyal Abbasi",
+              "batsman_in_id": "6591427",
+              "batsman_in_runs": "8"
+            },
+            {
+              "runs": "73",
+              "wickets": 3,
+              "batsman_out_name": "Daniyal Abbasi",
+              "batsman_out_id": "6591427",
+              "batsman_in_name": "Waqas Younis",
+              "batsman_in_id": "6596627",
+              "batsman_in_runs": "18"
+            },
+            {
+              "runs": "73",
+              "wickets": 4,
+              "batsman_out_name": "Mustafa Qureshi",
+              "batsman_out_id": "1911744",
+              "batsman_in_name": "Waqas Younis",
+              "batsman_in_id": "6596627",
+              "batsman_in_runs": "18"
+            },
+            {
+              "runs": "73",
+              "wickets": 5,
+              "batsman_out_name": "Jahangeer Rehman",
+              "batsman_out_id": "6617644",
+              "batsman_in_name": "Waqas Younis",
+              "batsman_in_id": "6596627",
+              "batsman_in_runs": "18"
+            },
+            {
+              "runs": "112",
+              "wickets": 6,
+              "batsman_out_name": "Akkheel Rehman",
+              "batsman_out_id": "5802943",
+              "batsman_in_name": "Waqas Younis",
+              "batsman_in_id": "6596627",
+              "batsman_in_runs": "41"
+            },
+            {
+              "runs": "120",
+              "wickets": 7,
+              "batsman_out_name": "Anwar Zeb",
+              "batsman_out_id": "6591439",
+              "batsman_in_name": "Waqas Younis",
+              "batsman_in_id": "6596627",
+              "batsman_in_runs": "45"
+            },
+            {
+              "runs": "152",
+              "wickets": 8,
+              "batsman_out_name": "Waqas Younis",
+              "batsman_out_id": "6596627",
+              "batsman_in_name": "Yousif Khan",
+              "batsman_in_id": "3988606",
+              "batsman_in_runs": "18"
+            },
+            {
+              "runs": "160",
+              "wickets": 9,
+              "batsman_out_name": "Yousif Khan",
+              "batsman_out_id": "3988606",
+              "batsman_in_name": "Shubham Khimavat",
+              "batsman_in_id": "5397693",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "163",
+              "wickets": 10,
+              "batsman_out_name": "Shubham Khimavat",
+              "batsman_out_id": "5397693",
+              "batsman_in_name": "Asif Khan",
+              "batsman_in_id": "6720482",
+              "batsman_in_runs": "2"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Shyamsunder Alooru",
+              "bowler_id": "4954128",
+              "overs": "6.0",
+              "maidens": "0",
+              "runs": "25",
+              "wides": "0",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Upendar Peddy",
+              "bowler_id": "5898038",
+              "overs": "9.0",
+              "maidens": "0",
+              "runs": "47",
+              "wides": "5",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Srikanth Sharma Kompella",
+              "bowler_id": "4709583",
+              "overs": "2",
+              "maidens": "0",
+              "runs": "14",
+              "wides": "4",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Vasanth Reddy",
+              "bowler_id": "6549095",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "14",
+              "wides": "1",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Nagarjuna Mangalagiri",
+              "bowler_id": "5032355",
+              "overs": "5.0",
+              "maidens": "0",
+              "runs": "17",
+              "wides": "3",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Sneh Thakkar",
+              "bowler_id": "6532916",
+              "overs": "5.5",
+              "maidens": "0",
+              "runs": "18",
+              "wides": "1",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Hasen Sheik",
+              "bowler_id": "4940147",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "23",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Srikantha Reddy Chirra",
+              "bowler_id": "5042580",
+              "overs": "1.0",
+              "maidens": "0",
+              "runs": "3",
+              "wides": "1",
+              "wickets": "0",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

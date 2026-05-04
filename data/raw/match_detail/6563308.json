@@ -1,0 +1,934 @@
+{
+  "match_details": [
+    {
+      "id": 6563308,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "22/07/2024",
+      "league_name": "London Sports League",
+      "league_id": "18740",
+      "competition_name": "GSL Saturday Div 1 x Div 2",
+      "competition_id": "122921",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6563308",
+      "match_date": "13/07/2024",
+      "match_time": "12:30",
+      "ground_name": "Add New Ground",
+      "ground_id": "",
+      "home_team_name": "1st XI",
+      "home_team_id": "283587",
+      "home_club_name": "Fort CC",
+      "home_club_id": "23347",
+      "away_team_name": "3rd XI",
+      "away_team_id": "284288",
+      "away_club_name": "Spartans CC, Essex",
+      "away_club_id": "14366",
+      "umpire_1_name": "Sai Tharun",
+      "umpire_1_id": "6287108",
+      "umpire_2_name": "",
+      "umpire_2_id": "",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "Shamseer Koliyad",
+      "scorer_1_id": "4909455",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "283587",
+      "toss": "Fort CC - 1st XI won the toss and elected to bat",
+      "batted_first": "283587",
+      "no_of_overs": "40",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "",
+      "no_of_reserves": "",
+      "result": "W",
+      "result_description": "Fort CC - 1st XI - Won",
+      "result_applied_to": "283587",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 283587,
+          "game_points": "20",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 284288,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "7.0",
+          "bonus_points_batting": "4.0",
+          "bonus_points_bowling": "3.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Fort CC - 1st XI - Won",
+          "977612#283587"
+        ],
+        [
+          "Spartans CC, Essex - 3rd XI - Won",
+          "977612#284288"
+        ],
+        [
+          "Tied",
+          977618
+        ],
+        [
+          "Cancelled",
+          977614
+        ],
+        [
+          "Abandoned",
+          977615
+        ],
+        [
+          "Fort CC - 1st XI - Conceded",
+          "977616#284288"
+        ],
+        [
+          "Spartans CC, Essex - 3rd XI - Conceded",
+          "977617#283587"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Mara Mahshook",
+              "player_id": 5811029,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Rizwan Mrk",
+              "player_id": 4916471,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Rameez Mehthab",
+              "player_id": 4910395,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Shamseer Koliyad",
+              "player_id": 4909455,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "M Akhil",
+              "player_id": 4916478,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Ilyas Illu",
+              "player_id": 5779411,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Ramees Hassan",
+              "player_id": 4349692,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Shamil Zaan",
+              "player_id": 4916511,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 9,
+              "player_name": "Asthaf Patla",
+              "player_id": 5893325,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Rubais Ark",
+              "player_id": 6225570,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Amir Zuhail",
+              "player_id": 6400770,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 12,
+              "player_name": "Shifas Kalkandi",
+              "player_id": 4911132,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Sri Harsha Bandarupalli",
+              "player_id": 5345405,
+              "captain": true,
+              "wicket_keeper": true
+            },
+            {
+              "position": 2,
+              "player_name": "Ravindra N C",
+              "player_id": 5373907,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Shekar Reddy Thipireddy",
+              "player_id": 5349762,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Lavathishanth Tharmalingam",
+              "player_id": 4951819,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Surendra Ravulapati",
+              "player_id": 6269806,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Mahen Rajput",
+              "player_id": 5993571,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Varun Palem",
+              "player_id": 5613151,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Manoj Karri",
+              "player_id": 5316466,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Lakshman Kande",
+              "player_id": 6403734,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Rajesh Narayanabhatla",
+              "player_id": 4979578,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Ritvik Yeddanapudi",
+              "player_id": 6406961,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Fort CC - 1st XI",
+          "team_batting_id": "283587",
+          "innings_number": 1,
+          "extra_byes": "4",
+          "extra_leg_byes": "1",
+          "extra_wides": "22",
+          "extra_no_balls": "3",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "30",
+          "runs": "245",
+          "wickets": "5",
+          "overs": "40.0",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "40.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Mara Mahshook",
+              "batsman_id": "5811029",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Rajesh Narayanabhatla",
+              "bowler_id": "4979578",
+              "runs": "96",
+              "fours": "8",
+              "sixes": "0",
+              "balls": "97"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Rizwan Mrk",
+              "batsman_id": "4916471",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Rajesh Narayanabhatla",
+              "bowler_id": "4979578",
+              "runs": "65",
+              "fours": "5",
+              "sixes": "0",
+              "balls": "99"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Rameez Mehthab",
+              "batsman_id": "4910395",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "31",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "29"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Ilyas Illu",
+              "batsman_id": "5779411",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Shekar Reddy Thipireddy",
+              "bowler_id": "5349762",
+              "runs": "16",
+              "fours": "1",
+              "sixes": "1",
+              "balls": "12"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Ramees Hassan",
+              "batsman_id": "4349692",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Rajesh Narayanabhatla",
+              "bowler_id": "4979578",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "2"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Shamseer Koliyad",
+              "batsman_id": "4909455",
+              "how_out": "run out",
+              "fielder_name": "Sri Harsha Bandarupalli",
+              "fielder_id": "5345405",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "3",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "2"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Shamil Zaan",
+              "batsman_id": "4916511",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "4",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "2"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Shifas Kalkandi",
+              "batsman_id": "4911132",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "M Akhil",
+              "batsman_id": "4916478",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Asthaf Patla",
+              "batsman_id": "5893325",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Rubais Ark",
+              "batsman_id": "6225570",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "12",
+              "batsman_name": "Amir Zuhail",
+              "batsman_id": "6400770",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "172",
+              "wickets": 1,
+              "batsman_out_name": "Mara Mahshook",
+              "batsman_out_id": "5811029",
+              "batsman_in_name": "Rizwan Mrk",
+              "batsman_in_id": "4916471",
+              "batsman_in_runs": "49"
+            },
+            {
+              "runs": "200",
+              "wickets": 2,
+              "batsman_out_name": "Rizwan Mrk",
+              "batsman_out_id": "4916471",
+              "batsman_in_name": "Rameez Mehthab",
+              "batsman_in_id": "4910395",
+              "batsman_in_runs": "11"
+            },
+            {
+              "runs": "230",
+              "wickets": 3,
+              "batsman_out_name": "Ilyas Illu",
+              "batsman_out_id": "5779411",
+              "batsman_in_name": "Rameez Mehthab",
+              "batsman_in_id": "4910395",
+              "batsman_in_runs": "23"
+            },
+            {
+              "runs": "231",
+              "wickets": 4,
+              "batsman_out_name": "Ramees Hassan",
+              "batsman_out_id": "4349692",
+              "batsman_in_name": "Rameez Mehthab",
+              "batsman_in_id": "4910395",
+              "batsman_in_runs": "24"
+            },
+            {
+              "runs": "241",
+              "wickets": 5,
+              "batsman_out_name": "Shamseer Koliyad",
+              "batsman_out_id": "4909455",
+              "batsman_in_name": "Shamseer Koliyad",
+              "batsman_in_id": "4909455",
+              "batsman_in_runs": "3"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Ravindra N C",
+              "bowler_id": "5373907",
+              "overs": "5.0",
+              "maidens": "0",
+              "runs": "29",
+              "wides": "3",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Lavathishanth Tharmalingam",
+              "bowler_id": "4951819",
+              "overs": "7.0",
+              "maidens": "2",
+              "runs": "21",
+              "wides": "2",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Lakshman Kande",
+              "bowler_id": "6403734",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "23",
+              "wides": "5",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Shekar Reddy Thipireddy",
+              "bowler_id": "5349762",
+              "overs": "7.0",
+              "maidens": "0",
+              "runs": "45",
+              "wides": "3",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Rajesh Narayanabhatla",
+              "bowler_id": "4979578",
+              "overs": "8.0",
+              "maidens": "0",
+              "runs": "49",
+              "wides": "3",
+              "wickets": "3",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Varun Palem",
+              "bowler_id": "5613151",
+              "overs": "6.0",
+              "maidens": "0",
+              "runs": "42",
+              "wides": "5",
+              "wickets": "0",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Ritvik Yeddanapudi",
+              "bowler_id": "6406961",
+              "overs": "3.0",
+              "maidens": "0",
+              "runs": "31",
+              "wides": "1",
+              "wickets": "0",
+              "no_balls": "1"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Spartans CC, Essex - 3rd XI",
+          "team_batting_id": "284288",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "1",
+          "extra_wides": "24",
+          "extra_no_balls": "2",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "27",
+          "runs": "161",
+          "wickets": "10",
+          "overs": "35.2",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "40.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Varun Palem",
+              "batsman_id": "5613151",
+              "how_out": "ct",
+              "fielder_name": "Rubais Ark",
+              "fielder_id": "6225570",
+              "bowler_name": "M Akhil",
+              "bowler_id": "4916478",
+              "runs": "31",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "62"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Surendra Ravulapati",
+              "batsman_id": "6269806",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Ilyas Illu",
+              "bowler_id": "5779411",
+              "runs": "3",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "28"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Mahen Rajput",
+              "batsman_id": "5993571",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Ilyas Illu",
+              "bowler_id": "5779411",
+              "runs": "13",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "16"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Sri Harsha Bandarupalli",
+              "batsman_id": "5345405",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Mara Mahshook",
+              "bowler_id": "5811029",
+              "runs": "25",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "24"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Shekar Reddy Thipireddy",
+              "batsman_id": "5349762",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "M Akhil",
+              "bowler_id": "4916478",
+              "runs": "9",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "15"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Lavathishanth Tharmalingam",
+              "batsman_id": "4951819",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Ramees Hassan",
+              "bowler_id": "4349692",
+              "runs": "21",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "34"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Ritvik Yeddanapudi",
+              "batsman_id": "6406961",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Ilyas Illu",
+              "bowler_id": "5779411",
+              "runs": "14",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "16"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Rajesh Narayanabhatla",
+              "batsman_id": "4979578",
+              "how_out": "ct",
+              "fielder_name": "Rubais Ark",
+              "fielder_id": "6225570",
+              "bowler_name": "Ramees Hassan",
+              "bowler_id": "4349692",
+              "runs": "1",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "3"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Ravindra N C",
+              "batsman_id": "5373907",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Ramees Hassan",
+              "bowler_id": "4349692",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "4"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Lakshman Kande",
+              "batsman_id": "6403734",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "15",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "9"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Manoj Karri",
+              "batsman_id": "5316466",
+              "how_out": "ct",
+              "fielder_name": "Shamseer Koliyad",
+              "fielder_id": "4909455",
+              "bowler_name": "Asthaf Patla",
+              "bowler_id": "5893325",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "3"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "26",
+              "wickets": 1,
+              "batsman_out_name": "Surendra Ravulapati",
+              "batsman_out_id": "6269806",
+              "batsman_in_name": "Varun Palem",
+              "batsman_in_id": "5613151",
+              "batsman_in_runs": "11"
+            },
+            {
+              "runs": "48",
+              "wickets": 2,
+              "batsman_out_name": "Mahen Rajput",
+              "batsman_out_id": "5993571",
+              "batsman_in_name": "Varun Palem",
+              "batsman_in_id": "5613151",
+              "batsman_in_runs": "20"
+            },
+            {
+              "runs": "76",
+              "wickets": 3,
+              "batsman_out_name": "Varun Palem",
+              "batsman_out_id": "5613151",
+              "batsman_in_name": "Sri Harsha Bandarupalli",
+              "batsman_in_id": "5345405",
+              "batsman_in_runs": "16"
+            },
+            {
+              "runs": "98",
+              "wickets": 4,
+              "batsman_out_name": "Sri Harsha Bandarupalli",
+              "batsman_out_id": "5345405",
+              "batsman_in_name": "Shekar Reddy Thipireddy",
+              "batsman_in_id": "5349762",
+              "batsman_in_runs": "9"
+            },
+            {
+              "runs": "98",
+              "wickets": 5,
+              "batsman_out_name": "Shekar Reddy Thipireddy",
+              "batsman_out_id": "5349762",
+              "batsman_in_name": "Lavathishanth Tharmalingam",
+              "batsman_in_id": "4951819",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "134",
+              "wickets": 6,
+              "batsman_out_name": "Ritvik Yeddanapudi",
+              "batsman_out_id": "6406961",
+              "batsman_in_name": "Lavathishanth Tharmalingam",
+              "batsman_in_id": "4951819",
+              "batsman_in_runs": "14"
+            },
+            {
+              "runs": "135",
+              "wickets": 7,
+              "batsman_out_name": "Rajesh Narayanabhatla",
+              "batsman_out_id": "4979578",
+              "batsman_in_name": "Lavathishanth Tharmalingam",
+              "batsman_in_id": "4951819",
+              "batsman_in_runs": "14"
+            },
+            {
+              "runs": "137",
+              "wickets": 8,
+              "batsman_out_name": "Ravindra N C",
+              "batsman_out_id": "5373907",
+              "batsman_in_name": "Lavathishanth Tharmalingam",
+              "batsman_in_id": "4951819",
+              "batsman_in_runs": "14"
+            },
+            {
+              "runs": "160",
+              "wickets": 9,
+              "batsman_out_name": "Lavathishanth Tharmalingam",
+              "batsman_out_id": "4951819",
+              "batsman_in_name": "Lakshman Kande",
+              "batsman_in_id": "6403734",
+              "batsman_in_runs": "14"
+            },
+            {
+              "runs": "161",
+              "wickets": 10,
+              "batsman_out_name": "Manoj Karri",
+              "batsman_out_id": "5316466",
+              "batsman_in_name": "Lakshman Kande",
+              "batsman_in_id": "6403734",
+              "batsman_in_runs": "15"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Ramees Hassan",
+              "bowler_id": "4349692",
+              "overs": "6.0",
+              "maidens": "1",
+              "runs": "13",
+              "wides": "0",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Rubais Ark",
+              "bowler_id": "6225570",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "12",
+              "wides": "5",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Ilyas Illu",
+              "bowler_id": "5779411",
+              "overs": "8.0",
+              "maidens": "1",
+              "runs": "35",
+              "wides": "2",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Rizwan Mrk",
+              "bowler_id": "4916471",
+              "overs": "3.0",
+              "maidens": "0",
+              "runs": "12",
+              "wides": "4",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Mara Mahshook",
+              "bowler_id": "5811029",
+              "overs": "8.0",
+              "maidens": "0",
+              "runs": "41",
+              "wides": "4",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "M Akhil",
+              "bowler_id": "4916478",
+              "overs": "3.0",
+              "maidens": "0",
+              "runs": "21",
+              "wides": "8",
+              "wickets": "2",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Asthaf Patla",
+              "bowler_id": "5893325",
+              "overs": "3.2",
+              "maidens": "0",
+              "runs": "26",
+              "wides": "1",
+              "wickets": "1",
+              "no_balls": "1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

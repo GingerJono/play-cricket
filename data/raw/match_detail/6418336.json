@@ -1,0 +1,947 @@
+{
+  "match_details": [
+    {
+      "id": 6418336,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "10/09/2024",
+      "league_name": "Essex and East London Cricket League",
+      "league_id": "22939",
+      "competition_name": "Premier Division",
+      "competition_id": "116785",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6418336",
+      "match_date": "07/09/2024",
+      "match_time": "12:00",
+      "ground_name": "Add New Ground",
+      "ground_id": "",
+      "home_team_name": "1st XI",
+      "home_team_id": "307656",
+      "home_club_name": "London Riders CC",
+      "home_club_id": "25411",
+      "away_team_name": "1st XI",
+      "away_team_id": "253633",
+      "away_club_name": "Spartans CC, Essex",
+      "away_club_id": "14366",
+      "umpire_1_name": "Afzal Butt Muhammad",
+      "umpire_1_id": "6411428",
+      "umpire_2_name": "",
+      "umpire_2_id": "",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "",
+      "scorer_1_id": "",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "253633",
+      "toss": "Spartans CC, Essex - 1st XI won the toss and elected to bat",
+      "batted_first": "253633",
+      "no_of_overs": null,
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Spartans CC, Essex - 1st XI - Time Game Win(bat 1st)",
+      "result_applied_to": "253633",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 307656,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "4.0",
+          "bonus_points_batting": "1.0",
+          "bonus_points_bowling": "3.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 253633,
+          "game_points": "25",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "London Riders CC - 1st XI - Over Game Win",
+          "983631#307656"
+        ],
+        [
+          "Spartans CC, Essex - 1st XI - Over Game Win",
+          "983631#253633"
+        ],
+        [
+          "London Riders CC - 1st XI - Time Game Win(bat 1st)",
+          "983627#307656"
+        ],
+        [
+          "Spartans CC, Essex - 1st XI - Time Game Win(bat 1st)",
+          "983627#253633"
+        ],
+        [
+          "London Riders CC - 1st XI - Time Game Win(bat 2nd)",
+          "983629#307656"
+        ],
+        [
+          "Spartans CC, Essex - 1st XI - Time Game Win(bat 2nd)",
+          "983629#253633"
+        ],
+        [
+          "Draw Over Game",
+          983831
+        ],
+        [
+          "Draw Time Game",
+          983832
+        ],
+        [
+          "Tied",
+          931166
+        ],
+        [
+          "Cancelled",
+          931162
+        ],
+        [
+          "Abandoned",
+          931163
+        ],
+        [
+          "Abandoned Time Game",
+          983943
+        ],
+        [
+          "London Riders CC - 1st XI - Conceded",
+          "931164#253633"
+        ],
+        [
+          "Spartans CC, Essex - 1st XI - Conceded",
+          "931165#307656"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Afjol Ahmed",
+              "player_id": 6294675,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Faysal Haque",
+              "player_id": 5311539,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Md Rasel Ahmed",
+              "player_id": 6241024,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Rashed Ahmed",
+              "player_id": 5754176,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Atif Khan",
+              "player_id": 5831344,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Abu Hussain",
+              "player_id": 6325418,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Jumma Khan",
+              "player_id": 6787737,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Ismail Rony",
+              "player_id": 4884818,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 9,
+              "player_name": "Adnand Rumon",
+              "player_id": 6319259,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Madhukar Thapa",
+              "player_id": 6037491,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Rafsan Hussain",
+              "player_id": 5805861,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Yash Dhanak",
+              "player_id": 6208192,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Fahad Khan",
+              "player_id": 6354683,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Parimeet Jadav",
+              "player_id": 5596358,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 4,
+              "player_name": "Nimesh Mistry",
+              "player_id": 5630680,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Nageswara Nallabothu",
+              "player_id": 5352392,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "sai krishna chennaboina",
+              "player_id": 6209466,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Chinna Rayalu Katha",
+              "player_id": 4726759,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Sakaar Mishra",
+              "player_id": 5495689,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Syed Waseem",
+              "player_id": 4991927,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Goli Sunder",
+              "player_id": 6339475,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Ven Kompella",
+              "player_id": 4979621,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 12,
+              "player_name": "Srikanth Sharma Kompella",
+              "player_id": 4709583,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Spartans CC, Essex - 1st XI",
+          "team_batting_id": "253633",
+          "innings_number": 1,
+          "extra_byes": "3",
+          "extra_leg_byes": "0",
+          "extra_wides": "18",
+          "extra_no_balls": "1",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "22",
+          "runs": "308",
+          "wickets": "7",
+          "overs": "42.0",
+          "balls": "",
+          "declared": true,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Fahad Khan",
+              "batsman_id": "6354683",
+              "how_out": "ct",
+              "fielder_name": "Jumma Khan",
+              "fielder_id": "6787737",
+              "bowler_name": "Md Rasel Ahmed",
+              "bowler_id": "6241024",
+              "runs": "12",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "17"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Yash Dhanak",
+              "batsman_id": "6208192",
+              "how_out": "ct",
+              "fielder_name": "Atif Khan",
+              "fielder_id": "5831344",
+              "bowler_name": "Atif Khan",
+              "bowler_id": "5831344",
+              "runs": "9",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "22"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Nimesh Mistry",
+              "batsman_id": "5630680",
+              "how_out": "run out",
+              "fielder_name": "Adnand Rumon",
+              "fielder_id": "6319259",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "7",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "12"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Nageswara Nallabothu",
+              "batsman_id": "5352392",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jumma Khan",
+              "bowler_id": "6787737",
+              "runs": "87",
+              "fours": "9",
+              "sixes": "4",
+              "balls": "58"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Parimeet Jadav",
+              "batsman_id": "5596358",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "133",
+              "fours": "15",
+              "sixes": "2",
+              "balls": "101"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Syed Waseem",
+              "batsman_id": "4991927",
+              "how_out": "ct",
+              "fielder_name": "Jumma Khan",
+              "fielder_id": "6787737",
+              "bowler_name": "Jumma Khan",
+              "bowler_id": "6787737",
+              "runs": "4",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "6"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Chinna Rayalu Katha",
+              "batsman_id": "4726759",
+              "how_out": "ct",
+              "fielder_name": "Afjol Ahmed",
+              "fielder_id": "6294675",
+              "bowler_name": "Jumma Khan",
+              "bowler_id": "6787737",
+              "runs": "16",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "14"
+            },
+            {
+              "position": "8",
+              "batsman_name": "sai krishna chennaboina",
+              "batsman_id": "6209466",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jumma Khan",
+              "bowler_id": "6787737",
+              "runs": "17",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "22"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Sakaar Mishra",
+              "batsman_id": "5495689",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "1",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "1"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Ven Kompella",
+              "batsman_id": "4979621",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Goli Sunder",
+              "batsman_id": "6339475",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "17",
+              "wickets": 1,
+              "batsman_out_name": "Fahad Khan",
+              "batsman_out_id": "6354683",
+              "batsman_in_name": "Yash Dhanak",
+              "batsman_in_id": "6208192",
+              "batsman_in_runs": "3"
+            },
+            {
+              "runs": "27",
+              "wickets": 2,
+              "batsman_out_name": "Yash Dhanak",
+              "batsman_out_id": "6208192",
+              "batsman_in_name": "Nimesh Mistry",
+              "batsman_in_id": "5630680",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "53",
+              "wickets": 3,
+              "batsman_out_name": "Nimesh Mistry",
+              "batsman_out_id": "5630680",
+              "batsman_in_name": "Nageswara Nallabothu",
+              "batsman_in_id": "5352392",
+              "batsman_in_runs": "7"
+            },
+            {
+              "runs": "198",
+              "wickets": 4,
+              "batsman_out_name": "Nageswara Nallabothu",
+              "batsman_out_id": "5352392",
+              "batsman_in_name": "Parimeet Jadav",
+              "batsman_in_id": "5596358",
+              "batsman_in_runs": "70"
+            },
+            {
+              "runs": "210",
+              "wickets": 5,
+              "batsman_out_name": "Syed Waseem",
+              "batsman_out_id": "4991927",
+              "batsman_in_name": "Parimeet Jadav",
+              "batsman_in_id": "5596358",
+              "batsman_in_runs": "78"
+            },
+            {
+              "runs": "234",
+              "wickets": 6,
+              "batsman_out_name": "Chinna Rayalu Katha",
+              "batsman_out_id": "4726759",
+              "batsman_in_name": "Parimeet Jadav",
+              "batsman_in_id": "5596358",
+              "batsman_in_runs": "82"
+            },
+            {
+              "runs": "289",
+              "wickets": 7,
+              "batsman_out_name": "sai krishna chennaboina",
+              "batsman_out_id": "6209466",
+              "batsman_in_name": "Parimeet Jadav",
+              "batsman_in_id": "5596358",
+              "batsman_in_runs": "115"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Md Rasel Ahmed",
+              "bowler_id": "6241024",
+              "overs": "15.0",
+              "maidens": "1",
+              "runs": "77",
+              "wides": "5",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Atif Khan",
+              "bowler_id": "5831344",
+              "overs": "6.0",
+              "maidens": "0",
+              "runs": "41",
+              "wides": "3",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Afjol Ahmed",
+              "bowler_id": "6294675",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "33",
+              "wides": "2",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Madhukar Thapa",
+              "bowler_id": "6037491",
+              "overs": "3.0",
+              "maidens": "0",
+              "runs": "31",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Jumma Khan",
+              "bowler_id": "6787737",
+              "overs": "12.0",
+              "maidens": "0",
+              "runs": "94",
+              "wides": "4",
+              "wickets": "4",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Rashed Ahmed",
+              "bowler_id": "5754176",
+              "overs": "2.0",
+              "maidens": "0",
+              "runs": "29",
+              "wides": "4",
+              "wickets": "0",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "London Riders CC - 1st XI",
+          "team_batting_id": "307656",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "1",
+          "extra_wides": "24",
+          "extra_no_balls": "3",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "28",
+          "runs": "140",
+          "wickets": "9",
+          "overs": "40.1",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Ismail Rony",
+              "batsman_id": "4884818",
+              "how_out": "ct",
+              "fielder_name": "Parimeet Jadav",
+              "fielder_id": "5596358",
+              "bowler_name": "Sakaar Mishra",
+              "bowler_id": "5495689",
+              "runs": "3",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "10"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Afjol Ahmed",
+              "batsman_id": "6294675",
+              "how_out": "ct",
+              "fielder_name": "sai krishna chennaboina",
+              "fielder_id": "6209466",
+              "bowler_name": "Goli Sunder",
+              "bowler_id": "6339475",
+              "runs": "8",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "10"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Abu Hussain",
+              "batsman_id": "6325418",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Parimeet Jadav",
+              "bowler_id": "5596358",
+              "runs": "38",
+              "fours": "4",
+              "sixes": "1",
+              "balls": "79"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Rafsan Hussain",
+              "batsman_id": "5805861",
+              "how_out": "ct",
+              "fielder_name": "Parimeet Jadav",
+              "fielder_id": "5596358",
+              "bowler_name": "Ven Kompella",
+              "bowler_id": "4979621",
+              "runs": "9",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "30"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Md Rasel Ahmed",
+              "batsman_id": "6241024",
+              "how_out": "ct",
+              "fielder_name": "Parimeet Jadav",
+              "fielder_id": "5596358",
+              "bowler_name": "Parimeet Jadav",
+              "bowler_id": "5596358",
+              "runs": "23",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "31"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Rashed Ahmed",
+              "batsman_id": "5754176",
+              "how_out": "ct",
+              "fielder_name": "Srikanth Sharma Kompella",
+              "fielder_id": "4709583",
+              "bowler_name": "Yash Dhanak",
+              "bowler_id": "6208192",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "11"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Madhukar Thapa",
+              "batsman_id": "6037491",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Yash Dhanak",
+              "bowler_id": "6208192",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "1"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Jumma Khan",
+              "batsman_id": "6787737",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sakaar Mishra",
+              "bowler_id": "5495689",
+              "runs": "21",
+              "fours": "3",
+              "sixes": "1",
+              "balls": "45"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Adnand Rumon",
+              "batsman_id": "6319259",
+              "how_out": "ct",
+              "fielder_name": "Nageswara Nallabothu",
+              "fielder_id": "5352392",
+              "bowler_name": "Nageswara Nallabothu",
+              "bowler_id": "5352392",
+              "runs": "8",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "27"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Atif Khan",
+              "batsman_id": "5831344",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "4"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Faysal Haque",
+              "batsman_id": "5311539",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "0"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "11",
+              "wickets": 1,
+              "batsman_out_name": "Ismail Rony",
+              "batsman_out_id": "4884818",
+              "batsman_in_name": "Afjol Ahmed",
+              "batsman_in_id": "6294675",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "11",
+              "wickets": 2,
+              "batsman_out_name": "Afjol Ahmed",
+              "batsman_out_id": "6294675",
+              "batsman_in_name": "Abu Hussain",
+              "batsman_in_id": "6325418",
+              "batsman_in_runs": "3"
+            },
+            {
+              "runs": "50",
+              "wickets": 3,
+              "batsman_out_name": "Rafsan Hussain",
+              "batsman_out_id": "5805861",
+              "batsman_in_name": "Abu Hussain",
+              "batsman_in_id": "6325418",
+              "batsman_in_runs": "20"
+            },
+            {
+              "runs": "96",
+              "wickets": 4,
+              "batsman_out_name": "Md Rasel Ahmed",
+              "batsman_out_id": "6241024",
+              "batsman_in_name": "Abu Hussain",
+              "batsman_in_id": "6325418",
+              "batsman_in_runs": "36"
+            },
+            {
+              "runs": "103",
+              "wickets": 5,
+              "batsman_out_name": "Abu Hussain",
+              "batsman_out_id": "6325418",
+              "batsman_in_name": "Rashed Ahmed",
+              "batsman_in_id": "5754176",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "103",
+              "wickets": 6,
+              "batsman_out_name": "Madhukar Thapa",
+              "batsman_out_id": "6037491",
+              "batsman_in_name": "Rashed Ahmed",
+              "batsman_in_id": "5754176",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "114",
+              "wickets": 7,
+              "batsman_out_name": "Rashed Ahmed",
+              "batsman_out_id": "5754176",
+              "batsman_in_name": "Jumma Khan",
+              "batsman_in_id": "6787737",
+              "batsman_in_runs": "8"
+            },
+            {
+              "runs": "139",
+              "wickets": 8,
+              "batsman_out_name": "Jumma Khan",
+              "batsman_out_id": "6787737",
+              "batsman_in_name": "Adnand Rumon",
+              "batsman_in_id": "6319259",
+              "batsman_in_runs": "8"
+            },
+            {
+              "runs": "140",
+              "wickets": 9,
+              "batsman_out_name": "Adnand Rumon",
+              "batsman_out_id": "6319259",
+              "batsman_in_name": "Atif Khan",
+              "batsman_in_id": "5831344",
+              "batsman_in_runs": "0"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Goli Sunder",
+              "bowler_id": "6339475",
+              "overs": "7.0",
+              "maidens": "0",
+              "runs": "22",
+              "wides": "5",
+              "wickets": "1",
+              "no_balls": "2"
+            },
+            {
+              "bowler_name": "Sakaar Mishra",
+              "bowler_id": "5495689",
+              "overs": "9.0",
+              "maidens": "1",
+              "runs": "37",
+              "wides": "1",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Yash Dhanak",
+              "bowler_id": "6208192",
+              "overs": "9.0",
+              "maidens": "2",
+              "runs": "37",
+              "wides": "4",
+              "wickets": "2",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Ven Kompella",
+              "bowler_id": "4979621",
+              "overs": "5.0",
+              "maidens": "1",
+              "runs": "19",
+              "wides": "5",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Chinna Rayalu Katha",
+              "bowler_id": "4726759",
+              "overs": "2.0",
+              "maidens": "0",
+              "runs": "14",
+              "wides": "3",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Nageswara Nallabothu",
+              "bowler_id": "5352392",
+              "overs": "4.1",
+              "maidens": "1",
+              "runs": "5",
+              "wides": "2",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Parimeet Jadav",
+              "bowler_id": "5596358",
+              "overs": "4.0",
+              "maidens": "2",
+              "runs": "5",
+              "wides": "4",
+              "wickets": "2",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
