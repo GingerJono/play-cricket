@@ -67,6 +67,8 @@ CHROMIUM_CANDIDATES = [
 RAINHAM_CLUB_ID = "5251"
 RAINHAM_FIRST_XI_TEAM_ID = "51207"   # Rainham CC, Essex - 1st XI
 RAINHAM_NAME = "Rainham CC"
+RAINHAM_PC_SUBDOMAIN = "rainhamcc"
+PC_DEFAULT_RULE_TYPE = 179
 
 NOT_OUT = ("not out", "retired not out")
 DID_NOT_BAT = ("did not bat", "absent")
@@ -123,6 +125,86 @@ def _esc(x) -> str:
                   .replace("<", "&lt;")
                   .replace(">", "&gt;")
                   .replace('"', "&quot;"))
+
+
+def _player_link(subdomain, player_id, kind, label):
+    """Return an `<a>` tag for the player's Play-Cricket profile, or just
+    the escaped label if we can't build one (no subdomain / no id)."""
+    url = player_pc_url(subdomain, player_id, kind=kind) if subdomain else None
+    safe = _esc(label)
+    if not url or not player_id:
+        return safe
+    return f"<a href='{_esc(url)}' target='_blank' rel='noopener'>{safe}</a>"
+
+
+def _perf_bat_html(subdomain, b):
+    """Render one batter line for the §5 match strip: `Smith 89 (60b, #4)`."""
+    name = _player_link(subdomain, b.get("id"), "batting",
+                        b.get("name") or "?")
+    runs = b.get("runs", 0)
+    star = "*" if (b.get("how_out") or "").lower() in NOT_OUT else ""
+    pos = b.get("pos")
+    balls = b.get("balls")
+    extras = []
+    if balls is not None and balls != "":
+        extras.append(f"{balls}b")
+    if pos is not None:
+        extras.append(f"#{pos}")
+    extra = f" <span class='x'>({', '.join(extras)})</span>" if extras else ""
+    return f"<span class='who'>{name}</span> <b>{runs}{star}</b>{extra}"
+
+
+def _perf_bowl_html(subdomain, b):
+    """`Khan 5/22 (10ov)`."""
+    name = _player_link(subdomain, b.get("id"), "bowling",
+                        b.get("name") or "?")
+    w = b.get("wickets", 0); r = b.get("runs", 0)
+    overs = b.get("overs") or ""
+    ext = f" <span class='x'>({overs}ov)</span>" if overs else ""
+    return f"<span class='who'>{name}</span> <b>{w}/{r}</b>{ext}"
+
+
+def _player_md_link(subdomain, player_id, kind, label):
+    url = player_pc_url(subdomain, player_id, kind=kind) if subdomain else None
+    if not url or not player_id:
+        return label or "?"
+    return f"[{label or '?'}]({url})"
+
+
+def _perf_bat_md(subdomain, b):
+    name = _player_md_link(subdomain, b.get("id"), "batting",
+                           b.get("name") or "?")
+    star = "*" if (b.get("how_out") or "").lower() in NOT_OUT else ""
+    bits = []
+    if b.get("balls") not in (None, "", 0):
+        bits.append(f"{b['balls']}b")
+    if b.get("pos") is not None:
+        bits.append(f"#{b['pos']}")
+    extra = f" ({', '.join(bits)})" if bits else ""
+    return f"{name} **{b.get('runs', 0)}{star}**{extra}"
+
+
+def _perf_bowl_md(subdomain, b):
+    name = _player_md_link(subdomain, b.get("id"), "bowling",
+                           b.get("name") or "?")
+    overs = b.get("overs") or ""
+    extra = f" ({overs}ov)" if overs else ""
+    return f"{name} **{b.get('wickets', 0)}/{b.get('runs', 0)}**{extra}"
+
+
+def _date_short(date_ddmmyyyy):
+    """'12/07/2025' → "Jul '25" (just month + year — enough to anchor a
+    sample range without overflowing a narrow cell)."""
+    if not date_ddmmyyyy or len(date_ddmmyyyy) < 10:
+        return date_ddmmyyyy or ""
+    months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+              "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    try:
+        mo = int(date_ddmmyyyy[3:5])
+        y = date_ddmmyyyy[8:10]
+        return f"{months[mo]} '{y}"
+    except (ValueError, IndexError):
+        return date_ddmmyyyy
 
 
 # ---------------------------------------------------------------- club / team --
@@ -527,10 +609,149 @@ def wld_segments(counts, keys=("W","D","L","T","A","NR")):
     return [(k, counts.get(k, 0)) for k in keys if counts.get(k, 0) > 0]
 
 
+# ------------------------------------------------ match-detail / matrix --
+
+def fetch_match_perf(conn, match_id, club_id):
+    """Pull the scouted club's batting + bowling performance in this match.
+
+    Returns a dict {top_bat, fifty_plus, top_bowl, three_plus} where each
+    of top_bat/top_bowl is a single row (or None) and the *_plus lists
+    contain anyone else who hit the bonus threshold (50+ runs / 3+
+    wickets) but wasn't the top performer."""
+    bat_rows = conn.execute("""
+        SELECT batsman_id, batsman_name, position,
+               coalesce(runs,0), balls, how_out
+        FROM batting
+        WHERE match_id=? AND team_batting_club_id=?
+          AND lower(coalesce(how_out,'')) NOT IN ('did not bat','absent')
+        ORDER BY coalesce(runs,0) DESC, position ASC
+    """, (match_id, club_id)).fetchall()
+    bowl_rows = conn.execute("""
+        SELECT bowler_id, bowler_name, overs,
+               coalesce(maidens,0), coalesce(runs,0), coalesce(wickets,0)
+        FROM bowling
+        WHERE match_id=? AND team_bowling_club_id=?
+        ORDER BY coalesce(wickets,0) DESC, coalesce(runs,0) ASC
+    """, (match_id, club_id)).fetchall()
+
+    top_bat, fifty_plus = None, []
+    if bat_rows:
+        b = bat_rows[0]
+        top_bat = {
+            "id": b[0], "name": b[1], "pos": b[2],
+            "runs": b[3], "balls": b[4], "how_out": b[5],
+        }
+        for r in bat_rows[1:]:
+            if (r[3] or 0) >= 50:
+                fifty_plus.append({
+                    "id": r[0], "name": r[1], "pos": r[2],
+                    "runs": r[3], "balls": r[4], "how_out": r[5],
+                })
+
+    # Filter out empty bowling-card rows (no overs / runs / wickets / maidens)
+    bowled = [r for r in bowl_rows
+              if overs_to_balls(r[2]) or r[3] or r[4] or r[5]]
+    top_bowl, three_plus = None, []
+    if bowled:
+        b = bowled[0]
+        top_bowl = {
+            "id": b[0], "name": b[1], "overs": b[2],
+            "maidens": b[3], "runs": b[4], "wickets": b[5],
+        }
+        for r in bowled[1:]:
+            if (r[5] or 0) >= 3:
+                three_plus.append({
+                    "id": r[0], "name": r[1], "overs": r[2],
+                    "maidens": r[3], "runs": r[4], "wickets": r[5],
+                })
+    return {
+        "top_bat": top_bat, "fifty_plus": fifty_plus,
+        "top_bowl": top_bowl, "three_plus": three_plus,
+    }
+
+
+def first_innings_matrix(conn, club_id, team_ids, today_iso, comp_types=("League","Cup")):
+    """Return a 2x2 dict for (bat_first|bowl_first) × (home|away) of the
+    last `n` matches each, with avg/median first-innings totals and the
+    date range that those samples cover.
+
+    We only look at the scouted team's 1st XI (team_ids), include
+    League + Cup played matches up to today_iso, and pull
+    `innings.runs WHERE innings_seq=1` to get the first-innings total.
+    """
+    if not team_ids:
+        return None
+    t_ph = ",".join("?" * len(team_ids))
+    c_ph = ",".join("?" * len(comp_types))
+    rows = conn.execute(f"""
+        SELECT m.match_id, m.match_date,
+               m.home_club_id, m.batted_first,
+               (SELECT i.runs FROM innings i
+                 WHERE i.match_id=m.match_id AND i.innings_seq=1) AS r1
+        FROM matches m
+        WHERE (m.home_team_id IN ({t_ph}) OR m.away_team_id IN ({t_ph}))
+          AND m.competition_type IN ({c_ph})
+          AND m.match_date <> '' AND m.result <> ''
+          AND substr(m.match_date,7,4)||substr(m.match_date,4,2)||
+              substr(m.match_date,1,2) <= ?
+        ORDER BY substr(m.match_date,7,4)||substr(m.match_date,4,2)||
+                 substr(m.match_date,1,2) DESC
+    """, (*team_ids, *team_ids, *comp_types, today_iso)).fetchall()
+
+    target = set(team_ids)
+    buckets = {("bat", "home"): [], ("bat", "away"): [],
+               ("bowl", "home"): [], ("bowl", "away"): []}
+    for mid, mdate, hcid, bf, r1 in rows:
+        bf = (bf or "").strip()
+        if not bf:
+            continue
+        venue = "home" if hcid == club_id else "away"
+        side = "bat" if bf in target else "bowl"
+        buckets[(side, venue)].append((mdate, r1))
+
+    LAST = 10
+    out = {}
+    for k, items in buckets.items():
+        # Take the last LAST played items (we already DESC'd), keep only
+        # those that have a recorded first-innings total.
+        sample = [(d, r) for d, r in items[:LAST] if r is not None]
+        if not sample:
+            out[k] = None
+            continue
+        runs = sorted(r for _, r in sample)
+        n = len(runs)
+        avg = sum(runs) / n
+        if n % 2:
+            med = runs[n // 2]
+        else:
+            med = (runs[n // 2 - 1] + runs[n // 2]) / 2
+        # Date range: dd/mm/yyyy strings — sort by ISO (yyyymmdd) so
+        # "06/09/2025" doesn't appear earlier than "30/08/2025".
+        dates = sorted((d for d, _ in sample), key=to_iso)
+        out[k] = {
+            "n": n, "avg": avg, "median": med,
+            "first": dates[0], "last": dates[-1],
+        }
+    return out
+
+
 # ---------------------------------------------------------------- main ----
 
 def play_cricket_match_url(match_id):
     return f"https://play-cricket.com/website/results/{match_id}"
+
+
+def player_pc_url(subdomain, player_id, kind="batting",
+                  rule_type_id=PC_DEFAULT_RULE_TYPE):
+    """Build a Play-Cricket player profile URL.
+
+    Example: https://spartansessex.play-cricket.com/player_stats/batting/
+             4908218?rule_type_id=179
+    `kind` is 'batting' or 'bowling'."""
+    if not subdomain or not player_id:
+        return None
+    return (f"https://{subdomain}.play-cricket.com/player_stats/"
+            f"{kind}/{player_id}?rule_type_id={rule_type_id}")
 
 
 def parse_args():
@@ -673,12 +894,13 @@ def main():
     h2h_upcoming = [m for m in h2h_matches if not m["result"]
                     and to_iso(m["match_date"]) >= today_iso]
 
-    # ---- Section 5: last 10 1st XI played L+C with scores ----
+    # ---- Section 5: last N 1st XI played L+C with scores ----
     recent = matches[:args.last_recent]   # already DESC
-    # Decorate with innings scores
+    # Decorate each with innings totals + per-side performance summary
+    # (top scorer + 50+ supporting innings; top wicket-taker + 3wi+).
     for m in recent:
-        innings = fetch_innings_summary(conn, m["match_id"])
-        m["innings_lines"] = innings
+        m["innings_lines"] = fetch_innings_summary(conn, m["match_id"])
+        m["perf"] = fetch_match_perf(conn, m["match_id"], club_id)
 
     # ---- Section 6 charts ----
     # 6a. bat 1st vs bat 2nd
@@ -782,11 +1004,19 @@ def main():
     us_avgs = team_avgs_per_season(conn, club_id, target_team_ids, last_n_seasons)
     vs_avgs = team_avgs_per_season(conn, vs_club_id, vs_team_ids, last_n_seasons)
 
+    # 6e. First-innings matrix (bat/bowl first × home/away, last 10 each)
+    fi_matrix = first_innings_matrix(conn, club_id, target_team_ids, today_iso)
+
+    # Play-Cricket subdomain for player profile links (used in §2/§3/§5)
+    pc_subdomain = (CLUB_LINKS.get(str(club_id), {}) or {}).get("pc_subdomain")
+
     # ---- Build report data ----
     data = {
         "club_name": club_name,
         "club_id": club_id,
         "vs_club_name": vs_club_name,
+        "vs_pc_subdomain": RAINHAM_PC_SUBDOMAIN,
+        "pc_subdomain": pc_subdomain,
         "today": today,
         "current_season": cur_season,
         "last_n_seasons": last_n_seasons,
@@ -805,6 +1035,7 @@ def main():
         "chart_toss": chart_toss,
         "us_avgs": us_avgs,
         "vs_avgs": vs_avgs,
+        "fi_matrix": fi_matrix,
         "video_links": video_links_for(club_id, club_name, recent_matches=recent),
     }
 
@@ -944,6 +1175,7 @@ def render_long_png(html_path: Path, png_path: Path):
 # from name-based web searches and may not be the right entity.
 CLUB_LINKS = {
     "14366": {  # Spartans CC, Essex
+        "pc_subdomain": "spartansessex",
         "official": [
             ("Play-Cricket club page", "https://spartansessex.play-cricket.com/home"),
             ("Club website", "https://www.thespartanscricketclub.com/"),
@@ -992,6 +1224,7 @@ CLUB_LINKS = {
         ],
     },
     "6909": {  # Wickford CC
+        "pc_subdomain": "wickford",
         "official": [
             ("Play-Cricket club page", "https://wickford.play-cricket.com/home"),
             ("Club website", "https://www.wickfordcc.co.uk/"),
@@ -1088,11 +1321,13 @@ def render_md(d):
     md.append("")
     md.append("| # | Player | M | I | NO | Runs | HS | Avg | SR | 50 | 100 | Pos |")
     md.append("|--:|--------|--:|--:|--:|---:|---:|---:|---:|--:|--:|--:|")
+    sub = d.get("pc_subdomain")
     for i, r in enumerate(d["top_batters"], 1):
         (bid, name, innings, no_, runs, hs, fifties, hundreds, balls_known,
          runs_when_balls, matches_, mode_pos) = r
         avg = f"{runs/(innings-no_):.2f}" if (innings-no_) > 0 else "—"
         sr = f"{100*runs_when_balls/balls_known:.1f}" if balls_known else "—"
+        name = _player_md_link(sub, bid, "batting", name)
         md.append(f"| {i} | {name} | {matches_} | {innings} | {no_} | "
                   f"**{runs}** | {hs} | {avg} | {sr} | {fifties} | {hundreds} | {mode_pos} |")
     md.append("")
@@ -1105,7 +1340,8 @@ def render_md(d):
     for i, r in enumerate(d["top_bowlers"], 1):
         avg = f"{r['avg']:.2f}" if r["avg"] is not None else "—"
         econ = f"{r['econ']:.2f}" if r["econ"] is not None else "—"
-        md.append(f"| {i} | {r['name']} | {r['matches']} | {r['overs']} | "
+        nm = _player_md_link(sub, r["bowler_id"], "bowling", r["name"])
+        md.append(f"| {i} | {nm} | {r['matches']} | {r['overs']} | "
                   f"{r['maidens']} | {r['runs']} | **{r['wickets']}** | {avg} | "
                   f"{econ} | {r['best']} | {r['fivers']} | {r['fourers']} |")
     md.append("")
@@ -1149,23 +1385,68 @@ def render_md(d):
     # 5. Recent
     md.append(f"## 5. Last {len(d['recent'])} 1st XI played matches (L+C)")
     md.append("")
-    md.append("| Date | Comp | Venue | Opponent | Result | Score |")
-    md.append("|---|---|---|---|---|---|")
+    sub = d.get("pc_subdomain")
+    target_set = set(d["target_team_ids"])
     for m in d["recent"]:
         we_home = m["home_club_id"] == d["club_id"]
         venue = "H" if we_home else "A"
         opp = m["away_club_name"] if we_home else m["home_club_name"]
-        target_set = set(d["target_team_ids"])
+        opp_short = re.sub(r",.*$", "", opp).strip()
         r = result_for(m["result"], m["result_applied_to"], target_set)
         scores = innings_inline(m)
-        md.append(f"| [{m['match_date']}]({play_cricket_match_url(m['match_id'])}) "
-                  f"| {m['competition_type']} | {venue} | {opp} | {r} | {scores} |")
+        md.append(
+            f"- **{r}** [{m['match_date']}]"
+            f"({play_cricket_match_url(m['match_id'])}) "
+            f"· {m['competition_type']} · {venue} vs **{opp_short}** "
+            f"— {scores}"
+        )
+        perf = m.get("perf") or {}
+        if perf.get("top_bat"):
+            bits = [_perf_bat_md(sub, perf["top_bat"])]
+            for x in perf.get("fifty_plus", []):
+                bits.append(_perf_bat_md(sub, x))
+            md.append(f"  - 🏏 " + " · ".join(bits))
+        if perf.get("top_bowl") and perf["top_bowl"]["wickets"] is not None:
+            bits = [_perf_bowl_md(sub, perf["top_bowl"])]
+            for x in perf.get("three_plus", []):
+                bits.append(_perf_bowl_md(sub, x))
+            md.append(f"  - 🎯 " + " · ".join(bits))
     md.append("")
 
     # 6. Charts (text-only summary in MD; HTML has bars)
     md.append("## 6. Patterns")
     md.append("")
-    md.append("### 6a. When batting first vs second (last 3 seasons L+C)")
+
+    fi = d.get("fi_matrix")
+    if fi:
+        md.append("### 6a. First-innings totals — last 10 of each quadrant")
+        md.append("")
+        md.append("_The runs the team batting first put up. Avg shown "
+                  "prominently, median in brackets._")
+        md.append("")
+        md.append("| | at Home | Away |")
+        md.append("|---|---|---|")
+        for side, label, sub_label in (
+            ("bat",  f"{d['club_name']} **bat 1st**",  "own first innings"),
+            ("bowl", f"{d['club_name']} **bowl 1st**", "opponent's first innings"),
+        ):
+            row = [f"{label}<br>_{sub_label}_"]
+            for venue in ("home", "away"):
+                c = fi.get((side, venue))
+                if not c:
+                    row.append("—")
+                else:
+                    med = (f"{c['median']:.0f}" if isinstance(c['median'], float)
+                            and c['median'].is_integer() else f"{c['median']}")
+                    row.append(
+                        f"**{c['avg']:.0f}** (med {med}) "
+                        f"<br><sub>n={c['n']} · {_date_short(c['first'])} → "
+                        f"{_date_short(c['last'])}</sub>"
+                    )
+            md.append("| " + " | ".join(row) + " |")
+        md.append("")
+
+    md.append("### 6b. When batting first vs second (last 3 seasons L+C)")
     md.append("")
     md.append(f"- {d['club_name']} batting 1st: " + wld_str(d["chart_bat"]["us_bat1"]))
     md.append(f"- {d['club_name']} batting 2nd: " + wld_str(d["chart_bat"]["us_bat2"]))
@@ -1173,7 +1454,7 @@ def render_md(d):
     md.append(f"- {d['vs_club_name']} batting 2nd: " + wld_str(d["chart_bat"]["vs_bat2"]))
     md.append("")
 
-    md.append("### 6b. Home vs away (last 3 seasons L+C)")
+    md.append("### 6c. Home vs away (last 3 seasons L+C)")
     md.append("")
     md.append(f"- {d['club_name']} at home: " + wld_str(d["chart_ha"]["us_home"]))
     md.append(f"- {d['club_name']} away: " + wld_str(d["chart_ha"]["us_away"]))
@@ -1181,7 +1462,7 @@ def render_md(d):
     md.append(f"- {d['vs_club_name']} away: " + wld_str(d["chart_ha"]["vs_away"]))
     md.append("")
 
-    md.append("### 6c. When they win the toss")
+    md.append("### 6d. When they win the toss")
     md.append("")
     t = d["chart_toss"]
     won_n = t["won_n"]
@@ -1200,7 +1481,7 @@ def render_md(d):
         md.append("_No matches with toss data in scope._")
     md.append("")
 
-    md.append("### 6d. Team batting & bowling avg per season (1st XI, L+C)")
+    md.append("### 6e. Team batting & bowling avg per season (1st XI, L+C)")
     md.append("")
     md.append("| Season | "
               f"{d['club_name']} bat | {d['vs_club_name']} bat | "
@@ -1435,22 +1716,56 @@ table.players tbody tr.p-stat + tr.p-name td{border-top:1px solid var(--line)}
 /* Recent-match list — scores wrap to a second line if they don't fit */
 .recent-list{margin:6px 0 2px;display:flex;flex-direction:column;gap:6px}
 .r-row{display:grid;grid-template-columns:64px 32px 18px 1fr;
-       grid-template-rows:auto auto;
        gap:3px 8px;padding:8px 10px;
        border:1px solid var(--line);border-radius:8px;background:#fff;
        align-items:center}
-.r-row .date{grid-column:1;grid-row:1;font-size:10.5px;color:var(--muted);
-             font-weight:700}
-.r-row .pill{grid-column:2;grid-row:1;justify-self:start}
-.r-row .venue{grid-column:3;grid-row:1;font-size:10.5px;font-weight:700;
+.r-row .date{font-size:10.5px;color:var(--muted);font-weight:700}
+.r-row .pill{justify-self:start}
+.r-row .venue{font-size:10.5px;font-weight:700;
               text-align:center;color:var(--muted)}
-.r-row .opp{grid-column:4;grid-row:1;font-size:12.5px;font-weight:700;
+.r-row .opp{font-size:12.5px;font-weight:700;
             white-space:normal;word-break:break-word;line-height:1.25}
-.r-row .scores{grid-column:1 / -1;grid-row:2;
-               font-size:11px;color:var(--muted);
+.r-row .scores{grid-column:1 / -1;font-size:11px;color:var(--muted);
                font-variant-numeric:tabular-nums;line-height:1.35;
                white-space:normal;word-break:break-word}
 .r-row .scores b{color:var(--ink)}
+/* Per-match performance strip (top scorer + 50+, top bowler + 3wi+) */
+.r-row .perf{grid-column:1 / -1;font-size:11px;line-height:1.4;
+  padding:1px 0 0;color:var(--ink)}
+.r-row .perf .lbl{display:inline-block;min-width:30px;font-size:9.5px;
+  font-weight:800;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.06em;margin-right:6px}
+.r-row .perf.bat .lbl{color:#0f5b29}
+.r-row .perf.bowl .lbl{color:#7e1f1f}
+.r-row .perf .who a{color:var(--ink);text-decoration:none;
+  border-bottom:1px dotted var(--line-2)}
+.r-row .perf .who a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.r-row .perf .x{color:var(--muted);font-size:10.5px}
+
+/* First-innings matrix (bat/bowl × home/away) */
+table.fi-matrix{width:100%;margin:6px 0 4px;border-collapse:separate;
+  border-spacing:6px}
+table.fi-matrix thead th{padding:4px 6px;font-size:10.5px;
+  text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+  background:none;border:none;text-align:center}
+table.fi-matrix thead th.corner{background:transparent}
+table.fi-matrix th.rh{text-align:left;font-weight:700;font-size:11.5px;
+  color:var(--ink);background:#f7f8fc;padding:8px 10px;border-radius:8px;
+  border:1px solid var(--line);width:36%}
+table.fi-matrix th.rh .subh{display:block;font-size:10px;font-weight:600;
+  color:var(--muted);text-transform:none;letter-spacing:0;margin-top:2px}
+table.fi-matrix td{padding:0;background:transparent;border:none}
+.fi-cell{background:#fff;border:1px solid var(--line);border-radius:9px;
+  padding:8px 10px;text-align:center;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  min-height:78px;justify-content:center}
+.fi-cell.empty{background:#fafbfd;color:var(--muted)}
+.fi-cell .avg{font-size:22px;font-weight:800;color:var(--ink);line-height:1;
+  font-variant-numeric:tabular-nums}
+.fi-cell .med{font-size:11px;color:var(--muted);font-weight:600;
+  font-variant-numeric:tabular-nums}
+.fi-cell .sub{font-size:9.5px;color:var(--muted);font-weight:600;
+  margin-top:2px;letter-spacing:.02em}
 
 /* Toss split bar */
 .choice-bar{height:22px;background:#eef0f6;border-radius:6px;
@@ -1589,11 +1904,12 @@ def render_html(d):
         avg = f"{runs/(innings-no_):.2f}" if (innings-no_) > 0 else "—"
         sr = f"{100*runs_when_balls/balls_known:.1f}" if balls_known else "—"
         rank_cls = f" top{i}" if i <= 3 else ""
+        nm_html = _player_link(d.get("pc_subdomain"), bid, "batting", name)
         parts.append(
             f"<tr class='p-name{rank_cls}'>"
             f"<td colspan='10' class='l'>"
             f"<span class='rk'>{i}</span>"
-            f"<span class='nm'>{_esc(name)}</span></td></tr>"
+            f"<span class='nm'>{nm_html}</span></td></tr>"
             f"<tr class='p-stat{rank_cls}'>"
             f"<td>{matches_}</td><td>{innings}</td><td>{no_}</td>"
             f"<td><b>{runs}</b></td><td>{hs}</td><td>{avg}</td>"
@@ -1616,11 +1932,13 @@ def render_html(d):
         avg = f"{r['avg']:.2f}" if r["avg"] is not None else "—"
         econ = f"{r['econ']:.2f}" if r["econ"] is not None else "—"
         rank_cls = f" top{i}" if i <= 3 else ""
+        nm_html = _player_link(d.get("pc_subdomain"), r['bowler_id'],
+                               "bowling", r['name'])
         parts.append(
             f"<tr class='p-name{rank_cls}'>"
             f"<td colspan='10' class='l'>"
             f"<span class='rk'>{i}</span>"
-            f"<span class='nm'>{_esc(r['name'])}</span></td></tr>"
+            f"<span class='nm'>{nm_html}</span></td></tr>"
             f"<tr class='p-stat{rank_cls}'>"
             f"<td>{r['matches']}</td><td>{r['overs']}</td>"
             f"<td>{r['maidens']}</td><td>{r['runs']}</td>"
@@ -1688,6 +2006,7 @@ def render_html(d):
                  "1st XI matches (L+C)</h2>")
     parts.append("<div class='recent-list'>")
     target_set = set(d["target_team_ids"])
+    sub = d.get("pc_subdomain")
     for m in d["recent"]:
         we_home = m["home_club_id"] == d["club_id"]
         venue = "H" if we_home else "A"
@@ -1703,14 +2022,44 @@ def render_html(d):
             f"<div class='venue'>{venue}</div>"
             f"<div class='opp'>{_esc(opp)}</div>"
             f"<div class='scores'>{scores}</div>"
-            f"</div>"
         )
+        # Per-side performance — top batter (+ any 50+ supporting innings),
+        # then top bowler (+ any 3wi+ supporting spells). Names link to
+        # Play-Cricket player profiles when we have the club's subdomain.
+        perf = m.get("perf") or {}
+        if perf.get("top_bat"):
+            tb = perf["top_bat"]
+            bits = [_perf_bat_html(sub, tb)]
+            for x in perf.get("fifty_plus", []):
+                bits.append(_perf_bat_html(sub, x))
+            parts.append("<div class='perf bat'>"
+                         "<span class='lbl'>Bat</span>"
+                         + " &middot; ".join(bits) + "</div>")
+        if perf.get("top_bowl") and perf["top_bowl"]["wickets"] is not None:
+            tb = perf["top_bowl"]
+            bits = [_perf_bowl_html(sub, tb)]
+            for x in perf.get("three_plus", []):
+                bits.append(_perf_bowl_html(sub, x))
+            parts.append("<div class='perf bowl'>"
+                         "<span class='lbl'>Bowl</span>"
+                         + " &middot; ".join(bits) + "</div>")
+        parts.append("</div>")
     parts.append("</div>")
     parts.append("</div>")
 
     # ------- 6. Patterns / charts ----------------------------------------
     parts.append("<div class='card'>")
     parts.append("<h2><span class='num'>6</span>Patterns</h2>")
+
+    # 6a. First-innings matrix (bat/bowl × home/away). Rendered first
+    # because it's the most actionable signal for a captain who's just
+    # won the toss.
+    if d.get("fi_matrix"):
+        parts.append("<h3>First-innings totals · last 10 in each quadrant</h3>")
+        parts.append("<p class='subtle'>The runs the team batting first put "
+                     "up. Bigger number = stronger signal for "
+                     "<b>chase / defend</b> at the toss.</p>")
+        parts.append(_render_fi_matrix(d["fi_matrix"], d["club_name"]))
 
     parts.append("<h3>Bat 1st vs Bat 2nd · last 3 seasons</h3>")
     parts.append(wld_chart_block([
@@ -1926,6 +2275,42 @@ def mini_double_bar(us_val, vs_val, max_val):
                 f"<span class='{kind}' style='width:{pct:.1f}%'>"
                 f"{val:.1f}</span></div>")
     return f"{bar(us_val,'us')}{bar(vs_val,'them')}"
+
+
+def _render_fi_matrix(matrix, club_name):
+    """Render the bat/bowl × home/away first-innings matrix."""
+    def cell(side, venue):
+        c = matrix.get((side, venue))
+        if not c:
+            return ("<div class='fi-cell empty'>"
+                    "<div class='avg'>—</div>"
+                    "<div class='sub'>no data</div></div>")
+        first = _date_short(c["first"])
+        last = _date_short(c["last"])
+        med = c["median"]
+        med_s = f"{med:.0f}" if isinstance(med, float) and med.is_integer() else f"{med:.1f}".rstrip("0").rstrip(".") if isinstance(med, float) else str(med)
+        return (f"<div class='fi-cell'>"
+                f"<div class='avg'>{c['avg']:.0f}</div>"
+                f"<div class='med'>med {med_s}</div>"
+                f"<div class='sub'>n={c['n']} · {_esc(first)} → {_esc(last)}</div>"
+                f"</div>")
+
+    return (
+        "<table class='fi-matrix'>"
+        "<thead><tr>"
+        "<th class='corner'></th>"
+        "<th>at <b>Home</b></th>"
+        "<th><b>Away</b></th>"
+        "</tr></thead>"
+        "<tbody>"
+        f"<tr><th class='rh'>{_esc(club_name)} bat 1st<br>"
+        f"<span class='subh'>own first innings</span></th>"
+        f"<td>{cell('bat','home')}</td><td>{cell('bat','away')}</td></tr>"
+        f"<tr><th class='rh'>{_esc(club_name)} bowl 1st<br>"
+        f"<span class='subh'>opponent's first innings</span></th>"
+        f"<td>{cell('bowl','home')}</td><td>{cell('bowl','away')}</td></tr>"
+        "</tbody></table>"
+    )
 
 
 if __name__ == "__main__":
