@@ -137,8 +137,8 @@ def cov_row(label: str, pct: float | None) -> str:
     pct is None (no BBB for the match)."""
     if pct is None:
         return (f'<div class="cov-row"><span class="lbl">{escape(label)}</span>'
-                f'<span class="bar"><span style="width:0"></span></span>'
-                f'<span class="num" style="color:var(--muted)">—</span></div>')
+                f'<span class="bar zero"><span style="width:0"></span></span>'
+                f'<span class="num">—</span></div>')
     cls = ""
     if pct == 0:
         cls = " zero"
@@ -191,8 +191,7 @@ def render_fixture_card(r: dict) -> str:
                 else '<span class="tag no">no BBB</span>')
     fmt_chip = ''
     if r["comp_type"]:
-        fmt_chip = (f'<span class="tag" style="background:#eef0f6;color:'
-                    f'var(--muted);font-weight:700">{escape(r["comp_type"])}</span>')
+        fmt_chip = f'<span class="tag no">{escape(r["comp_type"])}</span>'
 
     pc_link = PC_MATCH_URL.format(mid=r["match_id"])
     coverage = ""
