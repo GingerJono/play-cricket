@@ -273,6 +273,7 @@ def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
     # universe — so a brand-new opponent (Spartans, in 2026) shows up
     # even before we've played them.
     fixtures_by_club: dict[str, int] = {}
+    bbb_by_club: dict[str, int] = {}
     if match_ids:
         qm = ",".join("?" * len(match_ids))
         for r in cur.execute(f"""
@@ -284,6 +285,19 @@ def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
             GROUP BY opp_cid
         """, (L.RAINHAM_CLUB_ID, *match_ids)).fetchall():
             fixtures_by_club[r[0]] = r[1]
+        # Matches against this club that we already have ball-by-ball
+        # data for. Drives the primary sort — clubs whose games are
+        # already "rich" get the metadata-fill effort first.
+        for r in cur.execute(f"""
+            SELECT CASE WHEN m.home_club_id = ? THEN m.away_club_id
+                        ELSE m.home_club_id END AS opp_cid,
+                   COUNT(*) AS n
+            FROM match_bbb mb
+            JOIN matches m ON m.match_id = mb.match_id
+            WHERE m.match_id IN ({qm})
+            GROUP BY opp_cid
+        """, (L.RAINHAM_CLUB_ID, *match_ids)).fetchall():
+            bbb_by_club[r[0]] = r[1]
 
     # Some opposition clubs (e.g. a club we have a 2026 fixture against
     # but no roster cached because the fixture is unplayed) won't have
@@ -313,11 +327,15 @@ def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
             "cid": cid, "cname": cname,
             "n": len(pids),
             "n_fixtures": fixtures_by_club.get(cid, 0),
+            "n_bbb": bbb_by_club.get(cid, 0),
             "n_complete": n_complete, "n_partial": n_partial,
             "n_notcap": n_notcap, "n_review": n_review,
         })
-    # Sort by fixtures-vs-us (desc), then by squad size as tie-breaker.
-    rows.sort(key=lambda r: (r["n_fixtures"], r["n"]), reverse=True)
+    # Primary sort: matches-with-BBB (desc) — clubs whose Rainham
+    # fixtures already have ball-by-ball data are where metadata
+    # captures pay off most. Secondary: total fixtures vs us (desc).
+    rows.sort(key=lambda r: (r["n_bbb"], r["n_fixtures"], r["n"]),
+              reverse=True)
 
     # Hero stats
     n_clubs = len(rows)
@@ -354,8 +372,9 @@ def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
         ),
         '<div class="card">',
         '<h2>Clubs</h2>',
-        '<p class="note">Sorted by squad size — the most-encountered '
-        'opposition first.</p>',
+        '<p class="note">Sorted by matches with ball-by-ball data, '
+        'then total fixtures vs us — focus metadata-fill effort where '
+        'the BBB cache will reward it.</p>',
         '<div class="row-list">',
     ]
 
@@ -368,13 +387,18 @@ def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
                if r["n_review"] else "")
         )
         nf = r["n_fixtures"]
+        nb = r["n_bbb"]
         f_label = f'{nf} fix' if nf else 'no fixtures'
+        bbb_chip = (f'<span class="count" '
+                    f'style="color:var(--accent)">🎯 {nb} bbb</span>·'
+                    if nb else '')
         body.append(
             f'<a class="row-link" href="club/{escape(r["cid"])}.html">'
             f'<div class="name">{escape(r["cname"])}'
             f'<div class="rollup" style="margin-top:4px">{chips_html}</div>'
             f'</div>'
             f'<div class="right">'
+            f'{bbb_chip}'
             f'<span class="count">{f_label}</span>'
             f'<span class="count" style="opacity:.65">· {r["n"]} pl</span>'
             f'</div>'
@@ -398,6 +422,17 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
     cur = conn.cursor()
     n_pages = 0
     qmark_matches = ",".join("?" * len(match_ids)) if match_ids else "NULL"
+
+    # Pre-compute balls bowled per player in our BBB cache. Used to
+    # surface — and prioritise — bowlers we already have rich data on
+    # (so filling in their bowling-style metadata immediately unlocks
+    # downstream BBB analysis).
+    balls_bowled_by_pid: dict[int, int] = {}
+    for r in cur.execute(
+        "SELECT bowler_id, COUNT(*) AS n FROM balls "
+        "WHERE bowler_id IS NOT NULL GROUP BY bowler_id"
+    ).fetchall():
+        balls_bowled_by_pid[int(r[0])] = int(r[1])
 
     for cid, pids in players_by_club.items():
         cname_row = cur.execute(
@@ -444,16 +479,18 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
                 "last_on_club": last_club,
                 "ymd_club":     L.date_yyyymmdd(last_club),
                 "has_video":    has_video,
+                "n_balls_bbb":  balls_bowled_by_pid.get(pid, 0),
             })
-        # Sort: most-recent first (combined "any sighting" date), then
-        # apps-vs-us, then total club apps as tie-breakers. This keeps
-        # current squad members at the top regardless of whether
-        # they've personally played us.
+        # Primary sort: balls bowled in our BBB cache (desc) — captures
+        # the bowlers whose metadata directly enriches the ball-by-ball
+        # corpus. Tie-breakers: apps vs us, then total club apps, then
+        # most recent appearance.
         pid_stats.sort(
             key=lambda x: (
-                max(x["ymd_vs"] or "", x["ymd_club"] or ""),
+                x["n_balls_bbb"],
                 x["n_vs_us"],
                 x["n_on_club"],
+                max(x["ymd_vs"] or "", x["ymd_club"] or ""),
             ),
             reverse=True,
         )
@@ -497,8 +534,9 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
             ),
             '<div class="card">',
             '<h2>Roster</h2>',
-            '<p class="note">Sorted by most recent appearance. '
-            'Type to filter.</p>',
+            '<p class="note">Sorted by balls bowled in our BBB cache, '
+            'then apps vs us — bowlers with the most ball-by-ball '
+            'evidence float to the top. Type to filter.</p>',
             '<input type="search" id="player-filter" '
             'placeholder="Filter by name..." autocomplete="off" '
             'autocapitalize="none" autocorrect="off" spellcheck="false" '
@@ -519,6 +557,10 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
                              f'last seen {escape(s["last_on_club"])}')
             else:
                 meta_line = "no record"
+            if s["n_balls_bbb"]:
+                meta_line += (f' · <span style="color:var(--accent);'
+                              f'font-weight:700">🎯 {s["n_balls_bbb"]} bbb '
+                              f'balls</span>')
             body.append(
                 f'<a class="row-link" href="../player.html?id={s["pid"]}" '
                 f'data-name="{escape(s["name"].lower())}">'
