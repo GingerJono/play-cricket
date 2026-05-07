@@ -9,10 +9,13 @@
     document.getElementById('player-name').textContent = 'Missing ?id=';
     return;
   }
-  fetch('../data/rcc/' + pid + '.json')
-    .then(r => r.ok ? r.json() : Promise.reject(r.status))
-    .then(boot)
-    .catch(err => {
+  Promise.all([
+    fetch('../data/rcc/' + pid + '.json').then(r => r.ok ? r.json()
+      : Promise.reject(r.status)),
+    fetch('../data/rcc/team.json').then(r => r.ok ? r.json() : null)
+      .catch(() => null),
+  ]).then(([bundle, team]) => boot(bundle, team))
+   .catch(err => {
       document.getElementById('player-name').textContent =
         'Failed to load ' + pid + '.json (' + err + ')';
     });
@@ -173,6 +176,7 @@
 
   // ---------- state -----------------------------------------------------
   let DATA = null;
+  let TEAM = null;     // 1st-XI baseline aggregates (team.json)
   let STATE = {};      // slicer state
   let TAB = 'bat';     // active tab: 'bat' | 'bowl'
 
@@ -202,8 +206,9 @@
   }
 
   // ---------- main render -----------------------------------------------
-  function boot(data) {
+  function boot(data, team) {
     DATA = data;
+    TEAM = team || {};
     loadStateFromHash();
     document.getElementById('player-name').textContent = data.name;
     document.getElementById('crumb-name').textContent = data.name;
@@ -350,14 +355,19 @@
       const avg = dis ? runs / dis : null;
       const sr  = ballsT ? runsWB / ballsT * 100 : null;
 
+      const teamCareer = (TEAM.career && TEAM.career.bat) || {};
       stats.classList.remove('stats'); stats.classList.add('snapshot');
       [
         snapTile('Inns', inns),
         snapTile('Runs', runs),
         snapTile('Avg', avg!=null ? fmtN(avg,2) : '—',
-          nots ? nots + ' n.o.' : ''),
+          teamCareer.avg != null
+            ? 'team ' + fmtN(teamCareer.avg,2)
+            : (nots ? nots + ' n.o.' : '')),
         snapTile('Strike rate', sr!=null ? fmtN(sr,1) : '—',
-          ballsT ? ballsT + ' bls (' + withBalls.length + ' inns)' : '—'),
+          teamCareer.sr != null
+            ? 'team ' + fmtN(teamCareer.sr,1)
+            : (ballsT ? ballsT + ' bls' : '—')),
         snapTile('HS', hs),
         snapTile('50 / 100 / 0', fifties + ' / ' + tons + ' / ' + ducks),
       ].forEach(t => stats.appendChild(t));
@@ -384,14 +394,19 @@
       const econ = balls ? runs/balls * 6 : null;
       const sr = wkts ? balls/wkts : null;
 
+      const teamCareer = (TEAM.career && TEAM.career.bowl) || {};
       stats.classList.remove('stats'); stats.classList.add('snapshot');
       [
         snapTile('Inns', inns),
         snapTile('Wkts', wkts),
-        snapTile('Avg', avg!=null ? fmtN(avg,2) : '—'),
+        snapTile('Avg', avg!=null ? fmtN(avg,2) : '—',
+          teamCareer.avg != null ? 'team ' + fmtN(teamCareer.avg,2) : ''),
         snapTile('Econ', econ!=null ? fmtN(econ,2) : '—',
-          fmtN(overs,1) + ' overs'),
-        snapTile('Strike rate', sr!=null ? fmtN(sr,1) : '—'),
+          teamCareer.econ != null
+            ? 'team ' + fmtN(teamCareer.econ,2)
+            : fmtN(overs,1) + ' overs'),
+        snapTile('Strike rate', sr!=null ? fmtN(sr,1) : '—',
+          teamCareer.sr != null ? 'team ' + fmtN(teamCareer.sr,1) : ''),
         snapTile('Best · M', bbi.wkts + '/' + bbi.runs,
           maids + ' maidens'),
       ].forEach(t => stats.appendChild(t));
@@ -528,19 +543,21 @@
       root.appendChild(compareBattingCard('Position',
         'position', b => b.position,
         uniqueSorted(DATA.batting.filter(b => !b.did_not_bat)
-          .map(b => b.position).filter(p => p != null))));
+          .map(b => b.position).filter(p => p != null)),
+        null, null, 'by_position'));
       root.appendChild(compareBattingCard('Home / away',
-        'home_away', null, ['home','away'], 'match'));
+        'home_away', null, ['home','away'], 'match', null, 'by_home_away'));
       root.appendChild(compareBattingCard('Result',
-        'result', null, ['W','L','D','T','A'], 'match'));
+        'result', null, ['W','L','D','T','A'], 'match', null, 'by_result'));
       root.appendChild(compareBattingCard('Competition',
-        'competition', null, ['League','Cup'], 'match'));
+        'competition', null, ['League','Cup'], 'match', null,
+        'by_competition'));
       root.appendChild(compareBattingCard('Bat 1st / 2nd',
         'bat_first', null, ['yes','no'], 'match',
-        m => m.bat_first ? 'yes' : 'no'));
+        m => m.bat_first ? 'yes' : 'no', 'by_bat_first'));
       root.appendChild(compareBattingCard('Toss',
         'toss', null, ['won','lost'], 'match',
-        m => m.toss_won ? 'won' : 'lost'));
+        m => m.toss_won ? 'won' : 'lost', 'by_toss'));
       // BBB-driven comparisons
       if (DATA.balls_faced.length) {
         root.appendChild(phaseSplitCard('bat'));
@@ -552,17 +569,18 @@
       // Bowling comparisons
       root.appendChild(seasonSplitsBowlingCard());
       root.appendChild(compareBowlingCard('Home / away',
-        'home_away', null, ['home','away'], 'match'));
+        'home_away', null, ['home','away'], 'match', null, 'by_home_away'));
       root.appendChild(compareBowlingCard('Result',
-        'result', null, ['W','L','D','T','A'], 'match'));
+        'result', null, ['W','L','D','T','A'], 'match', null, 'by_result'));
       root.appendChild(compareBowlingCard('Competition',
-        'competition', null, ['League','Cup'], 'match'));
+        'competition', null, ['League','Cup'], 'match', null,
+        'by_competition'));
       root.appendChild(compareBowlingCard('Bat 1st / 2nd',
         'bat_first', null, ['yes','no'], 'match',
-        m => m.bat_first ? 'yes' : 'no'));
+        m => m.bat_first ? 'yes' : 'no', 'by_bat_first'));
       root.appendChild(compareBowlingCard('Toss',
         'toss', null, ['won','lost'], 'match',
-        m => m.toss_won ? 'won' : 'lost'));
+        m => m.toss_won ? 'won' : 'lost', 'by_toss'));
       // BBB-driven comparisons
       if (DATA.balls_bowled.length) {
         root.appendChild(phaseSplitCard('bowl'));
@@ -578,7 +596,8 @@
   //   'match' — group by attribute on the match (slice keys looked up
   //             via groupFn(match) or, if groupFn is null, m[selfKey])
   //   else    — group by attribute on the row itself (groupFn(row))
-  function compareBattingCard(title, selfKey, rowFn, keys, groupBy, matchFn) {
+  function compareBattingCard(title, selfKey, rowFn, keys, groupBy, matchFn,
+                               teamDim) {
     const except = new Set(selfKey ? [selfKey] : []);
     const rows = filteredBatting(except);
     const card = el('div', {class:'card'},
@@ -600,10 +619,13 @@
       if (!buckets[k]) return;
       _accumBat(buckets[k], r);
     });
-    card.appendChild(_compareTableBat(buckets, keys, _firstColLabel(title)));
+    const teamLookup = teamDim ? (k => teamBat(teamDim, k)) : null;
+    card.appendChild(_compareTableBat(buckets, keys,
+      _firstColLabel(title), teamLookup));
     return card;
   }
-  function compareBowlingCard(title, selfKey, rowFn, keys, groupBy, matchFn) {
+  function compareBowlingCard(title, selfKey, rowFn, keys, groupBy, matchFn,
+                               teamDim) {
     const except = new Set(selfKey ? [selfKey] : []);
     const rows = filteredBowling(except);
     const card = el('div', {class:'card'},
@@ -625,7 +647,9 @@
       if (!buckets[k]) return;
       _accumBowl(buckets[k], r);
     });
-    card.appendChild(_compareTableBowl(buckets, keys, _firstColLabel(title)));
+    const teamLookup = teamDim ? (k => teamBowl(teamDim, k)) : null;
+    card.appendChild(_compareTableBowl(buckets, keys,
+      _firstColLabel(title), teamLookup));
     return card;
   }
   function _firstColLabel(title) {
@@ -638,16 +662,56 @@
     }
     return matchOf._idx[mid];
   }
+
+  // ---- bar cell + team lookup ----------------------------------------
+  function barCell(value, max, kind, fmt, teamValue) {
+    if (value == null || isNaN(value)) {
+      return el('td', null, ['—']);
+    }
+    const td = el('td', {class:'bar-cell'});
+    const w = max > 0 ? Math.min(100, value / max * 100) : 0;
+    td.appendChild(el('span',
+      {class:'fill ' + kind, style:'width:' + w + '%'}));
+    td.appendChild(el('span', {class:'val'}, [fmt(value)]));
+    if (teamValue != null && !isNaN(teamValue)) {
+      const t = el('span', {class:'team'}, ['t' + fmt(teamValue)]);
+      td.appendChild(t);
+      td.setAttribute('title', 'Team baseline: ' + fmt(teamValue));
+    }
+    return td;
+  }
+  function maxOf(arr, key) {
+    let m = 0;
+    arr.forEach(o => { const v = o && o[key]; if (v && v > m) m = v; });
+    return m;
+  }
+  // Team lookup helpers — return {avg, sr} (bat) or {avg, econ} (bowl).
+  function teamBat(dim, key) {
+    const slice = TEAM[dim];
+    if (!slice) return null;
+    const inner = slice.bat ? slice.bat : slice;
+    return inner ? inner[String(key)] || null : null;
+  }
+  function teamBowl(dim, key) {
+    const slice = TEAM[dim];
+    if (!slice) return null;
+    const inner = slice.bowl ? slice.bowl : slice;
+    return inner ? inner[String(key)] || null : null;
+  }
   // -- batting bucket aggregator (scorecard rows) --
   function _emptyBat() {
-    return {inns:0, runs:0, balls:0, ballsInns:0, nots:0,
-      hs:0, fifties:0, hundreds:0, ducks:0};
+    return {inns:0, runs:0, balls:0, runsWithBalls:0, ballsInns:0,
+      nots:0, hs:0, fifties:0, hundreds:0, ducks:0};
   }
   function _accumBat(s, r) {
     s.inns++;
     const runs = r.runs || 0;
     s.runs += runs;
-    if (r.balls) { s.balls += r.balls; s.ballsInns++; }
+    if (r.balls) {
+      s.balls += r.balls;
+      s.ballsInns++;
+      s.runsWithBalls += runs;
+    }
     if (r.not_out) s.nots++;
     if (runs > s.hs) s.hs = runs;
     if (runs >= 50 && runs < 100) s.fifties++;
@@ -661,12 +725,15 @@
     return {
       inns: s.inns, runs: s.runs,
       avg:  dis ? s.runs / dis : null,
-      sr:   s.balls ? s.runs / s.balls * 100 : null,
+      sr:   s.balls ? s.runsWithBalls / s.balls * 100 : null,
       hs:   s.hs,
       fifties: s.fifties, hundreds: s.hundreds, ducks: s.ducks,
     };
   }
-  function _compareTableBat(buckets, keys, firstLabel) {
+  function _compareTableBat(buckets, keys, firstLabel, teamLookup) {
+    const fins = keys.map(k => _finBat(buckets[String(k)] || _emptyBat()));
+    const maxAvg = maxOf(fins, 'avg');
+    const maxSR  = maxOf(fins, 'sr');
     const tab = el('table', {class:'bucket-table'}, [
       el('thead', null, [el('tr', null, [
         el('th', null, [firstLabel]),
@@ -679,15 +746,20 @@
       ])])
     ]);
     const tb = el('tbody');
-    keys.forEach(k => {
-      const f = _finBat(buckets[String(k)] || _emptyBat());
+    keys.forEach((k, i) => {
+      const f = fins[i];
       const empty = f.inns === 0;
+      const team = teamLookup ? teamLookup(k) : null;
       tb.appendChild(el('tr', {class: empty ? 'empty' : ''}, [
         el('td', null, [String(k)]),
         el('td', null, [empty ? '—' : String(f.inns)]),
         el('td', null, [empty ? '—' : String(f.runs)]),
-        el('td', null, [empty ? '—' : (f.avg!=null ? fmtN(f.avg,2) : '—')]),
-        el('td', null, [empty ? '—' : (f.sr!=null ? fmtN(f.sr,1) : '—')]),
+        empty ? el('td', null, ['—'])
+              : barCell(f.avg, maxAvg, 'avg',
+                  v => fmtN(v,2), team && team.avg),
+        empty ? el('td', null, ['—'])
+              : barCell(f.sr, maxSR, 'hot',
+                  v => fmtN(v,1), team && team.sr),
         el('td', null, [empty ? '—' : String(f.hs)]),
         el('td', null, [empty ? '—' : (f.fifties + '/' + f.hundreds)]),
       ]));
@@ -721,7 +793,10 @@
       best: s.sp ? (s.best_w + '/' + s.best_r) : '—',
     };
   }
-  function _compareTableBowl(buckets, keys, firstLabel) {
+  function _compareTableBowl(buckets, keys, firstLabel, teamLookup) {
+    const fins = keys.map(k => _finBowl(buckets[String(k)] || _emptyBowl()));
+    const maxAvg = maxOf(fins, 'avg');
+    const maxEcon = maxOf(fins, 'econ');
     const tab = el('table', {class:'bucket-table'}, [
       el('thead', null, [el('tr', null, [
         el('th', null, [firstLabel]),
@@ -734,16 +809,21 @@
       ])])
     ]);
     const tb = el('tbody');
-    keys.forEach(k => {
-      const f = _finBowl(buckets[String(k)] || _emptyBowl());
+    keys.forEach((k, i) => {
+      const f = fins[i];
       const empty = f.sp === 0;
+      const team = teamLookup ? teamLookup(k) : null;
       tb.appendChild(el('tr', {class: empty ? 'empty' : ''}, [
         el('td', null, [String(k)]),
         el('td', null, [empty ? '—' : String(f.sp)]),
         el('td', null, [empty ? '—' : fmtN(f.overs,1)]),
         el('td', null, [empty ? '—' : String(f.wkts)]),
-        el('td', null, [empty ? '—' : (f.avg!=null ? fmtN(f.avg,2) : '—')]),
-        el('td', null, [empty ? '—' : (f.econ!=null ? fmtN(f.econ,2) : '—')]),
+        empty ? el('td', null, ['—'])
+              : barCell(f.avg, maxAvg, 'avg',
+                  v => fmtN(v,2), team && team.avg),
+        empty ? el('td', null, ['—'])
+              : barCell(f.econ, maxEcon, 'hot',
+                  v => fmtN(v,2), team && team.econ),
         el('td', null, [empty ? '—' : f.best]),
       ]));
     });
@@ -837,10 +917,24 @@
         volChip(balls.length)]),
     ]);
     if (!balls.length) return emptyCard(card, 'No BBB balls match.');
-    card.appendChild(_breakdownTable(buckets, PHASE_50, 'Phase', view));
+    const teamDim = view === 'bat' ? 'by_phase_bat' : 'by_phase_bowl';
+    const lookup = k => (TEAM[teamDim] || {})[k] || null;
+    card.appendChild(_breakdownTable(buckets, PHASE_50, 'Phase', view,
+      lookup));
     return card;
   }
-  function _breakdownTable(buckets, keys, firstLabel, view) {
+  function _breakdownTable(buckets, keys, firstLabel, view, teamLookup) {
+    // For each row: avg + (sr or econ) get bars + team comparison.
+    const rows = keys.map(k => {
+      const s = buckets[k] || {balls:0};
+      return {
+        key: k, s: s,
+        avg: view === 'bat' ? s.bat_avg : s.bowl_avg,
+        rate: view === 'bat' ? s.sr : s.econ,
+      };
+    });
+    const maxAvg  = maxOf(rows, 'avg');
+    const maxRate = maxOf(rows, 'rate');
     const tab = el('table', {class:'bucket-table'}, [
       el('thead', null, [
         el('tr', null, [
@@ -855,18 +949,21 @@
       ]),
     ]);
     const tb = el('tbody');
-    keys.forEach(k => {
-      const s = buckets[k] || {balls:0};
+    rows.forEach(r => {
+      const s = r.s;
       const empty = s.balls === 0;
-      const avg = view === 'bat' ? s.bat_avg : s.bowl_avg;
+      const team = teamLookup ? teamLookup(r.key) : null;
       tb.appendChild(el('tr', {class: empty ? 'empty' : ''}, [
-        el('td', null, [k]),
+        el('td', null, [r.key]),
         el('td', null, [empty ? '—' : String(s.balls)]),
         el('td', null, [empty ? '—' : String(s.runs)]),
-        el('td', null, [empty ? '—' :
-          (avg != null ? fmtN(avg,2) : '—')]),
-        el('td', null, [empty ? '—' :
-          (view==='bat' ? fmtN(s.sr,1) : fmtN(s.econ,2))]),
+        empty ? el('td', null, ['—'])
+              : barCell(r.avg, maxAvg, 'avg',
+                  v => fmtN(v,2), team && team.avg),
+        empty ? el('td', null, ['—'])
+              : barCell(r.rate, maxRate, 'hot',
+                  v => view==='bat' ? fmtN(v,1) : fmtN(v,2),
+                  team && (view==='bat' ? team.sr : team.econ)),
         el('td', null, [empty ? '—' : String(s.wickets)]),
         el('td', null, [empty ? '—' : fmtN(s.dot_pct,0) + '%']),
       ]));
@@ -884,7 +981,9 @@
         volChip(balls.length)]),
     ]);
     if (!balls.length) return emptyCard(card, 'No BBB balls match.');
-    card.appendChild(_breakdownTable(buckets, PI_LABELS, 'Bucket', 'bat'));
+    const lookup = k => (TEAM.by_player_innings || {})[k] || null;
+    card.appendChild(_breakdownTable(buckets, PI_LABELS, 'Bucket', 'bat',
+      lookup));
     return card;
   }
 
@@ -899,10 +998,12 @@
       ['pace','spin','unknown']);
     const arms  = byKey(balls, b => b.bowling_arm || 'unknown',
       ['right','left','unknown']);
+    const lookupT = k => (TEAM.by_vs_btype || {})[k] || null;
+    const lookupA = k => (TEAM.by_vs_barm  || {})[k] || null;
     card.appendChild(_breakdownTable(types, ['pace','spin','unknown'],
-      'Type', 'bat'));
+      'Type', 'bat', lookupT));
     card.appendChild(_breakdownTable(arms, ['right','left','unknown'],
-      'Arm', 'bat'));
+      'Arm', 'bat', lookupA));
     return card;
   }
 
@@ -915,8 +1016,9 @@
     if (!balls.length) return emptyCard(card, 'No BBB balls match.');
     const buckets = byKey(balls, b => b.batting_hand || 'unknown',
       ['right','left','unknown']);
+    const lookup = k => (TEAM.by_vs_hand || {})[k] || null;
     card.appendChild(_breakdownTable(buckets, ['right','left','unknown'],
-      'Hand', 'bowl'));
+      'Hand', 'bowl', lookup));
     return card;
   }
 
@@ -935,8 +1037,9 @@
       sp.balls.forEach(b => accum(target, b));
     });
     const buckets = {'1st': fin(first), 'later': fin(later)};
+    const lookup = k => (TEAM.by_spell || {})[k] || null;
     card.appendChild(_breakdownTable(buckets, ['1st','later'],
-      'Spell', 'bowl'));
+      'Spell', 'bowl', lookup));
     return card;
   }
 
