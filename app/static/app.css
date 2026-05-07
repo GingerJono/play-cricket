@@ -400,6 +400,7 @@ input[type="search"]{
 .snap{
   background:var(--surface);padding:10px 11px;
 }
+.snap[title]{cursor:help}
 .snap .lbl{
   font-family:"IBM Plex Mono",monospace;
   font-size:9px;text-transform:uppercase;letter-spacing:.16em;
@@ -498,9 +499,10 @@ input[type="search"]{
 
 /* dashboard breakdown tables ------------------------------------------ */
 .bar-cell{
-  position:relative;text-align:right;
+  position:relative;text-align:left;
   padding:7px 8px;white-space:nowrap;
 }
+.bar-cell[title]{cursor:help}
 .bar-cell .fill{
   position:absolute;left:0;top:4px;bottom:4px;
   background:rgba(13,122,82,.20);
@@ -509,11 +511,6 @@ input[type="search"]{
 }
 .bar-cell .fill.hot{background:rgba(236,72,153,.22)}
 .bar-cell .val{position:relative;z-index:1;font-weight:600}
-.bar-cell .team{
-  position:relative;z-index:1;
-  font-size:9px;color:var(--muted);
-  margin-left:5px;letter-spacing:.02em;
-}
 
 .bucket-table{
   width:100%;font-family:"IBM Plex Mono",monospace;
@@ -526,6 +523,7 @@ input[type="search"]{
   background:var(--surface-2);text-align:right;
 }
 .bucket-table th:first-child{text-align:left;padding-left:8px}
+.bucket-table th.bar-th{text-align:left;padding-left:8px}
 .bucket-table td{padding:7px 6px;border-bottom:1px solid var(--rule);
   text-align:right;color:var(--ink);}
 .bucket-table td:first-child{text-align:left;padding-left:8px;
