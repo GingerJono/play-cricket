@@ -327,7 +327,7 @@ th{
   text-transform:uppercase;letter-spacing:.12em;
   font-family:"IBM Plex Mono",monospace;
 }
-td.num,th.num{text-align:right}
+td.num,th.num{text-align:left}
 tr:last-child td{border-bottom:none}
 
 /* ----------------------------------- season chips (data repo) --------- */
@@ -520,13 +520,13 @@ input[type="search"]{
   font-family:"IBM Plex Mono",monospace;font-size:9.5px;
   text-transform:uppercase;letter-spacing:.12em;color:var(--muted);
   font-weight:600;padding:6px 6px;border-bottom:1px solid var(--rule-2);
-  background:var(--surface-2);text-align:right;
+  background:var(--surface-2);text-align:left;
 }
-.bucket-table th:first-child{text-align:left;padding-left:8px}
-.bucket-table th.bar-th{text-align:left;padding-left:8px}
+.bucket-table th:first-child{padding-left:8px}
+.bucket-table th.bar-th{padding-left:8px}
 .bucket-table td{padding:7px 6px;border-bottom:1px solid var(--rule);
-  text-align:right;color:var(--ink);}
-.bucket-table td:first-child{text-align:left;padding-left:8px;
+  text-align:left;color:var(--ink);}
+.bucket-table td:first-child{padding-left:8px;
   color:var(--ink);font-weight:600}
 .bucket-table tr:last-child td{border-bottom:none}
 .bucket-table tr:hover td{background:var(--surface-2)}
