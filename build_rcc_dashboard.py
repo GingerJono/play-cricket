@@ -285,6 +285,265 @@ def player_bundle(conn, pid: int, mids: list[int],
     }
 
 
+# ---------------------------------------------------------- team aggregates --
+
+def _bat_emptier():
+    return {"inns":0, "runs":0, "runsWithBalls":0, "balls":0, "nots":0}
+
+def _bat_accum(s, r):
+    if r.get("did_not_bat"):
+        return
+    s["inns"] += 1
+    runs = r.get("runs") or 0
+    s["runs"] += runs
+    bls = r.get("balls") or 0
+    if bls:
+        s["balls"] += bls
+        s["runsWithBalls"] += runs
+    if r.get("not_out"):
+        s["nots"] += 1
+
+def _bat_fin(s):
+    dis = s["inns"] - s["nots"]
+    return {
+        "inns": s["inns"],
+        "avg":  (s["runs"] / dis) if dis else None,
+        "sr":   (s["runsWithBalls"] / s["balls"] * 100) if s["balls"] else None,
+    }
+
+def _bowl_emptier():
+    return {"sp":0, "balls":0, "runs":0, "wkts":0}
+
+def _bowl_accum(s, r):
+    s["sp"] += 1
+    s["balls"] += r.get("legal_balls") or 0
+    s["runs"]  += r.get("runs") or 0
+    s["wkts"]  += r.get("wickets") or 0
+
+def _bowl_fin(s):
+    return {
+        "sp": s["sp"],
+        "avg":  (s["runs"] / s["wkts"]) if s["wkts"] else None,
+        "econ": (s["runs"] / s["balls"] * 6) if s["balls"] else None,
+        "sr":   (s["balls"] / s["wkts"]) if s["wkts"] else None,
+    }
+
+
+def _ball_empty():
+    return {"balls":0, "legal":0, "runs_bat":0, "runs_extra":0,
+            "wickets":0, "dots":0}
+
+def _ball_accum(s, b):
+    s["balls"] += 1
+    legal = int(b.get("is_legal_ball") or 0)
+    rb = int(b.get("runs_bat") or 0)
+    re = int(b.get("runs_extra") or 0)
+    s["runs_bat"]   += rb
+    s["runs_extra"] += re
+    if legal:
+        s["legal"] += 1
+        if rb == 0 and re == 0:
+            s["dots"] += 1
+    if int(b.get("wicket") or 0):
+        s["wickets"] += 1
+
+def _ball_fin_bat(s):
+    return {
+        "balls": s["balls"],
+        "sr":  (s["runs_bat"] / s["legal"] * 100) if s["legal"] else None,
+        "avg": (s["runs_bat"] / s["wickets"]) if s["wickets"] else None,
+    }
+
+def _ball_fin_bowl(s):
+    return {
+        "balls": s["balls"],
+        "econ": ((s["runs_bat"] + s["runs_extra"]) / s["legal"] * 6)
+                if s["legal"] else None,
+        "avg":  ((s["runs_bat"] + s["runs_extra"]) / s["wickets"])
+                if s["wickets"] else None,
+    }
+
+
+def _phase_of(over_no: int) -> str:
+    o = (over_no or 0) + 1
+    if o <= 10: return "1-10"
+    if o <= 20: return "11-20"
+    if o <= 30: return "21-30"
+    if o <= 40: return "31-40"
+    return "41-50"
+
+def _pi_bucket(legal_so_far: int) -> str:
+    if legal_so_far < 10: return "0-10"
+    if legal_so_far < 20: return "11-20"
+    if legal_so_far < 50: return "21-50"
+    if legal_so_far < 100: return "51-100"
+    return "101+"
+
+
+def build_team_aggregates(player_bundles: list[dict]) -> dict:
+    """
+    Aggregate every Rainham 1st-XI batting / bowling row + every
+    Rainham-batter / Rainham-bowler ball across the universe, then
+    derive per-dimension summary metrics for the dashboard hover
+    tooltips.
+    """
+    # Pool every player's filtered universe rows.
+    all_bat = []
+    all_bowl = []
+    all_balls_faced = []
+    all_balls_bowled = []
+    matches_by_id = {}
+    for b in player_bundles:
+        for m in b["matches"]:
+            matches_by_id[m["match_id"]] = m
+        all_bat.extend(b["batting"])
+        all_bowl.extend(b["bowling"])
+        all_balls_faced.extend(b["balls_faced"])
+        all_balls_bowled.extend(b["balls_bowled"])
+
+    def by_match_attr(rows, attr_fn, accum, fin):
+        out = {}
+        for r in rows:
+            m = matches_by_id.get(r["match_id"])
+            if not m:
+                continue
+            key = attr_fn(m)
+            if key is None or key == "":
+                continue
+            s = out.setdefault(str(key), accum())
+            (_bat_accum if accum is _bat_emptier else _bowl_accum)(s, r)
+        return {k: fin(v) for k, v in out.items()}
+
+    def by_row_attr(rows, attr_fn, accum, fin):
+        out = {}
+        for r in rows:
+            key = attr_fn(r)
+            if key is None or key == "":
+                continue
+            s = out.setdefault(str(key), accum())
+            (_bat_accum if accum is _bat_emptier else _bowl_accum)(s, r)
+        return {k: fin(v) for k, v in out.items()}
+
+    def by_ball_attr(balls, attr_fn, fin):
+        out = {}
+        for b in balls:
+            key = attr_fn(b)
+            if key is None:
+                continue
+            s = out.setdefault(str(key), _ball_empty())
+            _ball_accum(s, b)
+        return {k: fin(v) for k, v in out.items()}
+
+    # Career
+    bat_total  = _bat_emptier()
+    bowl_total = _bowl_emptier()
+    for r in all_bat:  _bat_accum(bat_total, r)
+    for r in all_bowl: _bowl_accum(bowl_total, r)
+
+    # By each match-level dimension
+    out = {
+        "career": {
+            "bat":  _bat_fin(bat_total),
+            "bowl": _bowl_fin(bowl_total),
+        },
+        "by_season": {
+            "bat":  by_match_attr(all_bat,  lambda m: m["season"],
+                                  _bat_emptier, _bat_fin),
+            "bowl": by_match_attr(all_bowl, lambda m: m["season"],
+                                  _bowl_emptier, _bowl_fin),
+        },
+        "by_home_away": {
+            "bat":  by_match_attr(all_bat,  lambda m: m["home_away"],
+                                  _bat_emptier, _bat_fin),
+            "bowl": by_match_attr(all_bowl, lambda m: m["home_away"],
+                                  _bowl_emptier, _bowl_fin),
+        },
+        "by_result": {
+            "bat":  by_match_attr(all_bat,  lambda m: m["result"],
+                                  _bat_emptier, _bat_fin),
+            "bowl": by_match_attr(all_bowl, lambda m: m["result"],
+                                  _bowl_emptier, _bowl_fin),
+        },
+        "by_competition": {
+            "bat":  by_match_attr(all_bat,  lambda m: m["competition"],
+                                  _bat_emptier, _bat_fin),
+            "bowl": by_match_attr(all_bowl, lambda m: m["competition"],
+                                  _bowl_emptier, _bowl_fin),
+        },
+        "by_bat_first": {
+            "bat":  by_match_attr(all_bat,
+                                  lambda m: "yes" if m["bat_first"] else "no",
+                                  _bat_emptier, _bat_fin),
+            "bowl": by_match_attr(all_bowl,
+                                  lambda m: "yes" if m["bat_first"] else "no",
+                                  _bowl_emptier, _bowl_fin),
+        },
+        "by_toss": {
+            "bat":  by_match_attr(all_bat,
+                                  lambda m: "won" if m["toss_won"] else "lost",
+                                  _bat_emptier, _bat_fin),
+            "bowl": by_match_attr(all_bowl,
+                                  lambda m: "won" if m["toss_won"] else "lost",
+                                  _bowl_emptier, _bowl_fin),
+        },
+        "by_position": by_row_attr(all_bat, lambda r: r.get("position"),
+                                   _bat_emptier, _bat_fin),
+        # BBB-derived
+        "by_phase_bat":  by_ball_attr(all_balls_faced,
+                                      lambda b: _phase_of(b.get("over_no")),
+                                      _ball_fin_bat),
+        "by_phase_bowl": by_ball_attr(all_balls_bowled,
+                                      lambda b: _phase_of(b.get("over_no")),
+                                      _ball_fin_bowl),
+        "by_vs_btype":   by_ball_attr(all_balls_faced,
+                                      lambda b: b.get("bowling_type") or "unknown",
+                                      _ball_fin_bat),
+        "by_vs_barm":    by_ball_attr(all_balls_faced,
+                                      lambda b: b.get("bowling_arm") or "unknown",
+                                      _ball_fin_bat),
+        "by_vs_hand":    by_ball_attr(all_balls_bowled,
+                                      lambda b: b.get("batting_hand") or "unknown",
+                                      _ball_fin_bowl),
+    }
+
+    # Player innings buckets need a running counter per innings.
+    pi_buckets = {}
+    counters = {}
+    for b in all_balls_faced:
+        key = (b.get("match_id"), b.get("innings_seq"))
+        so = counters.get(key, 0)
+        bk = pi_buckets.setdefault(_pi_bucket(so), _ball_empty())
+        _ball_accum(bk, b)
+        if int(b.get("is_legal_ball") or 0):
+            counters[key] = so + 1
+    out["by_player_innings"] = {k: _ball_fin_bat(v) for k, v in pi_buckets.items()}
+
+    # Spell buckets — aggregate per innings, separate 1st vs later.
+    spell_first = _ball_empty()
+    spell_later = _ball_empty()
+    by_inn = {}
+    for b in all_balls_bowled:
+        by_inn.setdefault((b.get("match_id"), b.get("innings_seq")), []).append(b)
+    for inn_balls in by_inn.values():
+        inn_balls.sort(key=lambda x: ((x.get("over_no") or 0),
+                                       (x.get("ball_no") or 0)))
+        spell_idx = 0
+        last_over = None
+        for b in inn_balls:
+            o = b.get("over_no") or 0
+            if last_over is None or o > last_over + 2:
+                spell_idx += 1
+            target = spell_first if spell_idx == 1 else spell_later
+            _ball_accum(target, b)
+            last_over = o
+    out["by_spell"] = {
+        "1st":   _ball_fin_bowl(spell_first),
+        "later": _ball_fin_bowl(spell_later),
+    }
+
+    return out
+
+
 # ---------------------------------------------------------- index summary --
 
 def _summarise(b: dict) -> dict:
@@ -446,6 +705,7 @@ def build() -> int:
     # Per-player bundles
     RCC_DATA_DIR.mkdir(parents=True, exist_ok=True)
     summaries: list[dict] = []
+    bundles: list[dict] = []
     for pid in pids:
         b = player_bundle(conn, pid, mids, metas, aliases, meta_lookup)
         if not b["batting"] and not b["bowling"]:
@@ -453,10 +713,18 @@ def build() -> int:
         out = RCC_DATA_DIR / f"{pid}.json"
         out.write_text(json.dumps(b, separators=(",", ":")))
         summaries.append(_summarise(b))
+        bundles.append(b)
 
     # Index summary
     (RCC_DATA_DIR / "index.json").write_text(
         json.dumps(summaries, separators=(",", ":"))
+    )
+
+    # Team aggregates — used by the dashboard for per-cell hover
+    # comparisons against the 1st-XI baseline.
+    team = build_team_aggregates(bundles)
+    (RCC_DATA_DIR / "team.json").write_text(
+        json.dumps(team, separators=(",", ":"))
     )
 
     # Static pages
