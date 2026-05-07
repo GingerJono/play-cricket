@@ -252,38 +252,46 @@ RCC_JS = r"""
   function isInState(k, v) {
     return STATE[k] && STATE[k].indexOf(String(v)) >= 0;
   }
-  function matchPasses(m) {
-    if (STATE.season && !isInState('season', m.season)) return false;
-    if (STATE.home_away && !isInState('home_away', m.home_away)) return false;
-    if (STATE.result && !isInState('result', m.result)) return false;
-    if (STATE.competition &&
+  function matchPasses(m, except) {
+    except = except || EMPTY_SET;
+    if (!except.has('season') && STATE.season &&
+        !isInState('season', m.season)) return false;
+    if (!except.has('home_away') && STATE.home_away &&
+        !isInState('home_away', m.home_away)) return false;
+    if (!except.has('result') && STATE.result &&
+        !isInState('result', m.result)) return false;
+    if (!except.has('competition') && STATE.competition &&
         !isInState('competition', m.competition)) return false;
-    if (STATE.opp && !isInState('opp', m.opp_club_name)) return false;
-    if (STATE.bat_first && !isInState('bat_first',
-        m.bat_first ? 'yes' : 'no')) return false;
-    if (STATE.toss && !isInState('toss',
-        m.toss_won ? 'won' : 'lost')) return false;
+    if (!except.has('opp') && STATE.opp &&
+        !isInState('opp', m.opp_club_name)) return false;
+    if (!except.has('bat_first') && STATE.bat_first &&
+        !isInState('bat_first', m.bat_first ? 'yes' : 'no')) return false;
+    if (!except.has('toss') && STATE.toss &&
+        !isInState('toss', m.toss_won ? 'won' : 'lost')) return false;
     return true;
   }
-  function activeMatchIds() {
+  const EMPTY_SET = new Set();
+  function activeMatchIds(except) {
     const ids = new Set();
     DATA.matches.forEach(m => {
-      if (matchPasses(m)) ids.add(m.match_id);
+      if (matchPasses(m, except)) ids.add(m.match_id);
     });
     return ids;
   }
-  function filteredBatting() {
-    const ok = activeMatchIds();
+  function filteredBatting(except) {
+    except = except || EMPTY_SET;
+    const ok = activeMatchIds(except);
     return DATA.batting.filter(b => {
       if (!ok.has(b.match_id)) return false;
       if (b.did_not_bat) return false;
-      if (STATE.position &&
+      if (!except.has('position') && STATE.position &&
           !isInState('position', b.position)) return false;
       return true;
     });
   }
-  function filteredBowling() {
-    const ok = activeMatchIds();
+  function filteredBowling(except) {
+    except = except || EMPTY_SET;
+    const ok = activeMatchIds(except);
     return DATA.bowling.filter(b => ok.has(b.match_id));
   }
   function filteredFaced() {
@@ -535,24 +543,232 @@ RCC_JS = r"""
     const root = document.getElementById('cards');
     root.innerHTML = '';
     if (TAB === 'bat') {
+      // Comparisons (always visible — drive without needing to filter).
       root.appendChild(seasonSplitsBattingCard());
+      root.appendChild(compareBattingCard('Position',
+        'position', b => b.position,
+        uniqueSorted(DATA.batting.filter(b => !b.did_not_bat)
+          .map(b => b.position).filter(p => p != null))));
+      root.appendChild(compareBattingCard('Home / away',
+        'home_away', null, ['home','away'], 'match'));
+      root.appendChild(compareBattingCard('Result',
+        'result', null, ['W','L','D','T','A'], 'match'));
+      root.appendChild(compareBattingCard('Competition',
+        'competition', null, ['League','Cup'], 'match'));
+      root.appendChild(compareBattingCard('Bat 1st / 2nd',
+        'bat_first', null, ['yes','no'], 'match',
+        m => m.bat_first ? 'yes' : 'no'));
+      root.appendChild(compareBattingCard('Toss',
+        'toss', null, ['won','lost'], 'match',
+        m => m.toss_won ? 'won' : 'lost'));
+      // BBB-driven comparisons
       if (DATA.balls_faced.length) {
         root.appendChild(phaseSplitCard('bat'));
         root.appendChild(playerInningsCard());
         root.appendChild(vsBowlerTypeCard());
       }
       root.appendChild(bestBattingCard());
-      root.appendChild(inningsListCard());
     } else {
+      // Bowling comparisons
       root.appendChild(seasonSplitsBowlingCard());
+      root.appendChild(compareBowlingCard('Home / away',
+        'home_away', null, ['home','away'], 'match'));
+      root.appendChild(compareBowlingCard('Result',
+        'result', null, ['W','L','D','T','A'], 'match'));
+      root.appendChild(compareBowlingCard('Competition',
+        'competition', null, ['League','Cup'], 'match'));
+      root.appendChild(compareBowlingCard('Bat 1st / 2nd',
+        'bat_first', null, ['yes','no'], 'match',
+        m => m.bat_first ? 'yes' : 'no'));
+      root.appendChild(compareBowlingCard('Toss',
+        'toss', null, ['won','lost'], 'match',
+        m => m.toss_won ? 'won' : 'lost'));
+      // BBB-driven comparisons
       if (DATA.balls_bowled.length) {
         root.appendChild(phaseSplitCard('bowl'));
         root.appendChild(spellCard());
         root.appendChild(vsBatterHandCard());
       }
       root.appendChild(bestBowlingCard());
-      root.appendChild(bowlingListCard());
     }
+  }
+
+  // ----- comparison cards (scorecard-derived, ignore own dimension) ----
+  // groupBy:
+  //   'match' — group by attribute on the match (slice keys looked up
+  //             via groupFn(match) or, if groupFn is null, m[selfKey])
+  //   else    — group by attribute on the row itself (groupFn(row))
+  function compareBattingCard(title, selfKey, rowFn, keys, groupBy, matchFn) {
+    const except = new Set(selfKey ? [selfKey] : []);
+    const rows = filteredBatting(except);
+    const card = el('div', {class:'card'},
+      [el('h2', null, [title])]);
+    if (!rows.length) return emptyCard(card,
+      'No innings under the current filters.');
+    const buckets = {};
+    keys.forEach(k => buckets[String(k)] = _emptyBat());
+    rows.forEach(r => {
+      let key;
+      if (groupBy === 'match') {
+        const m = matchOf(r.match_id);
+        if (!m) return;
+        key = matchFn ? matchFn(m) : m[selfKey];
+      } else {
+        key = rowFn(r);
+      }
+      const k = String(key);
+      if (!buckets[k]) return;
+      _accumBat(buckets[k], r);
+    });
+    card.appendChild(_compareTableBat(buckets, keys, _firstColLabel(title)));
+    return card;
+  }
+  function compareBowlingCard(title, selfKey, rowFn, keys, groupBy, matchFn) {
+    const except = new Set(selfKey ? [selfKey] : []);
+    const rows = filteredBowling(except);
+    const card = el('div', {class:'card'},
+      [el('h2', null, [title])]);
+    if (!rows.length) return emptyCard(card,
+      'No spells under the current filters.');
+    const buckets = {};
+    keys.forEach(k => buckets[String(k)] = _emptyBowl());
+    rows.forEach(r => {
+      let key;
+      if (groupBy === 'match') {
+        const m = matchOf(r.match_id);
+        if (!m) return;
+        key = matchFn ? matchFn(m) : m[selfKey];
+      } else {
+        key = rowFn(r);
+      }
+      const k = String(key);
+      if (!buckets[k]) return;
+      _accumBowl(buckets[k], r);
+    });
+    card.appendChild(_compareTableBowl(buckets, keys, _firstColLabel(title)));
+    return card;
+  }
+  function _firstColLabel(title) {
+    return title.split(/[\\/]/)[0].trim();
+  }
+  function matchOf(mid) {
+    if (!matchOf._idx) {
+      matchOf._idx = {};
+      DATA.matches.forEach(m => matchOf._idx[m.match_id] = m);
+    }
+    return matchOf._idx[mid];
+  }
+  // -- batting bucket aggregator (scorecard rows) --
+  function _emptyBat() {
+    return {inns:0, runs:0, balls:0, ballsInns:0, nots:0,
+      hs:0, fifties:0, hundreds:0, ducks:0};
+  }
+  function _accumBat(s, r) {
+    s.inns++;
+    const runs = r.runs || 0;
+    s.runs += runs;
+    if (r.balls) { s.balls += r.balls; s.ballsInns++; }
+    if (r.not_out) s.nots++;
+    if (runs > s.hs) s.hs = runs;
+    if (runs >= 50 && runs < 100) s.fifties++;
+    else if (runs >= 100) s.hundreds++;
+    if (runs === 0 && !r.not_out
+        && (r.how_out || '') !== 'did not bat'
+        && (r.how_out || '') !== 'absent') s.ducks++;
+  }
+  function _finBat(s) {
+    const dis = s.inns - s.nots;
+    return {
+      inns: s.inns, runs: s.runs,
+      avg:  dis ? s.runs / dis : null,
+      sr:   s.balls ? s.runs / s.balls * 100 : null,
+      hs:   s.hs,
+      fifties: s.fifties, hundreds: s.hundreds, ducks: s.ducks,
+    };
+  }
+  function _compareTableBat(buckets, keys, firstLabel) {
+    const tab = el('table', {class:'bucket-table'}, [
+      el('thead', null, [el('tr', null, [
+        el('th', null, [firstLabel]),
+        el('th', null, ['Inns']),
+        el('th', null, ['Runs']),
+        el('th', null, ['Avg']),
+        el('th', null, ['SR']),
+        el('th', null, ['HS']),
+        el('th', null, ['50/100']),
+      ])])
+    ]);
+    const tb = el('tbody');
+    keys.forEach(k => {
+      const f = _finBat(buckets[String(k)] || _emptyBat());
+      const empty = f.inns === 0;
+      tb.appendChild(el('tr', {class: empty ? 'empty' : ''}, [
+        el('td', null, [String(k)]),
+        el('td', null, [empty ? '—' : String(f.inns)]),
+        el('td', null, [empty ? '—' : String(f.runs)]),
+        el('td', null, [empty ? '—' : (f.avg!=null ? fmtN(f.avg,2) : '—')]),
+        el('td', null, [empty ? '—' : (f.sr!=null ? fmtN(f.sr,1) : '—')]),
+        el('td', null, [empty ? '—' : String(f.hs)]),
+        el('td', null, [empty ? '—' : (f.fifties + '/' + f.hundreds)]),
+      ]));
+    });
+    tab.appendChild(tb);
+    return tab;
+  }
+  // -- bowling bucket aggregator (scorecard rows) --
+  function _emptyBowl() {
+    return {sp:0, balls:0, runs:0, wkts:0, maids:0,
+      best_w:0, best_r:0};
+  }
+  function _accumBowl(s, r) {
+    s.sp++;
+    s.balls += r.legal_balls || 0;
+    s.runs  += r.runs || 0;
+    s.wkts  += r.wickets || 0;
+    s.maids += r.maidens || 0;
+    const w = r.wickets || 0;
+    if (w > s.best_w
+        || (w === s.best_w && (r.runs || 999) < s.best_r)) {
+      s.best_w = w; s.best_r = r.runs || 0;
+    }
+  }
+  function _finBowl(s) {
+    return {
+      sp: s.sp, runs: s.runs, wkts: s.wkts,
+      overs: s.balls / 6,
+      avg:  s.wkts ? s.runs / s.wkts : null,
+      econ: s.balls ? s.runs / s.balls * 6 : null,
+      best: s.sp ? (s.best_w + '/' + s.best_r) : '—',
+    };
+  }
+  function _compareTableBowl(buckets, keys, firstLabel) {
+    const tab = el('table', {class:'bucket-table'}, [
+      el('thead', null, [el('tr', null, [
+        el('th', null, [firstLabel]),
+        el('th', null, ['Sp']),
+        el('th', null, ['O']),
+        el('th', null, ['W']),
+        el('th', null, ['Avg']),
+        el('th', null, ['Econ']),
+        el('th', null, ['Best']),
+      ])])
+    ]);
+    const tb = el('tbody');
+    keys.forEach(k => {
+      const f = _finBowl(buckets[String(k)] || _emptyBowl());
+      const empty = f.sp === 0;
+      tb.appendChild(el('tr', {class: empty ? 'empty' : ''}, [
+        el('td', null, [String(k)]),
+        el('td', null, [empty ? '—' : String(f.sp)]),
+        el('td', null, [empty ? '—' : fmtN(f.overs,1)]),
+        el('td', null, [empty ? '—' : String(f.wkts)]),
+        el('td', null, [empty ? '—' : (f.avg!=null ? fmtN(f.avg,2) : '—')]),
+        el('td', null, [empty ? '—' : (f.econ!=null ? fmtN(f.econ,2) : '—')]),
+        el('td', null, [empty ? '—' : f.best]),
+      ]));
+    });
+    tab.appendChild(tb);
+    return tab;
   }
 
   function volChip(n, label) {
@@ -808,87 +1024,6 @@ RCC_JS = r"""
       ]));
     });
     tab.appendChild(tb); card.appendChild(tab);
-    return card;
-  }
-
-  // -- innings list -----------------------------------------------------
-  function inningsListCard() {
-    const rows = filteredBatting().slice().sort((a,b) => {
-      const ma = DATA.matches.find(m => m.match_id === a.match_id);
-      const mb = DATA.matches.find(m => m.match_id === b.match_id);
-      return date_yyyymmdd((mb||{}).match_date||'').localeCompare(
-             date_yyyymmdd((ma||{}).match_date||''));
-    });
-    const card = el('div', {class:'card'}, [
-      el('h2', null, ['Innings (' + rows.length + ')']),
-    ]);
-    if (!rows.length) return emptyCard(card, 'No innings match.');
-    const list = el('div', {class:'fix-list'});
-    rows.slice(0, 30).forEach(r => {
-      const m = DATA.matches.find(x => x.match_id === r.match_id);
-      if (!m) return;
-      const sr = r.balls ? (r.runs/r.balls*100).toFixed(0) : '—';
-      const det = '#' + r.position + ' · ' + (r.runs||0) +
-        (r.not_out ? '*' : '') + 'r' +
-        (r.balls ? ' · ' + r.balls + 'b · SR ' + sr : '') +
-        (r.how_out ? ' · ' + r.how_out : '');
-      list.appendChild(el('div', {class:'fix'}, [
-        el('div', {class:'row1'}, [
-          el('div', {class:'left'}, [
-            el('div', {class:'date'},
-              [m.match_date + ' · ' + (m.home_away||'').toUpperCase()]),
-            el('div', {class:'opp'},
-              [(m.home_away==='home'?'vs ':'@ ') + m.opp_club_name]),
-          ]),
-          el('span', {class:'pill ' + m.result}, [m.result || '?']),
-        ]),
-        el('div', {class:'meta'}, [det]),
-      ]));
-    });
-    if (rows.length > 30) {
-      card.appendChild(el('p', {class:'note'},
-        ['Showing 30 most recent; ' + (rows.length-30) + ' more match.']));
-    }
-    card.appendChild(list);
-    return card;
-  }
-  function bowlingListCard() {
-    const rows = filteredBowling().slice().sort((a,b) => {
-      const ma = DATA.matches.find(m => m.match_id === a.match_id);
-      const mb = DATA.matches.find(m => m.match_id === b.match_id);
-      return date_yyyymmdd((mb||{}).match_date||'').localeCompare(
-             date_yyyymmdd((ma||{}).match_date||''));
-    });
-    const card = el('div', {class:'card'}, [
-      el('h2', null, ['Spells (' + rows.length + ')']),
-    ]);
-    if (!rows.length) return emptyCard(card, 'No spells match.');
-    const list = el('div', {class:'fix-list'});
-    rows.slice(0, 30).forEach(r => {
-      const m = DATA.matches.find(x => x.match_id === r.match_id);
-      if (!m) return;
-      const econ = r.legal_balls
-        ? (r.runs/r.legal_balls*6).toFixed(2) : '—';
-      const det = (r.overs||'0') + 'o · ' + (r.maidens||0) + 'm · ' +
-        (r.runs||0) + 'r · ' + (r.wickets||0) + 'w · econ ' + econ;
-      list.appendChild(el('div', {class:'fix'}, [
-        el('div', {class:'row1'}, [
-          el('div', {class:'left'}, [
-            el('div', {class:'date'},
-              [m.match_date + ' · ' + (m.home_away||'').toUpperCase()]),
-            el('div', {class:'opp'},
-              [(m.home_away==='home'?'vs ':'@ ') + m.opp_club_name]),
-          ]),
-          el('span', {class:'pill ' + m.result}, [m.result || '?']),
-        ]),
-        el('div', {class:'meta'}, [det]),
-      ]));
-    });
-    if (rows.length > 30) {
-      card.appendChild(el('p', {class:'note'},
-        ['Showing 30 most recent; ' + (rows.length-30) + ' more match.']));
-    }
-    card.appendChild(list);
     return card;
   }
 
