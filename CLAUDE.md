@@ -33,6 +33,20 @@ If the question is "ad-hoc, one-off SQL against the existing DB" → just
 write the query against `stats/data/rainham.db`. If the answer needs the
 DB to grow / be refreshed → see _Workflow_ below.
 
+## Companion docs
+
+- **`FRONTEND_DESIGN.md`** — the `frontend-design` skill verbatim, plus
+  the project-specific constraints (mobile-first 540px, no build step,
+  tabular numerics, contrast floor). Read this before redesigning any
+  page in `app/` or any artefact that emits HTML/PNG.
+- **`PLAN.md`** — full schema + scoring rules + caveats for the data
+  layer.
+- **`BALL_BY_BALL.md`** — the auth/endpoint trail for the two BBB
+  backends (ResultsVault + NV Play).
+- **`PLAN_NEXT.md`** — current iteration plan (visual rebuild of the
+  metadata pages, RCC player-stats dashboard, BBB analytics:
+  innings buckets, player buckets, bowling spells, vs LHB/RHB).
+
 ## What's in the cache
 
 ```

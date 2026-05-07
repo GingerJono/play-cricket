@@ -137,8 +137,8 @@ def cov_row(label: str, pct: float | None) -> str:
     pct is None (no BBB for the match)."""
     if pct is None:
         return (f'<div class="cov-row"><span class="lbl">{escape(label)}</span>'
-                f'<span class="bar"><span style="width:0"></span></span>'
-                f'<span class="num" style="color:var(--muted)">—</span></div>')
+                f'<span class="bar zero"><span style="width:0"></span></span>'
+                f'<span class="num">—</span></div>')
     cls = ""
     if pct == 0:
         cls = " zero"
@@ -191,8 +191,7 @@ def render_fixture_card(r: dict) -> str:
                 else '<span class="tag no">no BBB</span>')
     fmt_chip = ''
     if r["comp_type"]:
-        fmt_chip = (f'<span class="tag" style="background:#eef0f6;color:'
-                    f'var(--muted);font-weight:700">{escape(r["comp_type"])}</span>')
+        fmt_chip = f'<span class="tag no">{escape(r["comp_type"])}</span>'
 
     pc_link = PC_MATCH_URL.format(mid=r["match_id"])
     coverage = ""
@@ -232,11 +231,28 @@ def build() -> int:
         render_hero(rows)
         + '<main>'
         + '<div class="card">'
+        + '<h2>Browse</h2>'
+        + '<div class="row-list">'
+          '<a class="row-link" href="rcc/index.html">'
+          '<div class="name">RCC player dashboard'
+          '<div class="row-meta">Slice any Rainham 1st-XI player\'s '
+          'career across home/away, position, season, opposition, '
+          'bowler type, innings phase and bowling spells.</div></div>'
+          '<div class="right"><span class="count bbb">§ live</span></div>'
+          '</a>'
+          '<a class="row-link" href="metadata/clubs.html">'
+          '<div class="name">Opposition clubs'
+          '<div class="row-meta">Capture batting hand and bowling '
+          'style for opposition players. Drives the coverage % '
+          'columns below.</div></div>'
+          '</a>'
+        '</div>'
+        + '</div>'
+        + '<div class="card">'
         + '<h2>Fixtures</h2>'
-        + '<p class="note">Browse <a href="metadata/clubs.html">opposition '
-          'clubs</a> to start submitting player metadata. Every approved '
-          'submission lifts the coverage % on the matches that player '
-          'appears in.</p>'
+        + '<p class="note">Coverage % counts the share of opposition '
+          'legal balls whose batter/bowler has a complete metadata '
+          'record. Lifts off zero as the metadata queue is filled.</p>'
         + '<div class="fix-list">'
         + "".join(render_fixture_card(r) for r in rows)
         + '</div>'

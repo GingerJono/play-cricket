@@ -389,18 +389,17 @@ def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
         nf = r["n_fixtures"]
         nb = r["n_bbb"]
         f_label = f'{nf} fix' if nf else 'no fixtures'
-        bbb_chip = (f'<span class="count" '
-                    f'style="color:var(--accent)">🎯 {nb} bbb</span>·'
+        bbb_chip = (f'<span class="count bbb">§ {nb} bbb</span>'
                     if nb else '')
         body.append(
             f'<a class="row-link" href="club/{escape(r["cid"])}.html">'
             f'<div class="name">{escape(r["cname"])}'
-            f'<div class="rollup" style="margin-top:4px">{chips_html}</div>'
+            f'<div class="rollup">{chips_html}</div>'
             f'</div>'
             f'<div class="right">'
             f'{bbb_chip}'
             f'<span class="count">{f_label}</span>'
-            f'<span class="count" style="opacity:.65">· {r["n"]} pl</span>'
+            f'<span class="count" style="opacity:.55">· {r["n"]} pl</span>'
             f'</div>'
             f'</a>'
         )
@@ -558,15 +557,13 @@ def build_club_pages(conn, all_meta, aliases, clubs_by_player,
             else:
                 meta_line = "no record"
             if s["n_balls_bbb"]:
-                meta_line += (f' · <span style="color:var(--accent);'
-                              f'font-weight:700">🎯 {s["n_balls_bbb"]} bbb '
-                              f'balls</span>')
+                meta_line += (f' · <span class="bbb-mark">§ '
+                              f'{s["n_balls_bbb"]} bbb balls</span>')
             body.append(
                 f'<a class="row-link" href="../player.html?id={s["pid"]}" '
                 f'data-name="{escape(s["name"].lower())}">'
                 f'<div class="name">{escape(s["name"])}'
-                f'<div class="meta" style="font-size:10.5px;color:var(--muted);'
-                f'margin-top:2px">{meta_line}</div></div>'
+                f'<div class="row-meta">{meta_line}</div></div>'
                 f'<div class="right">{video_chip}{L.status_pill(status)}</div>'
                 f'</a>'
             )
