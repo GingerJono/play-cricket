@@ -75,21 +75,23 @@ def rcc_player_ids(conn, mids: list[int]) -> list[int]:
 # ---------------------------------------------------------- per-match meta --
 
 def result_letter(m: dict) -> str:
-    """W/L/D/T/NR/A from Rainham's perspective."""
-    res = (m.get("result") or "").strip().lower()
-    applied_to = m.get("result_applied_to") or ""
+    """W/L/D/T/NR/A from Rainham 1st XI's perspective.
+
+    The DB stores `result` as a single letter ('W'/'L'/'D'/'T'/'A')
+    and `result_applied_to` as a team_id (the team the W/L is from).
+    Rainham 1st XI team_id is `RAINHAM_FIRST_XI_TEAM_ID`.
+    """
+    res = (m.get("result") or "").strip().upper()
     if not res:
-        return ""    # unplayed
-    if res in ("won", "win"):
-        return "W" if applied_to == "home" and m["home_club_id"] == L.RAINHAM_CLUB_ID \
-            or applied_to == "away" and m["away_club_id"] == L.RAINHAM_CLUB_ID else "L"
-    if res in ("lost", "lose", "loss"):
-        return "L" if applied_to == "home" and m["home_club_id"] == L.RAINHAM_CLUB_ID \
-            or applied_to == "away" and m["away_club_id"] == L.RAINHAM_CLUB_ID else "W"
-    if res in ("tie", "tied"):    return "T"
-    if res in ("drawn", "draw"):  return "D"
-    if res in ("abandoned",):     return "A"
-    return "NR"
+        return ""
+    applied_to = str(m.get("result_applied_to") or "").strip()
+    rainham = applied_to == L.RAINHAM_FIRST_XI_TEAM_ID
+    if res == "W":  return "W" if rainham else "L"
+    if res == "L":  return "L" if rainham else "W"
+    if res in ("T", "TIE"):       return "T"
+    if res in ("D", "DRAW"):      return "D"
+    if res in ("A", "ABD", "ABANDONED"): return "A"
+    return res or "NR"
 
 
 def match_meta(conn, mids: list[int]) -> dict[int, dict]:
@@ -408,113 +410,13 @@ def write_player_template() -> None:
         extra_body='<script src="../static/rcc.js"></script>'))
 
 
-# ---------------------------------------------------------- supplementary CSS --
-
-# The dashboard reuses the global hero/card vocabulary from app.css and
-# adds a couple of bits of CSS for slicers + bucket bars + volume chips.
-RCC_EXTRA_CSS = """
-/* Dashboard extras — reuses global app.css palette tokens. */
-
-.bbb-bar-wrap{margin-top:14px;border:1px solid var(--rule);
-  background:repeating-linear-gradient(
-    90deg,var(--paper-2) 0 4px,transparent 4px 8px);height:20px;
-  position:relative;overflow:hidden}
-.bbb-bar-wrap > .fill{display:block;height:100%;background:var(--ball);
-  width:0;animation:bbbWipe .8s cubic-bezier(.2,.8,.2,1) forwards}
-.bbb-bar-wrap > .lbl{position:absolute;inset:0;display:flex;
-  align-items:center;justify-content:center;
-  font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;
-  color:var(--ink);letter-spacing:.06em}
-@keyframes bbbWipe{from{width:0}to{width:var(--w,0%)}}
-
-#slicer-rail{display:flex;flex-direction:column;gap:10px;margin-top:8px}
-.slicer-group{border-top:1px solid var(--rule);padding-top:8px}
-.slicer-group:first-child{border-top:none;padding-top:0}
-.slicer-group .lbl{
-  font-family:'Source Serif Pro',Georgia,serif;
-  font-size:9.5px;text-transform:uppercase;letter-spacing:.18em;
-  color:var(--muted);font-weight:700;margin-bottom:6px}
-.slicer-chips{display:flex;flex-wrap:wrap;gap:5px}
-.slicer-chip{display:inline-flex;align-items:center;gap:4px;
-  padding:4px 10px;background:var(--paper);border:1px solid var(--rule-2);
-  font-family:'JetBrains Mono',monospace;font-size:11px;
-  font-weight:600;color:var(--ink-2);cursor:pointer;user-select:none;
-  transition:background .12s,border-color .12s,color .12s}
-.slicer-chip:hover{border-color:var(--ball);color:var(--ball)}
-.slicer-chip.on{background:var(--ball);color:var(--paper);
-  border-color:var(--ball-2)}
-.slicer-chip.dim{opacity:.45;cursor:not-allowed}
-.slicer-chip .n{font-weight:400;opacity:.75;font-size:10px}
-.slicer-chip.on .n{opacity:.8}
-
-.filter-bar{display:flex;justify-content:space-between;align-items:center;
-  margin-top:10px;padding-top:10px;border-top:1px solid var(--rule);
-  font-family:'Source Serif Pro',Georgia,serif;font-style:italic;
-  font-size:12.5px;color:var(--muted)}
-.btn-link{background:none;border:none;color:var(--ball);
-  font-family:'Source Serif Pro',Georgia,serif;font-size:12.5px;
-  font-weight:700;letter-spacing:.05em;cursor:pointer;
-  text-decoration:underline}
-
-.kv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px 18px;margin:8px 0 0}
-.kv-grid > div{border-left:2px solid var(--ball);padding-left:10px}
-.kv-grid .k{font-size:9.5px;text-transform:uppercase;letter-spacing:.18em;
-  color:var(--muted);font-weight:700;
-  font-family:'Source Serif Pro',Georgia,serif}
-.kv-grid .v{font-family:'JetBrains Mono',monospace;font-size:18px;
-  font-weight:700;color:var(--ink);margin-top:2px;letter-spacing:-.02em}
-.kv-grid .vol{font-size:10.5px;color:var(--muted);margin-top:2px;
-  font-family:'Source Serif Pro',Georgia,serif;font-style:italic}
-
-.bucket-table{width:100%;font-family:'JetBrains Mono',monospace;
-  font-size:11.5px;font-variant-numeric:tabular-nums;border-collapse:collapse}
-.bucket-table th{
-  font-family:'Source Serif Pro',Georgia,serif;font-size:9.5px;
-  text-transform:uppercase;letter-spacing:.14em;color:var(--muted);
-  font-weight:700;padding:6px 6px;border-bottom:2px solid var(--ball);
-  text-align:right}
-.bucket-table th:first-child{text-align:left}
-.bucket-table td{padding:7px 6px;border-bottom:1px solid var(--rule);
-  text-align:right}
-.bucket-table td:first-child{text-align:left;color:var(--ink);font-weight:700}
-.bucket-table tr:last-child td{border-bottom:none}
-.bucket-table .empty td{color:var(--muted);opacity:.55;font-style:italic}
-
-.bucket-bars{display:flex;flex-direction:column;gap:6px;margin-top:8px}
-.bucket-bar{display:flex;align-items:center;gap:8px;font-size:11.5px;
-  font-family:'JetBrains Mono',monospace}
-.bucket-bar .lbl{flex:0 0 56px;color:var(--muted);font-size:10px;
-  letter-spacing:.05em;text-transform:uppercase;font-weight:700}
-.bucket-bar .bar{flex:1;height:11px;background:var(--paper-2);
-  border:1px solid var(--rule);overflow:hidden}
-.bucket-bar .bar > span{display:block;height:100%;background:var(--ball);
-  transition:width .35s cubic-bezier(.2,.8,.2,1)}
-.bucket-bar .bar.pitch > span{background:var(--pitch)}
-.bucket-bar .num{flex:0 0 70px;text-align:right;
-  font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
-
-.vol-chip{display:inline-block;padding:1px 7px;border:1px solid var(--ball);
-  background:transparent;color:var(--ball);
-  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
-  letter-spacing:.04em;margin-left:6px;
-  font-variant-numeric:tabular-nums}
-
-.fix-list .pill{flex-shrink:0}
-.fix-list .fix .opp{font-size:14.5px}
-.empty-note{color:var(--muted);font-style:italic;font-size:13px;
-  padding:10px 0}
-"""
-
-
 # ---------------------------------------------------------- main --
 
 def build() -> int:
+    # Dashboard CSS lives inside _app_lib.CSS itself so build order
+    # doesn't matter (build_data_repo.py / build_metadata.py both call
+    # write_static_assets() and would otherwise drop it).
     L.write_static_assets()
-    # Append our extras to app.css so the rcc pages get them too
-    css_path = L.APP_DIR / "static" / "app.css"
-    base = css_path.read_text() if css_path.exists() else L.CSS
-    css_path.write_text(base + "\n\n" + RCC_EXTRA_CSS)
 
     conn = L.open_db()
     mids = relevant_match_ids(conn)
