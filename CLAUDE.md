@@ -745,7 +745,8 @@ written once to `app/static/app.css`; pages link to it.
   * Rainham 1st XI on either side (`team_id = '51207'`)
   * League games (always)  OR  Cup games whose `competition_name`
     does NOT match T20 / Twenty20 / 20-20 / 20/20 / "Smash" patterns
-  * Played, in the last 10 seasons (today's date is the cutoff)
+  * Played at any point in the cache (no season cap by default — set
+    `SEASONS_BACK` per-builder if you want to limit)
 
 Encoded once in `_app_lib.first_xi_fixture_where()`:
 

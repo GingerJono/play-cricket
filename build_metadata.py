@@ -126,20 +126,22 @@ def overlay_status(player_id: int, base_status: str,
 # --------------------------------------------------------- universe scope --
 
 # Match the data-repo window so fixture / club / player counts stay in
-# sync across the site.
-SEASONS_BACK = 10
+# sync across the site. None = no cap (every fixture in the cache).
+SEASONS_BACK: int | None = None
 
 
 def relevant_match_ids(conn) -> set[int]:
     """
-    1st XI / League + non-T20 Cup, last 10 seasons.
+    1st XI / League + non-T20 Cup. By default no season cap — uses
+    every relevant fixture in the cache. Set SEASONS_BACK to limit.
 
     Includes BOTH played and scheduled-but-unplayed fixtures so that a
     club we'll face this season (e.g. Spartans CC's two 2026 League
     games) shows up even before we've played them.
     """
     import datetime as dt
-    season_min = dt.date.today().year - SEASONS_BACK + 1
+    season_min = (dt.date.today().year - SEASONS_BACK + 1
+                  if SEASONS_BACK is not None else None)
     return set(L.first_xi_match_ids(
         conn, season_min=season_min, include_unplayed=True,
     ))
@@ -359,7 +361,7 @@ def build_clubs_index(conn, all_meta, aliases, clubs_by_player,
                 ("Clubs", ""),
             ],
             lead=("Every club Rainham 1st XI has played in League or "
-                  "non-T20 Cup fixtures across the last 10 seasons. Tap "
+                  "non-T20 Cup fixtures in the cache. Tap "
                   "a club to see its players and start filling in their "
                   "metadata."),
             stats=[

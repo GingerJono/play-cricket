@@ -2,7 +2,7 @@
 """
 Generate the static data-repository page at `app/index.html`.
 
-One card per **played Rainham 1st-XI fixture** in the last 10 seasons,
+One card per **played Rainham 1st-XI fixture** in our cache,
 filtered to League and non-T20 Cup games:
 
   * date, opposition (with format chip), result pill
@@ -28,7 +28,9 @@ import _app_lib as L
 
 
 PC_MATCH_URL = "https://rainhamcc.play-cricket.com/website/results/{mid}"
-SEASONS_BACK = 10
+# None = no season cap (every Rainham 1st XI League/non-T20 Cup fixture
+# we have a record of). Set to e.g. 10 to limit to the recent decade.
+SEASONS_BACK: int | None = None
 
 
 def opposition_for(row) -> str:
@@ -61,7 +63,7 @@ def result_pill_class(result: str, applied_to: str,
     return "NR"
 
 
-def collect_rows(conn, since_season: int) -> list[dict]:
+def collect_rows(conn, since_season: int | None = None) -> list[dict]:
     cur = conn.cursor()
     sql_filter, params = L.first_xi_fixture_where(alias="m")
     sql = f"""
@@ -69,10 +71,11 @@ def collect_rows(conn, since_season: int) -> list[dict]:
         FROM matches m
         LEFT JOIN match_bbb b ON b.match_id = m.match_id
         WHERE {sql_filter}
-          AND m.season >= ?
-        ORDER BY m.match_date DESC
     """
-    params.append(since_season)
+    if since_season is not None:
+        sql += " AND m.season >= ?"
+        params.append(since_season)
+    sql += " ORDER BY m.match_date DESC"
     matches = cur.execute(sql, params).fetchall()
 
     today_yyyymmdd = dt.date.today().strftime("%Y%m%d")
@@ -171,14 +174,20 @@ def render_hero(rows: list[dict]) -> str:
         (f"{n_bbb}", "with BBB"),
         (f"{n_bbb*100//max(n,1)}%", "BBB coverage"),
     ]
+    span = ""
+    if rows:
+        years = sorted({r["season"] for r in rows if r.get("season")})
+        if years:
+            span = f"{years[0]}–{years[-1]}"
     return L.hero(
         "Data repository",
         crumbs=[("Rainham CC", "")],
-        lead=(f"Every played 1st-XI fixture (League + non-T20 Cup) in the "
-              f"last {SEASONS_BACK} seasons. Coverage % counts the share of "
-              f"opposition legal balls whose batter/bowler has a complete "
-              f"metadata record. Both columns sit at 0 % until that queue "
-              f"is bootstrapped — that's expected."),
+        lead=(f"Every played 1st-XI fixture (League + non-T20 Cup)"
+              f"{(' in the cache (' + span + ')') if span else ''}. "
+              f"Coverage % counts the share of opposition legal balls "
+              f"whose batter/bowler has a complete metadata record. "
+              f"Both columns sit at 0 % until that queue is bootstrapped "
+              f"— that's expected."),
         stats=stats,
         extra_html=f'<div class="season-chips">{chips}</div>',
     )
@@ -220,8 +229,8 @@ def render_fixture_card(r: dict) -> str:
 def build() -> int:
     L.write_static_assets()
     conn = L.open_db()
-    today = dt.date.today()
-    since = today.year - SEASONS_BACK + 1
+    since = (dt.date.today().year - SEASONS_BACK + 1
+             if SEASONS_BACK is not None else None)
     rows = collect_rows(conn, since_season=since)
     if not rows:
         print("No matches found in window — abort.", file=sys.stderr)
