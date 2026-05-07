@@ -324,12 +324,14 @@
   }
 
   // ---------- hero (snapshot tile grid per tab) ------------------------
-  function snapTile(lbl, v, sub) {
-    return el('div', {class:'snap'}, [
+  function snapTile(lbl, v, sub, teamHover) {
+    const tile = el('div', {class:'snap'}, [
       el('div', {class:'lbl'}, [lbl]),
       el('div', {class:'v'}, [v]),
       sub ? el('div', {class:'sub'}, [sub]) : null,
     ]);
+    if (teamHover) tile.setAttribute('title', teamHover);
+    return tile;
   }
   function renderHero() {
     const stats = document.getElementById('player-stats');
@@ -361,13 +363,13 @@
         snapTile('Inns', inns),
         snapTile('Runs', runs),
         snapTile('Avg', avg!=null ? fmtN(avg,2) : '—',
+          nots ? nots + ' n.o.' : null,
           teamCareer.avg != null
-            ? 'team ' + fmtN(teamCareer.avg,2)
-            : (nots ? nots + ' n.o.' : '')),
+            ? 'Team baseline: ' + fmtN(teamCareer.avg,2) : null),
         snapTile('Strike rate', sr!=null ? fmtN(sr,1) : '—',
+          ballsT ? ballsT + ' bls (' + withBalls.length + ' inns)' : null,
           teamCareer.sr != null
-            ? 'team ' + fmtN(teamCareer.sr,1)
-            : (ballsT ? ballsT + ' bls' : '—')),
+            ? 'Team baseline: ' + fmtN(teamCareer.sr,1) : null),
         snapTile('HS', hs),
         snapTile('50 / 100 / 0', fifties + ' / ' + tons + ' / ' + ducks),
       ].forEach(t => stats.appendChild(t));
@@ -399,14 +401,16 @@
       [
         snapTile('Inns', inns),
         snapTile('Wkts', wkts),
-        snapTile('Avg', avg!=null ? fmtN(avg,2) : '—',
-          teamCareer.avg != null ? 'team ' + fmtN(teamCareer.avg,2) : ''),
+        snapTile('Avg', avg!=null ? fmtN(avg,2) : '—', null,
+          teamCareer.avg != null
+            ? 'Team baseline: ' + fmtN(teamCareer.avg,2) : null),
         snapTile('Econ', econ!=null ? fmtN(econ,2) : '—',
+          fmtN(overs,1) + ' overs',
           teamCareer.econ != null
-            ? 'team ' + fmtN(teamCareer.econ,2)
-            : fmtN(overs,1) + ' overs'),
-        snapTile('Strike rate', sr!=null ? fmtN(sr,1) : '—',
-          teamCareer.sr != null ? 'team ' + fmtN(teamCareer.sr,1) : ''),
+            ? 'Team baseline: ' + fmtN(teamCareer.econ,2) : null),
+        snapTile('Strike rate', sr!=null ? fmtN(sr,1) : '—', null,
+          teamCareer.sr != null
+            ? 'Team baseline: ' + fmtN(teamCareer.sr,1) : null),
         snapTile('Best · M', bbi.wkts + '/' + bbi.runs,
           maids + ' maidens'),
       ].forEach(t => stats.appendChild(t));
@@ -664,6 +668,9 @@
   }
 
   // ---- bar cell + team lookup ----------------------------------------
+  // The bar fills behind the number; team baseline lives on the cell's
+  // `title` attribute so it surfaces on hover (desktop) / long-press
+  // (mobile) without crowding the visible row.
   function barCell(value, max, kind, fmt, teamValue) {
     if (value == null || isNaN(value)) {
       return el('td', null, ['—']);
@@ -674,8 +681,6 @@
       {class:'fill ' + kind, style:'width:' + w + '%'}));
     td.appendChild(el('span', {class:'val'}, [fmt(value)]));
     if (teamValue != null && !isNaN(teamValue)) {
-      const t = el('span', {class:'team'}, ['t' + fmt(teamValue)]);
-      td.appendChild(t);
       td.setAttribute('title', 'Team baseline: ' + fmt(teamValue));
     }
     return td;
@@ -739,8 +744,8 @@
         el('th', null, [firstLabel]),
         el('th', null, ['Inns']),
         el('th', null, ['Runs']),
-        el('th', null, ['Avg']),
-        el('th', null, ['SR']),
+        el('th', {class:'bar-th'}, ['Avg']),
+        el('th', {class:'bar-th'}, ['SR']),
         el('th', null, ['HS']),
         el('th', null, ['50/100']),
       ])])
@@ -803,8 +808,8 @@
         el('th', null, ['Sp']),
         el('th', null, ['O']),
         el('th', null, ['W']),
-        el('th', null, ['Avg']),
-        el('th', null, ['Econ']),
+        el('th', {class:'bar-th'}, ['Avg']),
+        el('th', {class:'bar-th'}, ['Econ']),
         el('th', null, ['Best']),
       ])])
     ]);
@@ -941,8 +946,8 @@
           el('th', null, [firstLabel]),
           el('th', null, ['Bls']),
           el('th', null, ['Runs']),
-          el('th', null, ['Avg']),
-          el('th', null, [view==='bat' ? 'SR' : 'Econ']),
+          el('th', {class:'bar-th'}, ['Avg']),
+          el('th', {class:'bar-th'}, [view==='bat' ? 'SR' : 'Econ']),
           el('th', null, ['Wkts']),
           el('th', null, ['Dot%']),
         ])
