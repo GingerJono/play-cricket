@@ -17,7 +17,7 @@ Writes:
                                   for the BBB slicers.
   app/static/rcc.js               dashboard client (slicers + cards)
 
-Universe: Rainham 1st XI / League + non-T20 Cup, last 10 seasons —
+Universe: Rainham 1st XI / League + non-T20 Cup, full cache —
 same `_app_lib.first_xi_match_ids` filter used everywhere else.
 
 The bundle is intentionally raw: every slice the user can apply on
@@ -38,7 +38,8 @@ from pathlib import Path
 import _app_lib as L
 
 
-SEASONS_BACK = 10
+# None = no season cap (every relevant fixture in the cache).
+SEASONS_BACK: int | None = None
 RCC_DATA_DIR = L.APP_DIR / "data" / "rcc"
 RCC_PAGE_DIR = L.APP_DIR / "rcc"
 
@@ -49,7 +50,8 @@ PC_MATCH_URL  = "https://rainhamcc.play-cricket.com/website/results/{mid}"
 # ---------------------------------------------------------- universe --
 
 def relevant_match_ids(conn) -> list[int]:
-    season_min = dt.date.today().year - SEASONS_BACK + 1
+    season_min = (dt.date.today().year - SEASONS_BACK + 1
+                  if SEASONS_BACK is not None else None)
     return L.first_xi_match_ids(
         conn, season_min=season_min, include_unplayed=True,
     )

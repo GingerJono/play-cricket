@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d7a52"><title>Canvey Kingfisher CC</title><link rel="preconnect" href="https://fonts.bunny.net"><link rel="stylesheet" href="https://fonts.bunny.net/css?family=ibm-plex-sans:400,500,600,700|ibm-plex-mono:400,500,600,700&amp;display=swap"><link rel="stylesheet" href="../../static/app.css"></head><body><header class="hero"><div class="crumbs"><a href="../../index.html">Rainham CC</a><span class="sep">&rsaquo;</span><a href="../clubs.html">Clubs</a><span class="sep">&rsaquo;</span><span>Canvey Kingfisher CC</span></div><h1>Canvey Kingfisher CC</h1><p class="lead">Players seen on Canvey Kingfisher CC when they faced our 1st XI in League or non-T20 Cup fixtures.</p><div class="stats"><div class="stat"><div class="n">3</div><div class="lbl">players</div></div><div class="stat"><div class="n">0</div><div class="lbl">complete</div></div><div class="stat"><div class="n">0</div><div class="lbl">partial</div></div><div class="stat"><div class="n">3</div><div class="lbl">missing</div></div></div></header><div class="card"><h2>Roster</h2><p class="note">Sorted by balls bowled in our BBB cache, then apps vs us — bowlers with the most ball-by-ball evidence float to the top. Type to filter.</p><input type="search" id="player-filter" placeholder="Filter by name..." autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" style="margin-bottom:8px"><div class="row-list" id="roster-list"><a class="row-link" href="../player.html?id=412044" data-name="- amesh"><div class="name">- Amesh<div class="row-meta">1 app vs us · last seen 21/06/2003</div></div><div class="right"><span class="tag notcap">not captured</span></div></a><a class="row-link" href="../player.html?id=412039" data-name="- daria"><div class="name">- Daria<div class="row-meta">1 app vs us · last seen 21/06/2003</div></div><div class="right"><span class="tag notcap">not captured</span></div></a><a class="row-link" href="../player.html?id=412040" data-name="ali ali"><div class="name">Ali Ali<div class="row-meta">1 app vs us · last seen 10/05/2003</div></div><div class="right"><span class="tag notcap">not captured</span></div></a></div></div><script>
+(function(){
+  var inp = document.getElementById('player-filter');
+  var list = document.getElementById('roster-list');
+  if (!inp || !list) return;
+  var rows = list.querySelectorAll('.row-link');
+  inp.addEventListener('input', function(){
+    var q = inp.value.trim().toLowerCase();
+    for (var i = 0; i < rows.length; i++) {
+      var name = rows[i].getAttribute('data-name') || '';
+      rows[i].style.display = (!q || name.indexOf(q) >= 0) ? '' : 'none';
+    }
+  });
+})();
+</script></body></html>
