@@ -109,11 +109,12 @@ def match_meta(conn, mids: list[int]) -> dict[int, dict]:
         opp_club_id = m["away_club_id"] if rainham_is_home else m["home_club_id"]
         opp_club_nm = m["away_club_name"] if rainham_is_home else m["home_club_name"]
         rainham_team_id = m["home_team_id"] if rainham_is_home else m["away_team_id"]
-        bat_first = (m.get("batted_first") or "").strip()
-        rainham_batted_first = (
-            (bat_first == "Home" and rainham_is_home)
-            or (bat_first == "Away" and not rainham_is_home)
-        )
+        # batted_first is a team_id (not "Home"/"Away"). Rainham
+        # batted first iff the team that batted first matches the
+        # Rainham 1st XI team_id we know is on this match.
+        bat_first_id = str(m.get("batted_first") or "").strip()
+        rainham_batted_first = (bat_first_id == rainham_team_id
+                                and bat_first_id != "")
         toss_won = m.get("toss_won_by_team_id") == rainham_team_id
         out[int(m["match_id"])] = {
             "match_id":        int(m["match_id"]),
