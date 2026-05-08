@@ -1,0 +1,155 @@
+{
+  "mae_naive": 55.310912331302816,
+  "mae_v1": 31.246239872779725,
+  "mae_v2": 30.436093614770108,
+  "lift_v2_vs_v1_runs": 0.8101462580096168,
+  "v2_interval_coverage_80": 0.7050325408642988,
+  "n_train_matches": 1513,
+  "n_val_matches": 504,
+  "n_train_balls": 353889,
+  "n_val_balls": 119542,
+  "bins": [
+    {
+      "bin": "0-29",
+      "err_naive": 100.1879989561283,
+      "err_v1": 42.13144433813529,
+      "err_v2": 40.59898088025925
+    },
+    {
+      "bin": "30-59",
+      "err_naive": 64.72107516899771,
+      "err_v1": 39.6299373954061,
+      "err_v2": 38.1420033627055
+    },
+    {
+      "bin": "60-89",
+      "err_naive": 57.27213906566204,
+      "err_v1": 37.99959575852278,
+      "err_v2": 36.473302439554324
+    },
+    {
+      "bin": "90-119",
+      "err_naive": 53.81799941513667,
+      "err_v1": 35.89124103685492,
+      "err_v2": 33.793870821697844
+    },
+    {
+      "bin": "120-149",
+      "err_naive": 51.963887124293976,
+      "err_v1": 32.307897828805345,
+      "err_v2": 31.10438305409907
+    },
+    {
+      "bin": "150-179",
+      "err_naive": 49.37955219103694,
+      "err_v1": 28.50230437465124,
+      "err_v2": 28.380537864511542
+    },
+    {
+      "bin": "180-209",
+      "err_naive": 45.86036579297251,
+      "err_v1": 25.473276793577906,
+      "err_v2": 25.709054070092034
+    },
+    {
+      "bin": "210-239",
+      "err_naive": 40.43869033825682,
+      "err_v1": 21.251745029985898,
+      "err_v2": 21.425443084915617
+    },
+    {
+      "bin": "240-269",
+      "err_naive": 32.5508386471214,
+      "err_v1": 16.898606693257,
+      "err_v2": 17.395513406580907
+    },
+    {
+      "bin": "270+",
+      "err_naive": 21.007254995610513,
+      "err_v1": 12.917144432890755,
+      "err_v2": 13.713330497336
+    }
+  ],
+  "top_features": [
+    {
+      "feature": "overs_per_innings",
+      "importance": 2573
+    },
+    {
+      "feature": "match_date_yyyymmdd",
+      "importance": 1849
+    },
+    {
+      "feature": "run_rate",
+      "importance": 902
+    },
+    {
+      "feature": "wickets",
+      "importance": 604
+    },
+    {
+      "feature": "runs",
+      "importance": 583
+    },
+    {
+      "feature": "match_month",
+      "importance": 520
+    },
+    {
+      "feature": "balls_gone",
+      "importance": 240
+    },
+    {
+      "feature": "batters_remaining_count",
+      "importance": 168
+    },
+    {
+      "feature": "season",
+      "importance": 163
+    },
+    {
+      "feature": "frac_innings",
+      "importance": 147
+    },
+    {
+      "feature": "balls_left",
+      "importance": 111
+    },
+    {
+      "feature": "ns_runs_so_far",
+      "importance": 81
+    },
+    {
+      "feature": "striker_runs_so_far",
+      "importance": 66
+    },
+    {
+      "feature": "ns_balls_so_far",
+      "importance": 54
+    },
+    {
+      "feature": "ns_intra_sr",
+      "importance": 36
+    },
+    {
+      "feature": "bowler_balls_in_innings",
+      "importance": 35
+    },
+    {
+      "feature": "striker_intra_sr",
+      "importance": 23
+    },
+    {
+      "feature": "striker_balls_so_far",
+      "importance": 22
+    },
+    {
+      "feature": "bowler_runs_in_innings",
+      "importance": 4
+    },
+    {
+      "feature": "bowler_econ_so_far",
+      "importance": 3
+    }
+  ]
+}
