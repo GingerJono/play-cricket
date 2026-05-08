@@ -1,0 +1,926 @@
+{
+  "match_details": [
+    {
+      "id": 6145010,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "19/08/2024",
+      "league_name": "Huddersfield Premier Cricket League",
+      "league_id": "346",
+      "competition_name": "Conference",
+      "competition_id": "116562",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6145010",
+      "match_date": "27/07/2024",
+      "match_time": "12:30",
+      "ground_name": "Add New Ground",
+      "ground_id": "",
+      "home_team_name": "1st XI",
+      "home_team_id": "195240",
+      "home_club_name": "Edgerton & Dalton CC",
+      "home_club_id": "2520",
+      "away_team_name": "1st XI",
+      "away_team_id": "66662",
+      "away_club_name": "Emley Clarence CC",
+      "away_club_id": "2575",
+      "umpire_1_name": "",
+      "umpire_1_id": "",
+      "umpire_2_name": "",
+      "umpire_2_id": "",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "",
+      "scorer_1_id": "",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "66662",
+      "toss": "Emley Clarence CC - 1st XI won the toss and elected to bat",
+      "batted_first": "66662",
+      "no_of_overs": "50",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Emley Clarence CC - 1st XI - Won",
+      "result_applied_to": "66662",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 195240,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "1.0",
+          "bonus_points_batting": "1.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 66662,
+          "game_points": "6",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Edgerton & Dalton CC - 1st XI - Won",
+          "929559#195240"
+        ],
+        [
+          "Emley Clarence CC - 1st XI - Won",
+          "929559#66662"
+        ],
+        [
+          "Tied",
+          929564
+        ],
+        [
+          "Abandoned",
+          929562
+        ],
+        [
+          "Edgerton & Dalton CC - 1st XI - Conceded",
+          "929561#66662"
+        ],
+        [
+          "Emley Clarence CC - 1st XI - Conceded",
+          "929563#195240"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Bilal Ahmad",
+              "player_id": 5323610,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Ather Baig",
+              "player_id": 4942717,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Aditya Garimella",
+              "player_id": 4705743,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Iqrar Hussain",
+              "player_id": 6913312,
+              "captain": true,
+              "wicket_keeper": true
+            },
+            {
+              "position": 5,
+              "player_name": "Muhammad Islam",
+              "player_id": 4059828,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Umar Khan",
+              "player_id": 6398963,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Fahad Mahmood",
+              "player_id": 6913318,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Sagar Nahar",
+              "player_id": 5889680,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Kashif Shehzad",
+              "player_id": 5591705,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Arham Afzaal",
+              "player_id": 5870090,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Umar Assed",
+              "player_id": 3554932,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Jamie Hopper",
+              "player_id": 5876679,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Quinton Venter",
+              "player_id": 5970765,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Luke Taylor",
+              "player_id": 4079903,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 4,
+              "player_name": "Adam Taylor",
+              "player_id": 4071613,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Sam Haynes",
+              "player_id": 6599965,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Zak Morris",
+              "player_id": 4713948,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Brayden Gilman",
+              "player_id": 5524339,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Hassnain Qureshi",
+              "player_id": 5419825,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Hasnat Bukhari",
+              "player_id": 5879348,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Mirza Mobeen",
+              "player_id": 727323,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Archie Walker",
+              "player_id": 5441239,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Emley Clarence CC - 1st XI",
+          "team_batting_id": "66662",
+          "innings_number": 1,
+          "extra_byes": "7",
+          "extra_leg_byes": "3",
+          "extra_wides": "14",
+          "extra_no_balls": "2",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "26",
+          "runs": "219",
+          "wickets": "10",
+          "overs": "44.4",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "50.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Quinton Venter",
+              "batsman_id": "5970765",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Umar Khan",
+              "bowler_id": "6398963",
+              "runs": "27",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "43"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Luke Taylor",
+              "batsman_id": "4079903",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Arham Afzaal",
+              "bowler_id": "5870090",
+              "runs": "28",
+              "fours": "1",
+              "sixes": "1",
+              "balls": "64"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Adam Taylor",
+              "batsman_id": "4071613",
+              "how_out": "run out",
+              "fielder_name": "Sagar Nahar",
+              "fielder_id": "5889680",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "1"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Hasnat Bukhari",
+              "batsman_id": "5879348",
+              "how_out": "ct",
+              "fielder_name": "Sagar Nahar",
+              "fielder_id": "5889680",
+              "bowler_name": "Umar Khan",
+              "bowler_id": "6398963",
+              "runs": "68",
+              "fours": "8",
+              "sixes": "4",
+              "balls": "55"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Mirza Mobeen",
+              "batsman_id": "727323",
+              "how_out": "ct",
+              "fielder_name": "Arham Afzaal",
+              "fielder_id": "5870090",
+              "bowler_name": "Arham Afzaal",
+              "bowler_id": "5870090",
+              "runs": "6",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "13"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Hassnain Qureshi",
+              "batsman_id": "5419825",
+              "how_out": "st",
+              "fielder_name": "Sagar Nahar",
+              "fielder_id": "5889680",
+              "bowler_name": "Arham Afzaal",
+              "bowler_id": "5870090",
+              "runs": "4",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "10"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Archie Walker",
+              "batsman_id": "5441239",
+              "how_out": "ct",
+              "fielder_name": "Umar Assed",
+              "fielder_id": "3554932",
+              "bowler_name": "Umar Khan",
+              "bowler_id": "6398963",
+              "runs": "5",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "15"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Jamie Hopper",
+              "batsman_id": "5876679",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Kashif Shehzad",
+              "bowler_id": "5591705",
+              "runs": "21",
+              "fours": "3",
+              "sixes": "1",
+              "balls": "18"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Sam Haynes",
+              "batsman_id": "6599965",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Aditya Garimella",
+              "bowler_id": "4705743",
+              "runs": "31",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "29"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Zak Morris",
+              "batsman_id": "4713948",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Umar Khan",
+              "bowler_id": "6398963",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "4"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Brayden Gilman",
+              "batsman_id": "5524339",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "3",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "18"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "47",
+              "wickets": 1,
+              "batsman_out_name": "Quinton Venter",
+              "batsman_out_id": "5970765",
+              "batsman_in_name": "Luke Taylor",
+              "batsman_in_id": "4079903",
+              "batsman_in_runs": "16"
+            },
+            {
+              "runs": "48",
+              "wickets": 2,
+              "batsman_out_name": "Adam Taylor",
+              "batsman_out_id": "4071613",
+              "batsman_in_name": "Adam Taylor",
+              "batsman_in_id": "4071613",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "121",
+              "wickets": 3,
+              "batsman_out_name": "Luke Taylor",
+              "batsman_out_id": "4079903",
+              "batsman_in_name": "Hasnat Bukhari",
+              "batsman_in_id": "5879348",
+              "batsman_in_runs": "49"
+            },
+            {
+              "runs": "137",
+              "wickets": 4,
+              "batsman_out_name": "Mirza Mobeen",
+              "batsman_out_id": "727323",
+              "batsman_in_name": "Hasnat Bukhari",
+              "batsman_in_id": "5879348",
+              "batsman_in_runs": "57"
+            },
+            {
+              "runs": "149",
+              "wickets": 5,
+              "batsman_out_name": "Hassnain Qureshi",
+              "batsman_out_id": "5419825",
+              "batsman_in_name": "Hasnat Bukhari",
+              "batsman_in_id": "5879348",
+              "batsman_in_runs": "63"
+            },
+            {
+              "runs": "159",
+              "wickets": 6,
+              "batsman_out_name": "Hasnat Bukhari",
+              "batsman_out_id": "5879348",
+              "batsman_in_name": "Archie Walker",
+              "batsman_in_id": "5441239",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "178",
+              "wickets": 7,
+              "batsman_out_name": "Archie Walker",
+              "batsman_out_id": "5441239",
+              "batsman_in_name": "Jamie Hopper",
+              "batsman_in_id": "5876679",
+              "batsman_in_runs": "15"
+            },
+            {
+              "runs": "191",
+              "wickets": 8,
+              "batsman_out_name": "Jamie Hopper",
+              "batsman_out_id": "5876679",
+              "batsman_in_name": "Sam Haynes",
+              "batsman_in_id": "6599965",
+              "batsman_in_runs": "6"
+            },
+            {
+              "runs": "192",
+              "wickets": 9,
+              "batsman_out_name": "Zak Morris",
+              "batsman_out_id": "4713948",
+              "batsman_in_name": "Sam Haynes",
+              "batsman_in_id": "6599965",
+              "batsman_in_runs": "7"
+            },
+            {
+              "runs": "219",
+              "wickets": 10,
+              "batsman_out_name": "Sam Haynes",
+              "batsman_out_id": "6599965",
+              "batsman_in_name": "Brayden Gilman",
+              "batsman_in_id": "5524339",
+              "batsman_in_runs": "3"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Muhammad Islam",
+              "bowler_id": "4059828",
+              "overs": "10.0",
+              "maidens": "1",
+              "runs": "38",
+              "wides": "5",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Umar Khan",
+              "bowler_id": "6398963",
+              "overs": "15.0",
+              "maidens": "1",
+              "runs": "54",
+              "wides": "3",
+              "wickets": "4",
+              "no_balls": "2"
+            },
+            {
+              "bowler_name": "Arham Afzaal",
+              "bowler_id": "5870090",
+              "overs": "10.0",
+              "maidens": "1",
+              "runs": "52",
+              "wides": "1",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Fahad Mahmood",
+              "bowler_id": "6913318",
+              "overs": "1.0",
+              "maidens": "0",
+              "runs": "22",
+              "wides": "5",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Iqrar Hussain",
+              "bowler_id": "6913312",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "17",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Kashif Shehzad",
+              "bowler_id": "5591705",
+              "overs": "3.0",
+              "maidens": "0",
+              "runs": "19",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Aditya Garimella",
+              "bowler_id": "4705743",
+              "overs": "1.4",
+              "maidens": "0",
+              "runs": "7",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Edgerton & Dalton CC - 1st XI",
+          "team_batting_id": "195240",
+          "innings_number": 1,
+          "extra_byes": "4",
+          "extra_leg_byes": "2",
+          "extra_wides": "4",
+          "extra_no_balls": "1",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "11",
+          "runs": "181",
+          "wickets": "8",
+          "overs": "50.0",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "50.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Iqrar Hussain",
+              "batsman_id": "6913312",
+              "how_out": "ct",
+              "fielder_name": "Luke Taylor",
+              "fielder_id": "4079903",
+              "bowler_name": "Hassnain Qureshi",
+              "bowler_id": "5419825",
+              "runs": "21",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "36"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Bilal Ahmad",
+              "batsman_id": "5323610",
+              "how_out": "ct",
+              "fielder_name": "Hasnat Bukhari",
+              "fielder_id": "5879348",
+              "bowler_name": "Hassnain Qureshi",
+              "bowler_id": "5419825",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "1"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Kashif Shehzad",
+              "batsman_id": "5591705",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jamie Hopper",
+              "bowler_id": "5876679",
+              "runs": "16",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "30"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Sagar Nahar",
+              "batsman_id": "5889680",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "81",
+              "fours": "14",
+              "sixes": "0",
+              "balls": "115"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Ather Baig",
+              "batsman_id": "4942717",
+              "how_out": "ct",
+              "fielder_name": "Mirza Mobeen",
+              "fielder_id": "727323",
+              "bowler_name": "Hassnain Qureshi",
+              "bowler_id": "5419825",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "7"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Umar Assed",
+              "batsman_id": "3554932",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Zak Morris",
+              "bowler_id": "4713948",
+              "runs": "4",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "8"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Aditya Garimella",
+              "batsman_id": "4705743",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sam Haynes",
+              "bowler_id": "6599965",
+              "runs": "12",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "28"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Fahad Mahmood",
+              "batsman_id": "6913318",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Quinton Venter",
+              "bowler_id": "5970765",
+              "runs": "7",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "21"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Arham Afzaal",
+              "batsman_id": "5870090",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Hassnain Qureshi",
+              "bowler_id": "5419825",
+              "runs": "18",
+              "fours": "1",
+              "sixes": "1",
+              "balls": "27"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Muhammad Islam",
+              "batsman_id": "4059828",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "11",
+              "fours": "0",
+              "sixes": "1",
+              "balls": "28"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Umar Khan",
+              "batsman_id": "6398963",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "9",
+              "wickets": 1,
+              "batsman_out_name": "Bilal Ahmad",
+              "batsman_out_id": "5323610",
+              "batsman_in_name": "Iqrar Hussain",
+              "batsman_in_id": "6913312",
+              "batsman_in_runs": "9"
+            },
+            {
+              "runs": "34",
+              "wickets": 2,
+              "batsman_out_name": "Kashif Shehzad",
+              "batsman_out_id": "5591705",
+              "batsman_in_name": "Iqrar Hussain",
+              "batsman_in_id": "6913312",
+              "batsman_in_runs": "18"
+            },
+            {
+              "runs": "38",
+              "wickets": 3,
+              "batsman_out_name": "Iqrar Hussain",
+              "batsman_out_id": "6913312",
+              "batsman_in_name": "Sagar Nahar",
+              "batsman_in_id": "5889680",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "46",
+              "wickets": 4,
+              "batsman_out_name": "Ather Baig",
+              "batsman_out_id": "4942717",
+              "batsman_in_name": "Sagar Nahar",
+              "batsman_in_id": "5889680",
+              "batsman_in_runs": "9"
+            },
+            {
+              "runs": "55",
+              "wickets": 5,
+              "batsman_out_name": "Umar Assed",
+              "batsman_out_id": "3554932",
+              "batsman_in_name": "Sagar Nahar",
+              "batsman_in_id": "5889680",
+              "batsman_in_runs": "13"
+            },
+            {
+              "runs": "100",
+              "wickets": 6,
+              "batsman_out_name": "Aditya Garimella",
+              "batsman_out_id": "4705743",
+              "batsman_in_name": "Sagar Nahar",
+              "batsman_in_id": "5889680",
+              "batsman_in_runs": "42"
+            },
+            {
+              "runs": "121",
+              "wickets": 7,
+              "batsman_out_name": "Fahad Mahmood",
+              "batsman_out_id": "6913318",
+              "batsman_in_name": "Sagar Nahar",
+              "batsman_in_id": "5889680",
+              "batsman_in_runs": "54"
+            },
+            {
+              "runs": "156",
+              "wickets": 8,
+              "batsman_out_name": "Arham Afzaal",
+              "batsman_out_id": "5870090",
+              "batsman_in_name": "Sagar Nahar",
+              "batsman_in_id": "5889680",
+              "batsman_in_runs": "68"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Hassnain Qureshi",
+              "bowler_id": "5419825",
+              "overs": "15.0",
+              "maidens": "3",
+              "runs": "48",
+              "wides": "1",
+              "wickets": "4",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Jamie Hopper",
+              "bowler_id": "5876679",
+              "overs": "14.0",
+              "maidens": "3",
+              "runs": "38",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Zak Morris",
+              "bowler_id": "4713948",
+              "overs": "6.0",
+              "maidens": "2",
+              "runs": "16",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Sam Haynes",
+              "bowler_id": "6599965",
+              "overs": "8.0",
+              "maidens": "3",
+              "runs": "23",
+              "wides": "1",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Quinton Venter",
+              "bowler_id": "5970765",
+              "overs": "6.0",
+              "maidens": "0",
+              "runs": "46",
+              "wides": "2",
+              "wickets": "1",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Mirza Mobeen",
+              "bowler_id": "727323",
+              "overs": "1.0",
+              "maidens": "0",
+              "runs": "4",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

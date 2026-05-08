@@ -1,0 +1,889 @@
+{
+  "match_details": [
+    {
+      "id": 6709399,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "17/09/2025",
+      "league_name": "Huddersfield Premier Cricket League",
+      "league_id": "346",
+      "competition_name": "Alliance",
+      "competition_id": "125764",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6709399",
+      "match_date": "06/09/2025",
+      "match_time": "12:30",
+      "ground_name": "Add New Ground",
+      "ground_id": "",
+      "home_team_name": "1st XI",
+      "home_team_id": "195240",
+      "home_club_name": "Edgerton & Dalton CC",
+      "home_club_id": "2520",
+      "away_team_name": "2nd XI",
+      "away_team_id": "76899",
+      "away_club_name": "Barkisland CC",
+      "away_club_id": "924",
+      "umpire_1_name": "",
+      "umpire_1_id": "",
+      "umpire_2_name": "",
+      "umpire_2_id": "",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "",
+      "scorer_1_id": "",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "195240",
+      "toss": "Edgerton & Dalton CC - 1st XI won the toss and elected to bat",
+      "batted_first": "195240",
+      "no_of_overs": "45",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Edgerton & Dalton CC - 1st XI - Won",
+      "result_applied_to": "195240",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 195240,
+          "game_points": "6",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 76899,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "1.0",
+          "bonus_points_batting": "1.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Edgerton & Dalton CC - 1st XI - Won",
+          "998866#195240"
+        ],
+        [
+          "Barkisland CC - 2nd XI - Won",
+          "998866#76899"
+        ],
+        [
+          "Tied",
+          998871
+        ],
+        [
+          "Abandoned",
+          998869
+        ],
+        [
+          "Edgerton & Dalton CC - 1st XI - Conceded",
+          "998868#76899"
+        ],
+        [
+          "Barkisland CC - 2nd XI - Conceded",
+          "998870#195240"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Nasir Ali",
+              "player_id": 6939168,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Umar Khan",
+              "player_id": 6398963,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Bilal Ahmad",
+              "player_id": 5323610,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Sagar Nahar",
+              "player_id": 5889680,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 5,
+              "player_name": "Satwant Singh",
+              "player_id": 5331660,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Muhammad Shahzad",
+              "player_id": 5855503,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Mohammad Nadeem",
+              "player_id": 4707139,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Mohammad Shafiq",
+              "player_id": 4353220,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Iqrar Hussain",
+              "player_id": 6913312,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Amar Singh",
+              "player_id": 5321180,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Muhammad Adnan",
+              "player_id": 6955278,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Josh Finch",
+              "player_id": 4085700,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Seb Colman",
+              "player_id": 5969037,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Thomas Crowther",
+              "player_id": 4753530,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Jason Elsworth",
+              "player_id": 5912130,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Alfie Kitchen",
+              "player_id": 5808934,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Isaac Pollitt",
+              "player_id": 6758813,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 7,
+              "player_name": "Mathew Steers",
+              "player_id": 4571614,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Ted Sullivan",
+              "player_id": 5031350,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Jamie Sykes",
+              "player_id": 3822701,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Oliver Thornber",
+              "player_id": 4482775,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Dexter Issott",
+              "player_id": 4753535,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Edgerton & Dalton CC - 1st XI",
+          "team_batting_id": "195240",
+          "innings_number": 1,
+          "extra_byes": "3",
+          "extra_leg_byes": "4",
+          "extra_wides": "13",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "20",
+          "runs": "239",
+          "wickets": "5",
+          "overs": "45.0",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "45.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Muhammad Adnan",
+              "batsman_id": "6955278",
+              "how_out": "ct",
+              "fielder_name": "Mathew Steers",
+              "fielder_id": "4571614",
+              "bowler_name": "Dexter Issott",
+              "bowler_id": "4753535",
+              "runs": "44",
+              "fours": "7",
+              "sixes": "2",
+              "balls": "33"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Sagar Nahar",
+              "batsman_id": "5889680",
+              "how_out": "ct",
+              "fielder_name": "Mathew Steers",
+              "fielder_id": "4571614",
+              "bowler_name": "Jamie Sykes",
+              "bowler_id": "3822701",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "2"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Iqrar Hussain",
+              "batsman_id": "6913312",
+              "how_out": "ct",
+              "fielder_name": "Mathew Steers",
+              "fielder_id": "4571614",
+              "bowler_name": "Dexter Issott",
+              "bowler_id": "4753535",
+              "runs": "11",
+              "fours": "0",
+              "sixes": "1",
+              "balls": "42"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Bilal Ahmad",
+              "batsman_id": "5323610",
+              "how_out": "ct",
+              "fielder_name": "Josh Finch",
+              "fielder_id": "4085700",
+              "bowler_name": "Mathew Steers",
+              "bowler_id": "4571614",
+              "runs": "83",
+              "fours": "12",
+              "sixes": "2",
+              "balls": "92"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Mohammad Nadeem",
+              "batsman_id": "4707139",
+              "how_out": "ct",
+              "fielder_name": "Alfie Kitchen",
+              "fielder_id": "5808934",
+              "bowler_name": "Alfie Kitchen",
+              "bowler_id": "5808934",
+              "runs": "32",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "68"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Muhammad Shahzad",
+              "batsman_id": "5855503",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "14",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "17"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Mohammad Shafiq",
+              "batsman_id": "4353220",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "35",
+              "fours": "1",
+              "sixes": "4",
+              "balls": "16"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Nasir Ali",
+              "batsman_id": "6939168",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Amar Singh",
+              "batsman_id": "5321180",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Satwant Singh",
+              "batsman_id": "5331660",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Umar Khan",
+              "batsman_id": "6398963",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "4",
+              "wickets": 1,
+              "batsman_out_name": "Sagar Nahar",
+              "batsman_out_id": "5889680",
+              "batsman_in_name": "Muhammad Adnan",
+              "batsman_in_id": "6955278",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "57",
+              "wickets": 2,
+              "batsman_out_name": "Iqrar Hussain",
+              "batsman_out_id": "6913312",
+              "batsman_in_name": "Muhammad Adnan",
+              "batsman_in_id": "6955278",
+              "batsman_in_runs": "42"
+            },
+            {
+              "runs": "60",
+              "wickets": 3,
+              "batsman_out_name": "Muhammad Adnan",
+              "batsman_out_id": "6955278",
+              "batsman_in_name": "Bilal Ahmad",
+              "batsman_in_id": "5323610",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "188",
+              "wickets": 4,
+              "batsman_out_name": "Mohammad Nadeem",
+              "batsman_out_id": "4707139",
+              "batsman_in_name": "Bilal Ahmad",
+              "batsman_in_id": "5323610",
+              "batsman_in_runs": "82"
+            },
+            {
+              "runs": "192",
+              "wickets": 5,
+              "batsman_out_name": "Bilal Ahmad",
+              "batsman_out_id": "5323610",
+              "batsman_in_name": "Muhammad Shahzad",
+              "batsman_in_id": "5855503",
+              "batsman_in_runs": "3"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Mathew Steers",
+              "bowler_id": "4571614",
+              "overs": "12.0",
+              "maidens": "2",
+              "runs": "67",
+              "wides": "2",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Jamie Sykes",
+              "bowler_id": "3822701",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "32",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Dexter Issott",
+              "bowler_id": "4753535",
+              "overs": "7.0",
+              "maidens": "2",
+              "runs": "34",
+              "wides": "1",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Seb Colman",
+              "bowler_id": "5969037",
+              "overs": "11.0",
+              "maidens": "1",
+              "runs": "39",
+              "wides": "3",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Thomas Crowther",
+              "bowler_id": "4753530",
+              "overs": "5.0",
+              "maidens": "1",
+              "runs": "25",
+              "wides": "2",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Alfie Kitchen",
+              "bowler_id": "5808934",
+              "overs": "6.0",
+              "maidens": "0",
+              "runs": "35",
+              "wides": "5",
+              "wickets": "1",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Barkisland CC - 2nd XI",
+          "team_batting_id": "76899",
+          "innings_number": 1,
+          "extra_byes": "8",
+          "extra_leg_byes": "0",
+          "extra_wides": "28",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "36",
+          "runs": "199",
+          "wickets": "10",
+          "overs": "41.3",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "45.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Jamie Sykes",
+              "batsman_id": "3822701",
+              "how_out": "ct",
+              "fielder_name": "Muhammad Adnan",
+              "fielder_id": "6955278",
+              "bowler_name": "Umar Khan",
+              "bowler_id": "6398963",
+              "runs": "6",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "18"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Jason Elsworth",
+              "batsman_id": "5912130",
+              "how_out": "ct",
+              "fielder_name": "Bilal Ahmad",
+              "fielder_id": "5323610",
+              "bowler_name": "Iqrar Hussain",
+              "bowler_id": "6913312",
+              "runs": "16",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "35"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Josh Finch",
+              "batsman_id": "4085700",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Umar Khan",
+              "bowler_id": "6398963",
+              "runs": "12",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "20"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Thomas Crowther",
+              "batsman_id": "4753530",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Muhammad Shahzad",
+              "bowler_id": "5855503",
+              "runs": "37",
+              "fours": "7",
+              "sixes": "0",
+              "balls": "43"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Isaac Pollitt",
+              "batsman_id": "6758813",
+              "how_out": "ct",
+              "fielder_name": "Mohammad Nadeem",
+              "fielder_id": "4707139",
+              "bowler_name": "Amar Singh",
+              "bowler_id": "5321180",
+              "runs": "4",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "16"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Dexter Issott",
+              "batsman_id": "4753535",
+              "how_out": "ct",
+              "fielder_name": "Amar Singh",
+              "fielder_id": "5321180",
+              "bowler_name": "Mohammad Shafiq",
+              "bowler_id": "4353220",
+              "runs": "4",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "17"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Mathew Steers",
+              "batsman_id": "4571614",
+              "how_out": "ct",
+              "fielder_name": "Sagar Nahar",
+              "fielder_id": "5889680",
+              "bowler_name": "Muhammad Shahzad",
+              "bowler_id": "5855503",
+              "runs": "19",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "14"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Oliver Thornber",
+              "batsman_id": "4482775",
+              "how_out": "ct",
+              "fielder_name": "Mohammad Shafiq",
+              "fielder_id": "4353220",
+              "bowler_name": "Amar Singh",
+              "bowler_id": "5321180",
+              "runs": "25",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "40"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Ted Sullivan",
+              "batsman_id": "5031350",
+              "how_out": "ct",
+              "fielder_name": "Sagar Nahar",
+              "fielder_id": "5889680",
+              "bowler_name": "Muhammad Shahzad",
+              "bowler_id": "5855503",
+              "runs": "1",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "9"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Seb Colman",
+              "batsman_id": "5969037",
+              "how_out": "ct",
+              "fielder_name": "Sagar Nahar",
+              "fielder_id": "5889680",
+              "bowler_name": "Iqrar Hussain",
+              "bowler_id": "6913312",
+              "runs": "39",
+              "fours": "4",
+              "sixes": "1",
+              "balls": "35"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Alfie Kitchen",
+              "batsman_id": "5808934",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "2"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "19",
+              "wickets": 1,
+              "batsman_out_name": "Jamie Sykes",
+              "batsman_out_id": "3822701",
+              "batsman_in_name": "Jason Elsworth",
+              "batsman_in_id": "5912130",
+              "batsman_in_runs": "5"
+            },
+            {
+              "runs": "48",
+              "wickets": 2,
+              "batsman_out_name": "Josh Finch",
+              "batsman_out_id": "4085700",
+              "batsman_in_name": "Jason Elsworth",
+              "batsman_in_id": "5912130",
+              "batsman_in_runs": "16"
+            },
+            {
+              "runs": "50",
+              "wickets": 3,
+              "batsman_out_name": "Jason Elsworth",
+              "batsman_out_id": "5912130",
+              "batsman_in_name": "Thomas Crowther",
+              "batsman_in_id": "4753530",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "68",
+              "wickets": 4,
+              "batsman_out_name": "Isaac Pollitt",
+              "batsman_out_id": "6758813",
+              "batsman_in_name": "Thomas Crowther",
+              "batsman_in_id": "4753530",
+              "batsman_in_runs": "15"
+            },
+            {
+              "runs": "76",
+              "wickets": 5,
+              "batsman_out_name": "Dexter Issott",
+              "batsman_out_id": "4753535",
+              "batsman_in_name": "Unsure",
+              "batsman_in_id": "",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "116",
+              "wickets": 6,
+              "batsman_out_name": "Thomas Crowther",
+              "batsman_out_id": "4753530",
+              "batsman_in_name": "Mathew Steers",
+              "batsman_in_id": "4571614",
+              "batsman_in_runs": "18"
+            },
+            {
+              "runs": "122",
+              "wickets": 7,
+              "batsman_out_name": "Mathew Steers",
+              "batsman_out_id": "4571614",
+              "batsman_in_name": "Unsure",
+              "batsman_in_id": "",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "131",
+              "wickets": 8,
+              "batsman_out_name": "Ted Sullivan",
+              "batsman_out_id": "5031350",
+              "batsman_in_name": "Oliver Thornber",
+              "batsman_in_id": "4482775",
+              "batsman_in_runs": "3"
+            },
+            {
+              "runs": "199",
+              "wickets": 9,
+              "batsman_out_name": "Seb Colman",
+              "batsman_out_id": "5969037",
+              "batsman_in_name": "Oliver Thornber",
+              "batsman_in_id": "4482775",
+              "batsman_in_runs": "24"
+            },
+            {
+              "runs": "199",
+              "wickets": 10,
+              "batsman_out_name": "Oliver Thornber",
+              "batsman_out_id": "4482775",
+              "batsman_in_name": "Alfie Kitchen",
+              "batsman_in_id": "5808934",
+              "batsman_in_runs": "0"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Iqrar Hussain",
+              "bowler_id": "6913312",
+              "overs": "11.0",
+              "maidens": "0",
+              "runs": "39",
+              "wides": "2",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Umar Khan",
+              "bowler_id": "6398963",
+              "overs": "11.0",
+              "maidens": "1",
+              "runs": "57",
+              "wides": "18",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Mohammad Shafiq",
+              "bowler_id": "4353220",
+              "overs": "6.0",
+              "maidens": "1",
+              "runs": "33",
+              "wides": "2",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Amar Singh",
+              "bowler_id": "5321180",
+              "overs": "5.3",
+              "maidens": "1",
+              "runs": "19",
+              "wides": "2",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Muhammad Shahzad",
+              "bowler_id": "5855503",
+              "overs": "6.0",
+              "maidens": "1",
+              "runs": "29",
+              "wides": "3",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Bilal Ahmad",
+              "bowler_id": "5323610",
+              "overs": "2.0",
+              "maidens": "0",
+              "runs": "14",
+              "wides": "1",
+              "wickets": "0",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
