@@ -49,7 +49,7 @@ def tier_score(name: str) -> int:
     return 99
 
 
-def discover_universe(site_id: int, seasons: list[int]) -> dict:
+def discover_universe(site_id: int, seasons: list[int], strict_senior_filter: bool = False) -> dict:
     """
     Returns:
         {
@@ -57,6 +57,13 @@ def discover_universe(site_id: int, seasons: list[int]) -> dict:
           'universe_match_ids': [int],
           'bbb_match_ids': [int]   # subset, 2021+ only, for BBB phase
         }
+
+    `strict_senior_filter=True` keeps the original Essex inclusion filter
+    (`1st XI|Senior|Premier`), which only matches leagues whose division
+    names carry that prefix. The default (False) relies on EXCL alone —
+    which is the correct generalisation for leagues like Surrey that
+    name their divisions `Premier Division`, `Division 1`, `Division 2`
+    etc. without the `1st XI` prefix.
     """
     by_season_top5 = {}
     universe_ids: set[int] = set()
@@ -82,12 +89,13 @@ def discover_universe(site_id: int, seasons: list[int]) -> dict:
                 continue
             comp_counts[cid] = comp_counts.get(cid, 0) + 1
             comp_meta[cid] = cname
-        # senior pattern
+        # senior pattern (optional)
         senior = []
         for cid, n in comp_counts.items():
             cname = comp_meta[cid]
-            if re.search(r"1st XI|Senior|Premier", cname, re.I):
-                senior.append((tier_score(cname), cid, cname, n))
+            if strict_senior_filter and not re.search(r"1st XI|Senior|Premier", cname, re.I):
+                continue
+            senior.append((tier_score(cname), cid, cname, n))
         senior.sort()
         top5 = senior[:5]
         by_season_top5[s] = [
@@ -171,13 +179,15 @@ def parallel_fetch_bbb(match_ids: list[int], workers: int = 4) -> dict:
     return counts
 
 
-def run_league(slug: str, site_id: int, workers_detail: int = 8, workers_bbb: int = 4) -> dict:
+def run_league(slug: str, site_id: int, workers_detail: int = 8, workers_bbb: int = 4,
+               strict_senior_filter: bool = False) -> dict:
     seasons = list(range(2017, 2027))
-    print(f"\n========= {slug}  (site_id={site_id}) =========", flush=True)
+    print(f"\n========= {slug}  (site_id={site_id}, strict={strict_senior_filter}) =========", flush=True)
 
     out = {
         "slug": slug,
         "site_id": site_id,
+        "strict_senior_filter": strict_senior_filter,
         "started_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "phases": {},
     }
@@ -193,7 +203,7 @@ def run_league(slug: str, site_id: int, workers_detail: int = 8, workers_bbb: in
     # P2: universe filter
     print("[P2] universe filter (top-5 1st-XI Limited Overs) ...", flush=True)
     t0 = time.perf_counter()
-    u = discover_universe(site_id, seasons)
+    u = discover_universe(site_id, seasons, strict_senior_filter=strict_senior_filter)
     out["phases"]["p2_universe_secs"] = round(time.perf_counter() - t0, 2)
     out["universe_n"] = len(u["universe_match_ids"])
     out["bbb_universe_n"] = len(u["bbb_match_ids"])
@@ -240,8 +250,12 @@ def main() -> int:
     ap.add_argument("--site-id", type=int, required=True)
     ap.add_argument("--workers-detail", type=int, default=8)
     ap.add_argument("--workers-bbb", type=int, default=4)
+    ap.add_argument("--strict-senior-filter", action="store_true",
+                    help="require '1st XI|Senior|Premier' in division name "
+                         "(default: rely on EXCL alone, the better generaliser)")
     args = ap.parse_args()
-    run_league(args.slug, args.site_id, args.workers_detail, args.workers_bbb)
+    run_league(args.slug, args.site_id, args.workers_detail, args.workers_bbb,
+               args.strict_senior_filter)
     return 0
 
 
