@@ -1,0 +1,872 @@
+{
+  "match_details": [
+    {
+      "id": 6137291,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "25/08/2025",
+      "league_name": "Devon Cricket League",
+      "league_id": "298",
+      "competition_name": "C Division West",
+      "competition_id": "117896",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6137291",
+      "match_date": "17/08/2024",
+      "match_time": "13:00",
+      "ground_name": "The Butts",
+      "ground_id": "2066",
+      "home_team_name": "1st XI",
+      "home_team_id": "77349",
+      "home_club_name": "Kingsbridge CC",
+      "home_club_id": "133",
+      "away_team_name": "1st XI",
+      "away_team_id": "106896",
+      "away_club_name": "Brixham CC",
+      "away_club_id": "1440",
+      "umpire_1_name": "",
+      "umpire_1_id": "",
+      "umpire_2_name": "Paul Lewis",
+      "umpire_2_id": "6150523",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "",
+      "scorer_1_id": "",
+      "scorer_2_name": "Michael Smith",
+      "scorer_2_id": "3872351",
+      "toss_won_by_team_id": "77349",
+      "toss": "Kingsbridge CC - 1st XI won the toss and elected to bat",
+      "batted_first": "77349",
+      "no_of_overs": "45",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "",
+      "no_of_reserves": "",
+      "result": "W",
+      "result_description": "Brixham CC - 1st XI - Win",
+      "result_applied_to": "106896",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 77349,
+          "game_points": "0",
+          "penalty_points": "",
+          "bonus_points_together": "4.0",
+          "bonus_points_batting": "2.0",
+          "bonus_points_bowling": "2.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 106896,
+          "game_points": "10",
+          "penalty_points": "",
+          "bonus_points_together": "10.0",
+          "bonus_points_batting": "5.0",
+          "bonus_points_bowling": "5.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Kingsbridge CC - 1st XI - Win",
+          "939929#77349"
+        ],
+        [
+          "Brixham CC - 1st XI - Win",
+          "939929#106896"
+        ],
+        [
+          "Kingsbridge CC - 1st XI - Win on Run Rate",
+          "939931#77349"
+        ],
+        [
+          "Brixham CC - 1st XI - Win on Run Rate",
+          "939931#106896"
+        ],
+        [
+          "Tied",
+          939937
+        ],
+        [
+          "Cancelled",
+          939932
+        ],
+        [
+          "Abandoned",
+          939934
+        ],
+        [
+          "Kingsbridge CC - 1st XI - Conceded",
+          "939935#106896"
+        ],
+        [
+          "Brixham CC - 1st XI - Conceded",
+          "939936#77349"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Jack Brown",
+              "player_id": 5762002,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "James Fletcher",
+              "player_id": 4773687,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "James Ellis",
+              "player_id": 5567622,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Freddie Ford",
+              "player_id": 5323666,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 5,
+              "player_name": "Alex Browne",
+              "player_id": 3401523,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Adriaan Maxwell",
+              "player_id": 4941912,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Rakesh Gheravada",
+              "player_id": 5353920,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Farzad Safi",
+              "player_id": 5732943,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Neal Peach",
+              "player_id": 826509,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Kieran Hobbs",
+              "player_id": 6263987,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Anya Evans",
+              "player_id": 6240951,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Dalton Sanders",
+              "player_id": 4448103,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 2,
+              "player_name": "Christopher Lanyon",
+              "player_id": 5305855,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Tom Hopper",
+              "player_id": 3552666,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Gangul Ravina",
+              "player_id": 6219698,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Matt Parsons",
+              "player_id": 3355436,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Colin Horrocks",
+              "player_id": 5630666,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Bradley McKee",
+              "player_id": 4394092,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Lee Upham",
+              "player_id": 1515549,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Sajin Sivarajan",
+              "player_id": 5537170,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Mark Coysh",
+              "player_id": 1040987,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Tom Stephenson",
+              "player_id": 1952554,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Kingsbridge CC - 1st XI",
+          "team_batting_id": "77349",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "3",
+          "extra_wides": "3",
+          "extra_no_balls": "1",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "",
+          "total_extras": "7",
+          "runs": "86",
+          "wickets": "10",
+          "overs": "24.4",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "45.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Jack Brown",
+              "batsman_id": "5762002",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sajin Sivarajan",
+              "bowler_id": "5537170",
+              "runs": "1",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "2",
+              "batsman_name": "James Fletcher",
+              "batsman_id": "4773687",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Lee Upham",
+              "bowler_id": "1515549",
+              "runs": "21",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "3",
+              "batsman_name": "James Ellis",
+              "batsman_id": "5567622",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sajin Sivarajan",
+              "bowler_id": "5537170",
+              "runs": "5",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "4",
+              "batsman_name": "Freddie Ford",
+              "batsman_id": "5323666",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Lee Upham",
+              "bowler_id": "1515549",
+              "runs": "9",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "5",
+              "batsman_name": "Alex Browne",
+              "batsman_id": "3401523",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Lee Upham",
+              "bowler_id": "1515549",
+              "runs": "1",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "6",
+              "batsman_name": "Adriaan Maxwell",
+              "batsman_id": "4941912",
+              "how_out": "ct",
+              "fielder_name": "Mark Coysh",
+              "fielder_id": "1040987",
+              "bowler_name": "Matt Parsons",
+              "bowler_id": "3355436",
+              "runs": "24",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "7",
+              "batsman_name": "Rakesh Gheravada",
+              "batsman_id": "5353920",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Lee Upham",
+              "bowler_id": "1515549",
+              "runs": "7",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "8",
+              "batsman_name": "Farzad Safi",
+              "batsman_id": "5732943",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Gangul Ravina",
+              "bowler_id": "6219698",
+              "runs": "3",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Neal Peach",
+              "batsman_id": "826509",
+              "how_out": "ct",
+              "fielder_name": "Tom Hopper",
+              "fielder_id": "3552666",
+              "bowler_name": "Gangul Ravina",
+              "bowler_id": "6219698",
+              "runs": "8",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Kieran Hobbs",
+              "batsman_id": "6263987",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Lee Upham",
+              "bowler_id": "1515549",
+              "runs": "0",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Anya Evans",
+              "batsman_id": "6240951",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "1",
+              "wickets": 1,
+              "batsman_out_name": "Jack Brown",
+              "batsman_out_id": "5762002",
+              "batsman_in_name": "James Fletcher",
+              "batsman_in_id": "4773687",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "16",
+              "wickets": 2,
+              "batsman_out_name": "James Ellis",
+              "batsman_out_id": "5567622",
+              "batsman_in_name": "James Fletcher",
+              "batsman_in_id": "4773687",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "32",
+              "wickets": 3,
+              "batsman_out_name": "Freddie Ford",
+              "batsman_out_id": "5323666",
+              "batsman_in_name": "James Fletcher",
+              "batsman_in_id": "4773687",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "34",
+              "wickets": 4,
+              "batsman_out_name": "Alex Browne",
+              "batsman_out_id": "3401523",
+              "batsman_in_name": "James Fletcher",
+              "batsman_in_id": "4773687",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "50",
+              "wickets": 5,
+              "batsman_out_name": "James Fletcher",
+              "batsman_out_id": "4773687",
+              "batsman_in_name": "Adriaan Maxwell",
+              "batsman_in_id": "4941912",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "70",
+              "wickets": 6,
+              "batsman_out_name": "Rakesh Gheravada",
+              "batsman_out_id": "5353920",
+              "batsman_in_name": "Adriaan Maxwell",
+              "batsman_in_id": "4941912",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "72",
+              "wickets": 7,
+              "batsman_out_name": "Adriaan Maxwell",
+              "batsman_out_id": "4941912",
+              "batsman_in_name": "Farzad Safi",
+              "batsman_in_id": "5732943",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "84",
+              "wickets": 8,
+              "batsman_out_name": "Farzad Safi",
+              "batsman_out_id": "5732943",
+              "batsman_in_name": "Neal Peach",
+              "batsman_in_id": "826509",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "85",
+              "wickets": 9,
+              "batsman_out_name": "Kieran Hobbs",
+              "batsman_out_id": "6263987",
+              "batsman_in_name": "Neal Peach",
+              "batsman_in_id": "826509",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "85",
+              "wickets": 10,
+              "batsman_out_name": "Neal Peach",
+              "batsman_out_id": "826509",
+              "batsman_in_name": "Anya Evans",
+              "batsman_in_id": "6240951",
+              "batsman_in_runs": ""
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Bradley McKee",
+              "bowler_id": "4394092",
+              "overs": "5",
+              "maidens": "1",
+              "runs": "11",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Sajin Sivarajan",
+              "bowler_id": "5537170",
+              "overs": "4",
+              "maidens": "1",
+              "runs": "14",
+              "wides": "0",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Lee Upham",
+              "bowler_id": "1515549",
+              "overs": "8",
+              "maidens": "2",
+              "runs": "20",
+              "wides": "0",
+              "wickets": "5",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Matt Parsons",
+              "bowler_id": "3355436",
+              "overs": "5",
+              "maidens": "0",
+              "runs": "28",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Gangul Ravina",
+              "bowler_id": "6219698",
+              "overs": "2.4",
+              "maidens": "0",
+              "runs": "10",
+              "wides": "0",
+              "wickets": "2",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Brixham CC - 1st XI",
+          "team_batting_id": "106896",
+          "innings_number": 1,
+          "extra_byes": "1",
+          "extra_leg_byes": "1",
+          "extra_wides": "11",
+          "extra_no_balls": "5",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "",
+          "total_extras": "18",
+          "runs": "87",
+          "wickets": "4",
+          "overs": "21.4",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "45.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Dalton Sanders",
+              "batsman_id": "4448103",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jack Brown",
+              "bowler_id": "5762002",
+              "runs": "52",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "2",
+              "batsman_name": "Christopher Lanyon",
+              "batsman_id": "5305855",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Adriaan Maxwell",
+              "bowler_id": "4941912",
+              "runs": "0",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "3",
+              "batsman_name": "Tom Hopper",
+              "batsman_id": "3552666",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Neal Peach",
+              "bowler_id": "826509",
+              "runs": "14",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "4",
+              "batsman_name": "Gangul Ravina",
+              "batsman_id": "6219698",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "3",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "5",
+              "batsman_name": "Matt Parsons",
+              "batsman_id": "3355436",
+              "how_out": "run out",
+              "fielder_name": "James Ellis",
+              "fielder_id": "5567622",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "0",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "6",
+              "batsman_name": "Colin Horrocks",
+              "batsman_id": "5630666",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "0",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "7",
+              "batsman_name": "Bradley McKee",
+              "batsman_id": "4394092",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "8",
+              "batsman_name": "Lee Upham",
+              "batsman_id": "1515549",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Sajin Sivarajan",
+              "batsman_id": "5537170",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Mark Coysh",
+              "batsman_id": "1040987",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Tom Stephenson",
+              "batsman_id": "1952554",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "2",
+              "wickets": 1,
+              "batsman_out_name": "Christopher Lanyon",
+              "batsman_out_id": "5305855",
+              "batsman_in_name": "Dalton Sanders",
+              "batsman_in_id": "4448103",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "84",
+              "wickets": 2,
+              "batsman_out_name": "Dalton Sanders",
+              "batsman_out_id": "4448103",
+              "batsman_in_name": "Tom Hopper",
+              "batsman_in_id": "3552666",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "86",
+              "wickets": 3,
+              "batsman_out_name": "Tom Hopper",
+              "batsman_out_id": "3552666",
+              "batsman_in_name": "Gangul Ravina",
+              "batsman_in_id": "6219698",
+              "batsman_in_runs": ""
+            },
+            {
+              "runs": "86",
+              "wickets": 4,
+              "batsman_out_name": "Matt Parsons",
+              "batsman_out_id": "3355436",
+              "batsman_in_name": "Gangul Ravina",
+              "batsman_in_id": "6219698",
+              "batsman_in_runs": ""
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Farzad Safi",
+              "bowler_id": "5732943",
+              "overs": "6",
+              "maidens": "0",
+              "runs": "17",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Adriaan Maxwell",
+              "bowler_id": "4941912",
+              "overs": "2",
+              "maidens": "1",
+              "runs": "1",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Neal Peach",
+              "bowler_id": "826509",
+              "overs": "7",
+              "maidens": "5",
+              "runs": "7",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Rakesh Gheravada",
+              "bowler_id": "5353920",
+              "overs": "1",
+              "maidens": "0",
+              "runs": "24",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Jack Brown",
+              "bowler_id": "5762002",
+              "overs": "5.4",
+              "maidens": "0",
+              "runs": "36",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
