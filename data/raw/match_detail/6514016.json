@@ -1,0 +1,741 @@
+{
+  "match_details": [
+    {
+      "id": 6514016,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "07/03/2026",
+      "league_name": "Greater Manchester Cricket League",
+      "league_id": "11685",
+      "competition_name": "GMCL Division 2",
+      "competition_id": "122233",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6514016",
+      "match_date": "07/09/2024",
+      "match_time": "12:00",
+      "ground_name": "Add New Ground",
+      "ground_id": "",
+      "home_team_name": "1st XI",
+      "home_team_id": "343028",
+      "home_club_name": "Wythenshawe CC",
+      "home_club_id": "7141",
+      "away_team_name": "1st XI",
+      "away_team_id": "67383",
+      "away_club_name": "Micklehurst Cricket & Social Club",
+      "away_club_id": "4316",
+      "umpire_1_name": "Mike Hill",
+      "umpire_1_id": "25271",
+      "umpire_2_name": "Thomas George",
+      "umpire_2_id": "6498767",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "",
+      "scorer_1_id": "",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "343028",
+      "toss": "Wythenshawe CC - 1st XI won the toss and elected to field",
+      "batted_first": "67383",
+      "no_of_overs": "50",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Wythenshawe CC - 1st XI - Won",
+      "result_applied_to": "343028",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 343028,
+          "game_points": "5",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 67383,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Wythenshawe CC - 1st XI - Won",
+          "972548#343028"
+        ],
+        [
+          "Micklehurst Cricket & Social Club - 1st XI - Won",
+          "972548#67383"
+        ],
+        [
+          "Tied",
+          972554
+        ],
+        [
+          "Cancelled",
+          972550
+        ],
+        [
+          "Abandoned in Play",
+          972551
+        ],
+        [
+          "Abandoned No Play",
+          972802
+        ],
+        [
+          "Wythenshawe CC - 1st XI - Conceded",
+          "972552#67383"
+        ],
+        [
+          "Micklehurst Cricket & Social Club - 1st XI - Conceded",
+          "972553#343028"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Oscar Millington",
+              "player_id": 6198049,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "James Millington",
+              "player_id": 6055506,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "matthew taylor",
+              "player_id": 6262949,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Connor Gibson",
+              "player_id": 430826,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Craig McCoy",
+              "player_id": 4418586,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Sankara Sivasylam",
+              "player_id": 5609430,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 7,
+              "player_name": "Dhairya Patel",
+              "player_id": 6069351,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Muninder Adavelly",
+              "player_id": 6198947,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Vijaykumar Muslapuram",
+              "player_id": 399681,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Sujith Modukuri",
+              "player_id": 6197995,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Abrar Haider Khan",
+              "player_id": 6198948,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Sajjid Ali",
+              "player_id": 6022026,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Matthew Barton",
+              "player_id": 6210846,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Danny Clayton",
+              "player_id": 6214375,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Kevin Dooley",
+              "player_id": 5425923,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Deven Fitzhugh",
+              "player_id": 6211444,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "John-Paul Foden",
+              "player_id": 6010226,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Nicky Lawrence",
+              "player_id": 6424895,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Andy Pearson",
+              "player_id": 6169405,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Micklehurst Cricket & Social Club - 1st XI",
+          "team_batting_id": "67383",
+          "innings_number": 1,
+          "extra_byes": "3",
+          "extra_leg_byes": "0",
+          "extra_wides": "26",
+          "extra_no_balls": "2",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "31",
+          "runs": "187",
+          "wickets": "8",
+          "overs": "50.0",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "50.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Danny Clayton",
+              "batsman_id": "6214375",
+              "how_out": "ct",
+              "fielder_name": "James Millington",
+              "fielder_id": "6055506",
+              "bowler_name": "Abrar Haider Khan",
+              "bowler_id": "6198948",
+              "runs": "9",
+              "fours": "0",
+              "sixes": "1",
+              "balls": "10"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Andy Pearson",
+              "batsman_id": "6169405",
+              "how_out": "ct",
+              "fielder_name": "James Millington",
+              "fielder_id": "6055506",
+              "bowler_name": "Dhairya Patel",
+              "bowler_id": "6069351",
+              "runs": "9",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "39"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Matthew Barton",
+              "batsman_id": "6210846",
+              "how_out": "ct",
+              "fielder_name": "Connor Gibson",
+              "fielder_id": "430826",
+              "bowler_name": "Abrar Haider Khan",
+              "bowler_id": "6198948",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "5"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Nicky Lawrence",
+              "batsman_id": "6424895",
+              "how_out": "ct",
+              "fielder_name": "Sankara Sivasylam",
+              "fielder_id": "5609430",
+              "bowler_name": "Dhairya Patel",
+              "bowler_id": "6069351",
+              "runs": "37",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "37"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Deven Fitzhugh",
+              "batsman_id": "6211444",
+              "how_out": "ct",
+              "fielder_name": "Sankara Sivasylam",
+              "fielder_id": "5609430",
+              "bowler_name": "matthew taylor",
+              "bowler_id": "6262949",
+              "runs": "19",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "33"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Sajjid Ali",
+              "batsman_id": "6022026",
+              "how_out": "ct",
+              "fielder_name": "Abrar Haider Khan",
+              "fielder_id": "6198948",
+              "bowler_name": "Connor Gibson",
+              "bowler_id": "430826",
+              "runs": "22",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "72"
+            },
+            {
+              "position": "7",
+              "batsman_name": "John-Paul Foden",
+              "batsman_id": "6010226",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Muninder Adavelly",
+              "bowler_id": "6198947",
+              "runs": "8",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "10"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Kevin Dooley",
+              "batsman_id": "5425923",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "2"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "15",
+              "wickets": 1,
+              "batsman_out_name": "Danny Clayton",
+              "batsman_out_id": "6214375",
+              "batsman_in_name": "Andy Pearson",
+              "batsman_in_id": "6169405",
+              "batsman_in_runs": "5"
+            },
+            {
+              "runs": "16",
+              "wickets": 2,
+              "batsman_out_name": "Matthew Barton",
+              "batsman_out_id": "6210846",
+              "batsman_in_name": "Andy Pearson",
+              "batsman_in_id": "6169405",
+              "batsman_in_runs": "5"
+            },
+            {
+              "runs": "49",
+              "wickets": 3,
+              "batsman_out_name": "Andy Pearson",
+              "batsman_out_id": "6169405",
+              "batsman_in_name": "Nicky Lawrence",
+              "batsman_in_id": "6424895",
+              "batsman_in_runs": "20"
+            },
+            {
+              "runs": "86",
+              "wickets": 4,
+              "batsman_out_name": "Nicky Lawrence",
+              "batsman_out_id": "6424895",
+              "batsman_in_name": "Deven Fitzhugh",
+              "batsman_in_id": "6211444",
+              "batsman_in_runs": "18"
+            },
+            {
+              "runs": "94",
+              "wickets": 5,
+              "batsman_out_name": "Deven Fitzhugh",
+              "batsman_out_id": "6211444",
+              "batsman_in_name": "Sajjid Ali",
+              "batsman_in_id": "6022026",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "162",
+              "wickets": 6,
+              "batsman_out_name": "Sajjid Ali",
+              "batsman_out_id": "6022026",
+              "batsman_in_name": "Unsure",
+              "batsman_in_id": "",
+              "batsman_in_runs": "35"
+            },
+            {
+              "runs": "184",
+              "wickets": 7,
+              "batsman_out_name": "John-Paul Foden",
+              "batsman_out_id": "6010226",
+              "batsman_in_name": "Unsure",
+              "batsman_in_id": "",
+              "batsman_in_runs": "12"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Vijaykumar Muslapuram",
+              "bowler_id": "399681",
+              "overs": "8.0",
+              "maidens": "1",
+              "runs": "25",
+              "wides": "5",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Abrar Haider Khan",
+              "bowler_id": "6198948",
+              "overs": "5.0",
+              "maidens": "1",
+              "runs": "33",
+              "wides": "4",
+              "wickets": "2",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Dhairya Patel",
+              "bowler_id": "6069351",
+              "overs": "13.0",
+              "maidens": "5",
+              "runs": "33",
+              "wides": "2",
+              "wickets": "2",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "matthew taylor",
+              "bowler_id": "6262949",
+              "overs": "5.0",
+              "maidens": "1",
+              "runs": "22",
+              "wides": "13",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Muninder Adavelly",
+              "bowler_id": "6198947",
+              "overs": "9.0",
+              "maidens": "2",
+              "runs": "18",
+              "wides": "1",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Sujith Modukuri",
+              "bowler_id": "6197995",
+              "overs": "6.0",
+              "maidens": "0",
+              "runs": "33",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Connor Gibson",
+              "bowler_id": "430826",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "20",
+              "wides": "1",
+              "wickets": "2",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Wythenshawe CC - 1st XI",
+          "team_batting_id": "343028",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "1",
+          "extra_wides": "18",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "19",
+          "runs": "188",
+          "wickets": "1",
+          "overs": "24.1",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "50.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Sankara Sivasylam",
+              "batsman_id": "5609430",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "68",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "81"
+            },
+            {
+              "position": "2",
+              "batsman_name": "James Millington",
+              "batsman_id": "6055506",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sajjid Ali",
+              "bowler_id": "6022026",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "11"
+            },
+            {
+              "position": "3",
+              "batsman_name": "matthew taylor",
+              "batsman_id": "6262949",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "99",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "53"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Vijaykumar Muslapuram",
+              "batsman_id": "399681",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "5",
+              "batsman_name": "Connor Gibson",
+              "batsman_id": "430826",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "6",
+              "batsman_name": "Craig McCoy",
+              "batsman_id": "4418586",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "7",
+              "batsman_name": "Dhairya Patel",
+              "batsman_id": "6069351",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "8",
+              "batsman_name": "Sujith Modukuri",
+              "batsman_id": "6197995",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Oscar Millington",
+              "batsman_id": "6198049",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Muninder Adavelly",
+              "batsman_id": "6198947",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Abrar Haider Khan",
+              "batsman_id": "6198948",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "11",
+              "wickets": 1,
+              "batsman_out_name": "James Millington",
+              "batsman_out_id": "6055506",
+              "batsman_in_name": "Sankara Sivasylam",
+              "batsman_in_id": "5609430",
+              "batsman_in_runs": "7"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Sajjid Ali",
+              "bowler_id": "6022026",
+              "overs": "3.0",
+              "maidens": "0",
+              "runs": "7",
+              "wides": "1",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Kevin Dooley",
+              "bowler_id": "5425923",
+              "overs": "1.5",
+              "maidens": "1",
+              "runs": "13",
+              "wides": "6",
+              "wickets": "0",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
