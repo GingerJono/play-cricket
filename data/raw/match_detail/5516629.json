@@ -1,0 +1,866 @@
+{
+  "match_details": [
+    {
+      "id": 5516629,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "16/04/2026",
+      "league_name": "Bradford Premier League",
+      "league_id": "259",
+      "competition_name": "Division 1",
+      "competition_id": "108509",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "5516629",
+      "match_date": "12/08/2023",
+      "match_time": "12:30",
+      "ground_name": "Carlton CC",
+      "ground_id": "43376",
+      "home_team_name": "1st XI",
+      "home_team_id": "31934",
+      "home_club_name": "Carlton CC, Wakefield",
+      "home_club_id": "1662",
+      "away_team_name": "1st XI",
+      "away_team_id": "109763",
+      "away_club_name": "Batley CC",
+      "away_club_id": "988",
+      "umpire_1_name": "S Dobson",
+      "umpire_1_id": "6237242",
+      "umpire_2_name": "C Wood",
+      "umpire_2_id": "6037340",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "Sarah Pollard",
+      "scorer_1_id": "44605",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "31934",
+      "toss": "Carlton CC, Wakefield - 1st XI won the toss and elected to field",
+      "batted_first": "109763",
+      "no_of_overs": "50",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Carlton CC, Wakefield - 1st XI - Won",
+      "result_applied_to": "31934",
+      "match_notes": "<b>Batley CC 1st XI Innings</b><br/>\r\n14.6 Sana Ullah Khan: 5 wickets (8-3-12-5)<br/>21.3 Batley CC 1st XI: 50 runs in 21.3 overs, 94 minutes, 7 extras<br/>34.3 Batley CC 1st XI: 100 runs in 34.3 overs, 148 minutes, 12 extras\r\n<br/>\r\n<br/>\r\n<b>Carlton CC, Wakefield 1st XI Innings</b><br/>\r\n16.5 Carlton CC, Wakefield 1st XI: 50 runs in 16.4 overs, 70 minutes, 6 extras<br/>29.6 Carlton CC, Wakefield 1st XI: 100 runs in 30.0 overs, 130 minutes, 14 extras\r\n<br/>\r\n",
+      "points": [
+        {
+          "team_id": 31934,
+          "game_points": "10",
+          "penalty_points": "0.0",
+          "bonus_points_together": "6.0",
+          "bonus_points_batting": "1.0",
+          "bonus_points_bowling": "5.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 109763,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "4.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "4.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Carlton CC, Wakefield - 1st XI - Won",
+          "868754#31934"
+        ],
+        [
+          "Batley CC - 1st XI - Won",
+          "868754#109763"
+        ],
+        [
+          "Tied",
+          868759
+        ],
+        [
+          "Abandoned",
+          868756
+        ],
+        [
+          "Carlton CC, Wakefield - 1st XI - Conceded",
+          "868757#109763"
+        ],
+        [
+          "Batley CC - 1st XI - Conceded",
+          "868758#31934"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Tom Taylor",
+              "player_id": 5410334,
+              "captain": true,
+              "wicket_keeper": true
+            },
+            {
+              "position": 2,
+              "player_name": "Dan White",
+              "player_id": 4568267,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Steve Cooper",
+              "player_id": 4568455,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Dan Ford",
+              "player_id": 5491319,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Kieron Holliday",
+              "player_id": 4628761,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Sana Ullah Khan",
+              "player_id": 5474073,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Wasim Khaliq",
+              "player_id": 6220616,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Charles Dissanayaka",
+              "player_id": 4568263,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Farukh ALam",
+              "player_id": 5761124,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Kian Wade",
+              "player_id": 6480862,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "James Cooper",
+              "player_id": 3548713,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Roheil Hussain",
+              "player_id": 6074121,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Daanyaal Hussain",
+              "player_id": 5419854,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 3,
+              "player_name": "Nikash Khan",
+              "player_id": 4949539,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Kasir Maroof",
+              "player_id": 4567661,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Arbaab Hussain",
+              "player_id": 4730698,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Aadam Hussain",
+              "player_id": 3289512,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Nasir Jamal",
+              "player_id": 3318358,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Nasir Totakhil",
+              "player_id": 5803288,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Umar Farooq",
+              "player_id": 5304179,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Tariq Hussain",
+              "player_id": 5752073,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Zahoor Hussain",
+              "player_id": 5727195,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Batley CC - 1st XI",
+          "team_batting_id": "109763",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "5",
+          "extra_wides": "7",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "12",
+          "runs": "107",
+          "wickets": "10",
+          "overs": "35.2",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "49.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Nikash Khan",
+              "batsman_id": "4949539",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sana Ullah Khan",
+              "bowler_id": "5474073",
+              "runs": "4",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "10"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Daanyaal Hussain",
+              "batsman_id": "5419854",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sana Ullah Khan",
+              "bowler_id": "5474073",
+              "runs": "16",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "42"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Roheil Hussain",
+              "batsman_id": "6074121",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sana Ullah Khan",
+              "bowler_id": "5474073",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "1"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Nasir Totakhil",
+              "batsman_id": "5803288",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sana Ullah Khan",
+              "bowler_id": "5474073",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "14"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Kasir Maroof",
+              "batsman_id": "4567661",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Kieron Holliday",
+              "bowler_id": "4628761",
+              "runs": "30",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "54"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Tariq Hussain",
+              "batsman_id": "5752073",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sana Ullah Khan",
+              "bowler_id": "5474073",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "6"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Aadam Hussain",
+              "batsman_id": "3289512",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sana Ullah Khan",
+              "bowler_id": "5474073",
+              "runs": "6",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "14"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Arbaab Hussain",
+              "batsman_id": "4730698",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Farukh ALam",
+              "bowler_id": "5761124",
+              "runs": "6",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "16"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Umar Farooq",
+              "batsman_id": "5304179",
+              "how_out": "run out",
+              "fielder_name": "Charles Dissanayaka",
+              "fielder_id": "4568263",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "18",
+              "fours": "0",
+              "sixes": "1",
+              "balls": "32"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Zahoor Hussain",
+              "batsman_id": "5727195",
+              "how_out": "ct",
+              "fielder_name": "Wasim Khaliq",
+              "fielder_id": "6220616",
+              "bowler_name": "Farukh ALam",
+              "bowler_id": "5761124",
+              "runs": "4",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "6"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Nasir Jamal",
+              "batsman_id": "3318358",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "9",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "16"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "6",
+              "wickets": 1,
+              "batsman_out_name": "Nikash Khan",
+              "batsman_out_id": "4949539",
+              "batsman_in_name": "Daanyaal Hussain",
+              "batsman_in_id": "5419854",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "6",
+              "wickets": 2,
+              "batsman_out_name": "Roheil Hussain",
+              "batsman_out_id": "6074121",
+              "batsman_in_name": "Daanyaal Hussain",
+              "batsman_in_id": "5419854",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "12",
+              "wickets": 3,
+              "batsman_out_name": "Nasir Totakhil",
+              "batsman_out_id": "5803288",
+              "batsman_in_name": "Daanyaal Hussain",
+              "batsman_in_id": "5419854",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "32",
+              "wickets": 4,
+              "batsman_out_name": "Daanyaal Hussain",
+              "batsman_out_id": "5419854",
+              "batsman_in_name": "Kasir Maroof",
+              "batsman_in_id": "4567661",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "32",
+              "wickets": 5,
+              "batsman_out_name": "Tariq Hussain",
+              "batsman_out_id": "5752073",
+              "batsman_in_name": "Kasir Maroof",
+              "batsman_in_id": "4567661",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "46",
+              "wickets": 6,
+              "batsman_out_name": "Aadam Hussain",
+              "batsman_out_id": "3289512",
+              "batsman_in_name": "Kasir Maroof",
+              "batsman_in_id": "4567661",
+              "batsman_in_runs": "12"
+            },
+            {
+              "runs": "63",
+              "wickets": 7,
+              "batsman_out_name": "Arbaab Hussain",
+              "batsman_out_id": "4730698",
+              "batsman_in_name": "Kasir Maroof",
+              "batsman_in_id": "4567661",
+              "batsman_in_runs": "22"
+            },
+            {
+              "runs": "84",
+              "wickets": 8,
+              "batsman_out_name": "Kasir Maroof",
+              "batsman_out_id": "4567661",
+              "batsman_in_name": "Umar Farooq",
+              "batsman_in_id": "5304179",
+              "batsman_in_runs": "9"
+            },
+            {
+              "runs": "90",
+              "wickets": 9,
+              "batsman_out_name": "Zahoor Hussain",
+              "batsman_out_id": "5727195",
+              "batsman_in_name": "Umar Farooq",
+              "batsman_in_id": "5304179",
+              "batsman_in_runs": "10"
+            },
+            {
+              "runs": "107",
+              "wickets": 10,
+              "batsman_out_name": "Umar Farooq",
+              "batsman_out_id": "5304179",
+              "batsman_in_name": "Nasir Jamal",
+              "batsman_in_id": "3318358",
+              "batsman_in_runs": "9"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Sana Ullah Khan",
+              "bowler_id": "5474073",
+              "overs": "15",
+              "maidens": "4",
+              "runs": "36",
+              "wides": "2",
+              "wickets": "6",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Wasim Khaliq",
+              "bowler_id": "6220616",
+              "overs": "9",
+              "maidens": "1",
+              "runs": "31",
+              "wides": "3",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Farukh ALam",
+              "bowler_id": "5761124",
+              "overs": "8.2",
+              "maidens": "2",
+              "runs": "20",
+              "wides": "1",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Kieron Holliday",
+              "bowler_id": "4628761",
+              "overs": "3",
+              "maidens": "0",
+              "runs": "15",
+              "wides": "1",
+              "wickets": "1",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Carlton CC, Wakefield - 1st XI",
+          "team_batting_id": "31934",
+          "innings_number": 1,
+          "extra_byes": "1",
+          "extra_leg_byes": "2",
+          "extra_wides": "6",
+          "extra_no_balls": "5",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "14",
+          "runs": "101",
+          "wickets": "8",
+          "overs": "30",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "101",
+          "revised_target_overs": "41.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Kian Wade",
+              "batsman_id": "6480862",
+              "how_out": "ct",
+              "fielder_name": "Kasir Maroof",
+              "fielder_id": "4567661",
+              "bowler_name": "Nasir Jamal",
+              "bowler_id": "3318358",
+              "runs": "3",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "18"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Dan White",
+              "batsman_id": "4568267",
+              "how_out": "ct",
+              "fielder_name": "Nikash Khan",
+              "fielder_id": "4949539",
+              "bowler_name": "Nasir Jamal",
+              "bowler_id": "3318358",
+              "runs": "9",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "12"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Dan Ford",
+              "batsman_id": "5491319",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Nasir Jamal",
+              "bowler_id": "3318358",
+              "runs": "6",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "20"
+            },
+            {
+              "position": "4",
+              "batsman_name": "James Cooper",
+              "batsman_id": "3548713",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Nasir Totakhil",
+              "bowler_id": "5803288",
+              "runs": "12",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "26"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Farukh ALam",
+              "batsman_id": "5761124",
+              "how_out": "ct",
+              "fielder_name": "Zahoor Hussain",
+              "fielder_id": "5727195",
+              "bowler_name": "Tariq Hussain",
+              "bowler_id": "5752073",
+              "runs": "26",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "30"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Kieron Holliday",
+              "batsman_id": "4628761",
+              "how_out": "ct",
+              "fielder_name": "Kasir Maroof",
+              "fielder_id": "4567661",
+              "bowler_name": "Tariq Hussain",
+              "bowler_id": "5752073",
+              "runs": "11",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "25"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Sana Ullah Khan",
+              "batsman_id": "5474073",
+              "how_out": "ct",
+              "fielder_name": "Nikash Khan",
+              "fielder_id": "4949539",
+              "bowler_name": "Nasir Totakhil",
+              "bowler_id": "5803288",
+              "runs": "7",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "6"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Steve Cooper",
+              "batsman_id": "4568455",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "4",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "20"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Wasim Khaliq",
+              "batsman_id": "6220616",
+              "how_out": "ct",
+              "fielder_name": "Zahoor Hussain",
+              "fielder_id": "5727195",
+              "bowler_name": "Tariq Hussain",
+              "bowler_id": "5752073",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "7"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Tom Taylor",
+              "batsman_id": "5410334",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "9",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "21"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Charles Dissanayaka",
+              "batsman_id": "4568263",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "11",
+              "wickets": 1,
+              "batsman_out_name": "Dan White",
+              "batsman_out_id": "4568267",
+              "batsman_in_name": "Kian Wade",
+              "batsman_in_id": "6480862",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "18",
+              "wickets": 2,
+              "batsman_out_name": "Kian Wade",
+              "batsman_out_id": "6480862",
+              "batsman_in_name": "Dan Ford",
+              "batsman_in_id": "5491319",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "28",
+              "wickets": 3,
+              "batsman_out_name": "Dan Ford",
+              "batsman_out_id": "5491319",
+              "batsman_in_name": "James Cooper",
+              "batsman_in_id": "3548713",
+              "batsman_in_runs": "7"
+            },
+            {
+              "runs": "34",
+              "wickets": 4,
+              "batsman_out_name": "James Cooper",
+              "batsman_out_id": "3548713",
+              "batsman_in_name": "Farukh ALam",
+              "batsman_in_id": "5761124",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "75",
+              "wickets": 5,
+              "batsman_out_name": "Farukh ALam",
+              "batsman_out_id": "5761124",
+              "batsman_in_name": "Kieron Holliday",
+              "batsman_in_id": "4628761",
+              "batsman_in_runs": "10"
+            },
+            {
+              "runs": "82",
+              "wickets": 6,
+              "batsman_out_name": "Kieron Holliday",
+              "batsman_out_id": "4628761",
+              "batsman_in_name": "Sana Ullah Khan",
+              "batsman_in_id": "5474073",
+              "batsman_in_runs": "5"
+            },
+            {
+              "runs": "85",
+              "wickets": 7,
+              "batsman_out_name": "Sana Ullah Khan",
+              "batsman_out_id": "5474073",
+              "batsman_in_name": "Steve Cooper",
+              "batsman_in_id": "4568455",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "86",
+              "wickets": 8,
+              "batsman_out_name": "Wasim Khaliq",
+              "batsman_out_id": "6220616",
+              "batsman_in_name": "Steve Cooper",
+              "batsman_in_id": "4568455",
+              "batsman_in_runs": "1"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Nasir Jamal",
+              "bowler_id": "3318358",
+              "overs": "9",
+              "maidens": "3",
+              "runs": "33",
+              "wides": "0",
+              "wickets": "3",
+              "no_balls": "5"
+            },
+            {
+              "bowler_name": "Tariq Hussain",
+              "bowler_id": "5752073",
+              "overs": "11",
+              "maidens": "0",
+              "runs": "34",
+              "wides": "4",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Nasir Totakhil",
+              "bowler_id": "5803288",
+              "overs": "10",
+              "maidens": "1",
+              "runs": "31",
+              "wides": "2",
+              "wickets": "2",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
