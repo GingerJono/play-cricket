@@ -1,0 +1,87 @@
+{
+  "n_train_matches": 269,
+  "n_val_matches": 90,
+  "n_train_balls": 35390,
+  "n_val_balls": 12398,
+  "mae_lgbm_p50": 24.83774947914358,
+  "mae_naive": 39.62523844349715,
+  "interval_coverage_80": 0.7251976125181481,
+  "bins": [
+    {
+      "bin": "0-29",
+      "abs_err_lgbm": 27.554127806586457,
+      "abs_err_naive": 65.68486241362278
+    },
+    {
+      "bin": "30-59",
+      "abs_err_lgbm": 23.190140263417266,
+      "abs_err_naive": 34.10927776353804
+    },
+    {
+      "bin": "60-89",
+      "abs_err_lgbm": 24.048528677794963,
+      "abs_err_naive": 28.921352557885342
+    },
+    {
+      "bin": "90-119",
+      "abs_err_lgbm": 24.675703066884275,
+      "abs_err_naive": 28.62955484720642
+    },
+    {
+      "bin": "120-149",
+      "abs_err_lgbm": 28.67289354874257,
+      "abs_err_naive": 38.84217745446158
+    },
+    {
+      "bin": "150-179",
+      "abs_err_lgbm": 26.154210318813245,
+      "abs_err_naive": 39.38015253024035
+    },
+    {
+      "bin": "180-209",
+      "abs_err_lgbm": 22.683753626950903,
+      "abs_err_naive": 36.76774692484311
+    },
+    {
+      "bin": "210-239",
+      "abs_err_lgbm": 20.296437533933883,
+      "abs_err_naive": 31.442943321904714
+    },
+    {
+      "bin": "240-269",
+      "abs_err_lgbm": 21.9912915681163,
+      "abs_err_naive": 19.652692324028536
+    },
+    {
+      "bin": "270+",
+      "abs_err_lgbm": 18.44368313921024,
+      "abs_err_naive": 14.822222222222223
+    }
+  ],
+  "examples": [
+    {
+      "match_id": 7017021,
+      "opp": "Benfleet CC v Rainham CC, Essex",
+      "date": "14/06/2025",
+      "actual": 233
+    },
+    {
+      "match_id": 5293291,
+      "opp": "Rainham CC, Essex v Aztecs CC, Ilford",
+      "date": "25/06/2022",
+      "actual": 188
+    },
+    {
+      "match_id": 6525712,
+      "opp": "Rainham CC, Essex v Roding Valley CC",
+      "date": "17/08/2024",
+      "actual": 243
+    },
+    {
+      "match_id": 5293307,
+      "opp": "Rainham CC, Essex v West Essex CC",
+      "date": "02/07/2022",
+      "actual": 233
+    }
+  ]
+}
