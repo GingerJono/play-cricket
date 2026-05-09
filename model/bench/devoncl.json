@@ -1,30 +1,30 @@
 {
   "slug": "devoncl",
   "site_id": 298,
-  "started_at": "2026-05-08T16:56:49Z",
+  "started_at": "2026-05-09T06:42:42Z",
   "phases": {
-    "p1_summaries_secs": 19.05,
-    "p2_universe_secs": 0.09,
-    "p3_match_detail_secs": 234.18,
+    "p1_summaries_secs": 0.0,
+    "p2_universe_secs": 0.15,
+    "p3_match_detail_secs": 0.02,
     "p3_counts": {
-      "fetched": 3582,
-      "cached": 0,
+      "fetched": 0,
+      "cached": 3582,
       "failed": 0,
       "total": 3582
     },
-    "p4_bbb_secs": 961.67,
+    "p4_bbb_secs": 45.39,
     "p4_counts": {
-      "rv_fetched": 754,
-      "rv_cached": 0,
-      "nv_fetched": 988,
-      "nv_cached": 0,
+      "rv_fetched": 0,
+      "rv_cached": 754,
+      "nv_fetched": 1,
+      "nv_cached": 988,
       "no_mapping": 0,
       "no_data": 507,
-      "failed": 1,
-      "balls_total": 829697,
+      "failed": 0,
+      "balls_total": 829974,
       "total_matches": 2250
     },
-    "wall_secs": 1214.99
+    "wall_secs": 45.56
   },
   "universe_n": 3582,
   "bbb_universe_n": 2250,
@@ -255,5 +255,5 @@
     ],
     "2026": []
   },
-  "finished_at": "2026-05-08T17:17:04Z"
+  "finished_at": "2026-05-09T06:43:28Z"
 }

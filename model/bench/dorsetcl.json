@@ -1,30 +1,30 @@
 {
   "slug": "dorsetcl",
   "site_id": 302,
-  "started_at": "2026-05-08T16:46:43Z",
+  "started_at": "2026-05-09T06:41:08Z",
   "phases": {
-    "p1_summaries_secs": 22.64,
-    "p2_universe_secs": 0.14,
-    "p3_match_detail_secs": 145.63,
+    "p1_summaries_secs": 0.0,
+    "p2_universe_secs": 0.15,
+    "p3_match_detail_secs": 0.02,
     "p3_counts": {
-      "fetched": 2225,
-      "cached": 0,
+      "fetched": 0,
+      "cached": 2225,
       "failed": 0,
       "total": 2225
     },
-    "p4_bbb_secs": 437.98,
+    "p4_bbb_secs": 93.47,
     "p4_counts": {
-      "rv_fetched": 647,
-      "rv_cached": 0,
-      "nv_fetched": 59,
-      "nv_cached": 0,
+      "rv_fetched": 0,
+      "rv_cached": 647,
+      "nv_fetched": 0,
+      "nv_cached": 59,
       "no_mapping": 0,
       "no_data": 761,
       "failed": 0,
       "balls_total": 319763,
       "total_matches": 1467
     },
-    "wall_secs": 606.39
+    "wall_secs": 93.64
   },
   "universe_n": 2225,
   "bbb_universe_n": 1467,
@@ -190,5 +190,5 @@
     ],
     "2026": []
   },
-  "finished_at": "2026-05-08T16:56:49Z"
+  "finished_at": "2026-05-09T06:42:42Z"
 }
