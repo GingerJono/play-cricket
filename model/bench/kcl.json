@@ -1,30 +1,30 @@
 {
   "slug": "kcl",
   "site_id": 362,
-  "started_at": "2026-05-08T19:26:08Z",
+  "started_at": "2026-05-09T06:48:48Z",
   "phases": {
-    "p1_summaries_secs": 23.87,
-    "p2_universe_secs": 0.11,
-    "p3_match_detail_secs": 123.2,
+    "p1_summaries_secs": 0.0,
+    "p2_universe_secs": 0.18,
+    "p3_match_detail_secs": 2.49,
     "p3_counts": {
-      "fetched": 1799,
-      "cached": 0,
-      "failed": 1,
+      "fetched": 1,
+      "cached": 1799,
+      "failed": 0,
       "total": 1800
     },
-    "p4_bbb_secs": 573.01,
+    "p4_bbb_secs": 34.97,
     "p4_counts": {
-      "rv_fetched": 824,
-      "rv_cached": 0,
-      "nv_fetched": 353,
-      "nv_cached": 0,
+      "rv_fetched": 0,
+      "rv_cached": 824,
+      "nv_fetched": 1,
+      "nv_cached": 353,
       "no_mapping": 0,
       "no_data": 352,
-      "failed": 1,
-      "balls_total": 580062,
+      "failed": 0,
+      "balls_total": 580703,
       "total_matches": 1530
     },
-    "wall_secs": 720.19
+    "wall_secs": 37.64
   },
   "universe_n": 1800,
   "bbb_universe_n": 1530,
@@ -155,5 +155,5 @@
     ],
     "2026": []
   },
-  "finished_at": "2026-05-08T19:38:08Z"
+  "finished_at": "2026-05-09T06:49:25Z"
 }
