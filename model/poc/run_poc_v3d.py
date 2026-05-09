@@ -471,14 +471,25 @@ def main() -> int:
     df = join_bowl_team_strength(df, con)
     con.close()
 
+    # subsample matches to fit in RAM + downcast floats to f32
+    MAX_MATCHES = 20000
     rng = np.random.default_rng(seed=42)
     mids = df["match_id"].unique()
+    if len(mids) > MAX_MATCHES:
+        mids = rng.choice(mids, MAX_MATCHES, replace=False)
+        df = df[df["match_id"].isin(mids)].reset_index(drop=True)
+        print(f"\n== subsampled to {MAX_MATCHES} matches / {len(df):,} balls ==")
     rng.shuffle(mids)
     n_val = max(1, int(round(0.25 * len(mids))))
     val_ids = set(mids[:n_val].tolist())
     train_ids = set(mids[n_val:].tolist())
     train_df = df[df["match_id"].isin(train_ids)].reset_index(drop=True)
     val_df = df[df["match_id"].isin(val_ids)].reset_index(drop=True)
+
+    # downcast float64 → float32 to halve RAM for LGBM training
+    for d in (train_df, val_df):
+        f64 = d.select_dtypes(include=["float64"]).columns
+        d[f64] = d[f64].astype("float32")
     print(f"\n== train/val ==")
     print(f"  train: {len(train_ids):,} matches / {len(train_df):,} balls")
     print(f"  val:   {len(val_ids):,} matches / {len(val_df):,} balls")
