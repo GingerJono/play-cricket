@@ -84,7 +84,8 @@ def render_league(d: dict, strict: dict | None) -> list[str]:
 def main() -> int:
     # canonical = files NOT ending in _strict.json
     all_files = sorted(OUT.glob("*.json"))
-    canonical = [f for f in all_files if not f.stem.endswith("_strict") and f.stem != "results"]
+    canonical = [f for f in all_files if not f.stem.endswith("_strict")
+                 and f.stem not in ("results", "universe")]
     strict_files = {f.stem.replace("_strict", ""): f for f in all_files if f.stem.endswith("_strict")}
     if not canonical:
         print("no canonical per-league JSONs found in model/bench/")
