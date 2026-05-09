@@ -1,154 +1,154 @@
 {
-  "mae_naive": 39.33796187591982,
-  "mae_v1": 27.351208097598615,
-  "mae_v3c": 25.97425486949861,
-  "lift_v3c_vs_v1_runs": 1.3769532281000068,
-  "v3c_interval_coverage_80": 0.7889262116619934,
-  "n_train_matches": 18676,
-  "n_val_matches": 6225,
-  "striker_skill_nn_frac": 0.8665064018972486,
+  "mae_naive": 122.55298078395569,
+  "mae_v1": 29.017639639668275,
+  "mae_v3c": 25.79449408460902,
+  "lift_v3c_vs_v1_runs": 3.2231455550592543,
+  "v3c_interval_coverage_80": 0.7047544816835541,
+  "n_train_matches": 292,
+  "n_val_matches": 98,
+  "striker_skill_nn_frac": 0.5877965968637764,
   "bins": [
     {
       "bin": "0-29",
-      "err_naive": 107.7992228342919,
-      "err_v1": 48.29423924986971,
-      "err_v3": 43.76070012408679
+      "err_naive": 233.24231774264894,
+      "err_v1": 36.30685890237251,
+      "err_v3": 32.17137776317284
     },
     {
       "bin": "30-59",
-      "err_naive": 56.12455916907267,
-      "err_v1": 39.91936986154593,
-      "err_v3": 37.430154081994
+      "err_naive": 174.8577171656002,
+      "err_v1": 33.90032972785549,
+      "err_v3": 27.66188335388097
     },
     {
       "bin": "60-89",
-      "err_naive": 44.551564388174,
-      "err_v1": 35.26519569754317,
-      "err_v3": 33.25289697910897
+      "err_naive": 130.26572925150046,
+      "err_v1": 33.180170579761956,
+      "err_v3": 25.996661951331564
     },
     {
       "bin": "90-119",
-      "err_naive": 37.57866577417612,
-      "err_v1": 30.434017781711127,
-      "err_v3": 29.303028913870335
+      "err_naive": 104.3759354251867,
+      "err_v1": 29.387224020207434,
+      "err_v3": 25.79960518402793
     },
     {
       "bin": "120-149",
-      "err_naive": 30.702685610891866,
-      "err_v1": 25.607295214185974,
-      "err_v3": 24.81621571414908
+      "err_naive": 46.39272023088285,
+      "err_v1": 25.401357974854765,
+      "err_v3": 27.200000711576504
     },
     {
       "bin": "150-179",
-      "err_naive": 25.37698346181029,
-      "err_v1": 21.673465300445674,
-      "err_v3": 21.14663736605932
+      "err_naive": 35.0394801771322,
+      "err_v1": 22.09583269626057,
+      "err_v3": 23.634155076685683
     },
     {
       "bin": "180-209",
-      "err_naive": 19.53307541322664,
-      "err_v1": 17.55411971462298,
-      "err_v3": 17.246665474729056
+      "err_naive": 21.21765932660649,
+      "err_v1": 15.567804120454342,
+      "err_v3": 17.04511181341383
     },
     {
       "bin": "210-239",
-      "err_naive": 15.343804343224361,
-      "err_v1": 14.3046690802153,
-      "err_v3": 14.085986145114784
+      "err_naive": 11.660095216797105,
+      "err_v1": 13.865986823124528,
+      "err_v3": 14.510241195587069
     },
     {
       "bin": "240-269",
-      "err_naive": 13.196787777752098,
-      "err_v1": 12.351419046406928,
-      "err_v3": 12.201783374956387
+      "err_naive": 10.277826612317531,
+      "err_v1": 14.227501731736155,
+      "err_v3": 14.99390411145349
     },
     {
       "bin": "270+",
-      "err_naive": 15.138465489634697,
-      "err_v1": 11.553842345445966,
-      "err_v3": 11.318893415202595
+      "err_naive": 13.919375542287831,
+      "err_v1": 15.981730003103323,
+      "err_v3": 15.557960418412684
     }
   ],
   "top_features": [
     {
-      "feature": "run_rate",
-      "gain": 6495488.890156746
-    },
-    {
       "feature": "runs",
-      "gain": 1526776.8964118958
-    },
-    {
-      "feature": "overs_per_innings",
-      "gain": 1351918.8196706772
-    },
-    {
-      "feature": "wickets",
-      "gain": 999732.2123641968
-    },
-    {
-      "feature": "striker_bat_avg_skill",
-      "gain": 325272.563993454
-    },
-    {
-      "feature": "balls_left",
-      "gain": 312812.0023236275
-    },
-    {
-      "feature": "season",
-      "gain": 264782.66135311127
-    },
-    {
-      "feature": "ns_bat_avg_skill",
-      "gain": 216157.1135482788
-    },
-    {
-      "feature": "balls_gone",
-      "gain": 192660.74418830872
-    },
-    {
-      "feature": "bowler_bowl_avg_skill",
-      "gain": 146195.6324429512
-    },
-    {
-      "feature": "bowler_bowl_econ_skill",
-      "gain": 126145.68997859955
+      "gain": 47777.2461643219
     },
     {
       "feature": "match_month",
-      "gain": 122771.31590080261
+      "gain": 22958.73725414276
     },
     {
-      "feature": "ns_bat_sr_skill",
-      "gain": 106542.04990625381
+      "feature": "run_rate",
+      "gain": 20600.848196029663
     },
     {
-      "feature": "striker_bat_sr_skill",
-      "gain": 99473.24114990234
+      "feature": "overs_per_innings",
+      "gain": 20270.754819869995
     },
     {
-      "feature": "bowler_econ_so_far",
-      "gain": 88954.37503576279
+      "feature": "wickets",
+      "gain": 14573.40742301941
     },
     {
-      "feature": "bowler_balls_in_innings",
-      "gain": 79416.12408542633
-    },
-    {
-      "feature": "bowler_runs_in_innings",
-      "gain": 51483.716836452484
-    },
-    {
-      "feature": "bowler_bat_avg_skill",
-      "gain": 48735.8688659668
-    },
-    {
-      "feature": "frac_innings",
-      "gain": 48184.459914684296
+      "feature": "season",
+      "gain": 12442.074701309204
     },
     {
       "feature": "bowler_bowl_sr_skill",
-      "gain": 47674.52505493164
+      "gain": 11944.617027282715
+    },
+    {
+      "feature": "striker_bat_avg_skill",
+      "gain": 9973.51354598999
+    },
+    {
+      "feature": "balls_left",
+      "gain": 7337.30461025238
+    },
+    {
+      "feature": "bowler_bowl_econ_skill",
+      "gain": 6585.976392745972
+    },
+    {
+      "feature": "bowler_bowl_avg_skill",
+      "gain": 4415.27178478241
+    },
+    {
+      "feature": "striker_bat_sr_skill",
+      "gain": 4332.287891387939
+    },
+    {
+      "feature": "ns_bat_avg_skill",
+      "gain": 3723.0362977981567
+    },
+    {
+      "feature": "bowler_bat_avg_skill",
+      "gain": 3166.0581007003784
+    },
+    {
+      "feature": "ns_bat_sr_skill",
+      "gain": 2921.725196838379
+    },
+    {
+      "feature": "bowler_bat_sr_skill",
+      "gain": 2792.8289251327515
+    },
+    {
+      "feature": "striker_bowl_sr_skill",
+      "gain": 2683.5695190429688
+    },
+    {
+      "feature": "ns_bowl_econ_skill",
+      "gain": 2397.7210903167725
+    },
+    {
+      "feature": "striker_bowl_econ_skill",
+      "gain": 2339.845401763916
+    },
+    {
+      "feature": "balls_gone",
+      "gain": 1714.5030002593994
     }
   ]
 }

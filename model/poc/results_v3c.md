@@ -4,57 +4,57 @@ Reads the `balls` SQL table (which carries PC-namespace player_ids
 after `_rv_balls.py` / `_disambig.py` have run), not raw JSON.
 Drops rows where disambiguation left batter_id or bowler_id NULL.
 
-- Train: **18,676** matches / 4,443,171 balls
-- Val:   **6,225** matches / 1,480,776 balls
+- Train: **292** matches / 38,123 balls
+- Val:   **98** matches / 12,830 balls
 - Skill rows: per-month, joined by (player_id, year×100+month)
-- Striker skill non-null after join: **86.7%**
+- Striker skill non-null after join: **58.8%**
 
 ## Headline (held-out val)
 
 | Model | MAE | Δ vs v1 |
 |---|---:|---:|
-| naive RR | 39.3 | — |
-| v1 (state only) | 27.4 | (baseline) |
-| v3c (+ per-month skill) | **26.0** | **-1.4** |
+| naive RR | 122.6 | — |
+| v1 (state only) | 29.0 | (baseline) |
+| v3c (+ per-month skill) | **25.8** | **-3.2** |
 
-v3c 80% interval coverage: **0.79**
+v3c 80% interval coverage: **0.70**
 
 ## Per-ball-position MAE
 
 | balls in | naive | v1 | v3c | v3c vs v1 |
 |---|---:|---:|---:|---:|
-| 0-29 | 107.8 | 48.3 | 43.8 | -4.5 |
-| 30-59 | 56.1 | 39.9 | 37.4 | -2.5 |
-| 60-89 | 44.6 | 35.3 | 33.3 | -2.0 |
-| 90-119 | 37.6 | 30.4 | 29.3 | -1.1 |
-| 120-149 | 30.7 | 25.6 | 24.8 | -0.8 |
-| 150-179 | 25.4 | 21.7 | 21.1 | -0.5 |
-| 180-209 | 19.5 | 17.6 | 17.2 | -0.3 |
-| 210-239 | 15.3 | 14.3 | 14.1 | -0.2 |
-| 240-269 | 13.2 | 12.4 | 12.2 | -0.1 |
-| 270+ | 15.1 | 11.6 | 11.3 | -0.2 |
+| 0-29 | 233.2 | 36.3 | 32.2 | -4.1 |
+| 30-59 | 174.9 | 33.9 | 27.7 | -6.2 |
+| 60-89 | 130.3 | 33.2 | 26.0 | -7.2 |
+| 90-119 | 104.4 | 29.4 | 25.8 | -3.6 |
+| 120-149 | 46.4 | 25.4 | 27.2 | +1.8 |
+| 150-179 | 35.0 | 22.1 | 23.6 | +1.5 |
+| 180-209 | 21.2 | 15.6 | 17.0 | +1.5 |
+| 210-239 | 11.7 | 13.9 | 14.5 | +0.6 |
+| 240-269 | 10.3 | 14.2 | 15.0 | +0.8 |
+| 270+ | 13.9 | 16.0 | 15.6 | -0.4 |
 
 ## Top 20 features by GAIN
 
 | feature | gain |
 |---|---:|
-| `run_rate` | 6,495,488 |
-| `runs` | 1,526,776 |
-| `overs_per_innings` | 1,351,918 |
-| `wickets` | 999,732 |
-| `striker_bat_avg_skill` | 325,272 |
-| `balls_left` | 312,812 |
-| `season` | 264,782 |
-| `ns_bat_avg_skill` | 216,157 |
-| `balls_gone` | 192,660 |
-| `bowler_bowl_avg_skill` | 146,195 |
-| `bowler_bowl_econ_skill` | 126,145 |
-| `match_month` | 122,771 |
-| `ns_bat_sr_skill` | 106,542 |
-| `striker_bat_sr_skill` | 99,473 |
-| `bowler_econ_so_far` | 88,954 |
-| `bowler_balls_in_innings` | 79,416 |
-| `bowler_runs_in_innings` | 51,483 |
-| `bowler_bat_avg_skill` | 48,735 |
-| `frac_innings` | 48,184 |
-| `bowler_bowl_sr_skill` | 47,674 |
+| `runs` | 47,777 |
+| `match_month` | 22,958 |
+| `run_rate` | 20,600 |
+| `overs_per_innings` | 20,270 |
+| `wickets` | 14,573 |
+| `season` | 12,442 |
+| `bowler_bowl_sr_skill` | 11,944 |
+| `striker_bat_avg_skill` | 9,973 |
+| `balls_left` | 7,337 |
+| `bowler_bowl_econ_skill` | 6,585 |
+| `bowler_bowl_avg_skill` | 4,415 |
+| `striker_bat_sr_skill` | 4,332 |
+| `ns_bat_avg_skill` | 3,723 |
+| `bowler_bat_avg_skill` | 3,166 |
+| `ns_bat_sr_skill` | 2,921 |
+| `bowler_bat_sr_skill` | 2,792 |
+| `striker_bowl_sr_skill` | 2,683 |
+| `ns_bowl_econ_skill` | 2,397 |
+| `striker_bowl_econ_skill` | 2,339 |
+| `balls_gone` | 1,714 |
