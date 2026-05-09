@@ -83,6 +83,40 @@ RCC_S3_PREFIX=play-cricket/db/   # optional, defaults to db/
 The credentials are NEVER committed. The bucket name + prefix CAN be
 committed (they're not secret), or kept as env vars if preferred.
 
+## Supabase Postgres (planned, not yet wired)
+
+A Supabase Postgres instance has been provisioned for hosting a
+public-facing slim copy of the dataset (skill snapshots, match summaries,
+league/division metadata — NOT the full ~10GB ball-by-ball corpus, which
+exceeds the free-tier 500 MB cap).
+
+```
+host:     db.pfmajgetbhdcerkqswkc.supabase.co
+port:     5432
+database: postgres
+user:     postgres
+```
+
+Connection string (set the password as an env var; never commit):
+
+```
+postgresql://postgres:${SUPABASE_DB_PASSWORD}@db.pfmajgetbhdcerkqswkc.supabase.co:5432/postgres
+```
+
+Or set `SUPABASE_DB_URL` env var with the full URL including the password.
+
+Optional Supabase agent skills helper (run once locally):
+
+```
+npx skills add supabase/agent-skills
+```
+
+What we'll push to Supabase eventually (slim model output, not raw JSON):
+
+- `player_skill_snapshot` table (~1M rows, tiny)
+- `matches` slim view (no ball-level data)
+- `ball_features` aggregated to (match, ball-position-bucket) — not raw
+
 ## Watching repo size
 
 GitHub's soft cap is ~5 GB; hard cap ~10 GB. The committed raw JSON
