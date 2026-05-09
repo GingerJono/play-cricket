@@ -1,30 +1,30 @@
 {
   "slug": "cheshirecountycl",
   "site_id": 7246,
-  "started_at": "2026-05-08T17:37:48Z",
+  "started_at": "2026-05-09T06:45:29Z",
   "phases": {
-    "p1_summaries_secs": 23.75,
-    "p2_universe_secs": 0.11,
-    "p3_match_detail_secs": 269.78,
+    "p1_summaries_secs": 0.0,
+    "p2_universe_secs": 0.21,
+    "p3_match_detail_secs": 0.03,
     "p3_counts": {
-      "fetched": 4062,
-      "cached": 0,
+      "fetched": 0,
+      "cached": 4062,
       "failed": 0,
       "total": 4062
     },
-    "p4_bbb_secs": 1017.55,
+    "p4_bbb_secs": 46.13,
     "p4_counts": {
-      "rv_fetched": 1499,
-      "rv_cached": 0,
-      "nv_fetched": 687,
-      "nv_cached": 0,
+      "rv_fetched": 0,
+      "rv_cached": 1499,
+      "nv_fetched": 0,
+      "nv_cached": 687,
       "no_mapping": 0,
-      "no_data": 545,
-      "failed": 1,
+      "no_data": 546,
+      "failed": 0,
       "balls_total": 1054663,
       "total_matches": 2732
     },
-    "wall_secs": 1311.19
+    "wall_secs": 46.370000000000005
   },
   "universe_n": 4062,
   "bbb_universe_n": 2732,
@@ -235,5 +235,5 @@
     ],
     "2026": []
   },
-  "finished_at": "2026-05-08T17:59:40Z"
+  "finished_at": "2026-05-09T06:46:16Z"
 }
