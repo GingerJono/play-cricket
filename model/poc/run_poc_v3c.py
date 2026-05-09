@@ -142,57 +142,13 @@ def add_state(balls: pd.DataFrame) -> pd.DataFrame:
         df["striker_runs_so_far"] * 100.0 / df["striker_balls_so_far"], np.nan,
     )
 
-    # non-striker stats: requires lookup of (match_id, non_striker_id) → cumulative
-    # state at this ball. We can compute the same per-batter cumulative table
-    # (already have it in df indexed by (match_id, batter_id)) and then look up
-    # by (match_id, non_striker_id) at the same ball_no.
-    bat_state = df[["match_id", "batter_id", "ball_no",
-                    "striker_runs_so_far", "striker_balls_so_far"]].rename(
-        columns={"batter_id": "ns_id"})  # rename for the merge
-    # but we need PRE-ball state at the BALL where this batter is non-striker,
-    # not striker. Simplification: assume non-striker's running state at ball N
-    # is their running state from their LAST ON-STRIKE ball <= N. That's
-    # close enough for this POC; full accuracy needs a sequence walk.
-    # Apply asof-merge per match.
-    df = df.sort_values(["match_id", "ball_no"]).reset_index(drop=True)
-    bat_state = bat_state.sort_values(["match_id", "ns_id", "ball_no"]).reset_index(drop=True)
-
-    # Approximation that's fast: take the batter's cumulative AT the previous
-    # delivery they faced. Use merge_asof per group.
-    parts = []
-    for mid, sub in df.groupby("match_id", sort=False):
-        bs_m = bat_state[bat_state["match_id"] == mid]
-        if bs_m.empty:
-            sub2 = sub.copy()
-            sub2["ns_runs_so_far"] = np.nan
-            sub2["ns_balls_so_far"] = np.nan
-            parts.append(sub2)
-            continue
-        # asof merge per ns_id
-        sub = sub.sort_values("ball_no")
-        bs_m = bs_m.sort_values(["ns_id", "ball_no"])
-        # backward asof: pick the most recent striker_runs_so_far for this ns_id
-        merged = pd.merge_asof(
-            sub.sort_values("ball_no"),
-            bs_m[["ns_id", "ball_no", "striker_runs_so_far", "striker_balls_so_far"]]
-                .rename(columns={"ball_no": "bs_ball_no"})
-                .sort_values("bs_ball_no"),
-            left_on="ball_no", right_on="bs_ball_no", by="ns_id",
-            direction="backward",
-        )
-        merged = merged.rename(columns={
-            "striker_runs_so_far_x": "striker_runs_so_far",
-            "striker_balls_so_far_x": "striker_balls_so_far",
-            "striker_runs_so_far_y": "ns_runs_so_far",
-            "striker_balls_so_far_y": "ns_balls_so_far",
-        })
-        merged = merged.drop(columns=["bs_ball_no"], errors="ignore")
-        parts.append(merged)
-    df = pd.concat(parts, ignore_index=True)
-    df["ns_intra_sr"] = np.where(
-        df["ns_balls_so_far"] > 0,
-        df["ns_runs_so_far"] * 100.0 / df["ns_balls_so_far"], np.nan,
-    )
+    # non-striker stats: building these from SQL needs a careful per-match
+    # asof merge (non-striker's last on-strike state). Punt for v3c — set to
+    # NaN and let LightGBM handle. The signal is weaker than the striker's
+    # in any case.
+    df["ns_runs_so_far"] = np.nan
+    df["ns_balls_so_far"] = np.nan
+    df["ns_intra_sr"] = np.nan
 
     # bowler intra-innings stats (per-match per-bowler cumulative)
     df = df.sort_values(["match_id", "bowler_id", "ball_no"]).reset_index(drop=True)
