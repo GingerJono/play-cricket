@@ -1,0 +1,459 @@
+{
+  "n_train_matches": 10500,
+  "n_val_matches": 3500,
+  "base_rate": 0.4731159442772486,
+  "brier_baseline": 0.249277247547896,
+  "brier": 0.11721416287709115,
+  "log_loss": 0.36582820313808134,
+  "brier_skill_score": 0.5297839492769204,
+  "calibration": [
+    {
+      "pbin": "[0.0, 0.1)",
+      "n": 200833,
+      "mean_pred": 0.03775613750186581,
+      "empirical": 0.028800047800909213
+    },
+    {
+      "pbin": "[0.1, 0.2)",
+      "n": 67431,
+      "mean_pred": 0.14550795609786207,
+      "empirical": 0.16176536014592693
+    },
+    {
+      "pbin": "[0.2, 0.3)",
+      "n": 47816,
+      "mean_pred": 0.24826021343326637,
+      "empirical": 0.2908858959344153
+    },
+    {
+      "pbin": "[0.3, 0.4)",
+      "n": 39749,
+      "mean_pred": 0.3485979266028072,
+      "empirical": 0.3939470175350323
+    },
+    {
+      "pbin": "[0.4, 0.5)",
+      "n": 35753,
+      "mean_pred": 0.4500370537464026,
+      "empirical": 0.4795961178082958
+    },
+    {
+      "pbin": "[0.5, 0.6)",
+      "n": 37936,
+      "mean_pred": 0.5503427063361075,
+      "empirical": 0.5572543230704344
+    },
+    {
+      "pbin": "[0.6, 0.7)",
+      "n": 40622,
+      "mean_pred": 0.651219680458982,
+      "empirical": 0.6425582196839151
+    },
+    {
+      "pbin": "[0.7, 0.8)",
+      "n": 49571,
+      "mean_pred": 0.7521154336056786,
+      "empirical": 0.7351475661172863
+    },
+    {
+      "pbin": "[0.8, 0.9)",
+      "n": 71875,
+      "mean_pred": 0.8540595193970678,
+      "empirical": 0.841975652173913
+    },
+    {
+      "pbin": "[0.9, 1.0)",
+      "n": 149727,
+      "mean_pred": 0.9544941435418965,
+      "empirical": 0.9558663434116759
+    }
+  ],
+  "per_position": [
+    {
+      "ball_bin": "0-29",
+      "n": 104743.0,
+      "brier": 0.1446365273317825
+    },
+    {
+      "ball_bin": "30-59",
+      "n": 104049.0,
+      "brier": 0.13401089250424258
+    },
+    {
+      "ball_bin": "60-89",
+      "n": 101720.0,
+      "brier": 0.12547531432394524
+    },
+    {
+      "ball_bin": "90-119",
+      "n": 97876.0,
+      "brier": 0.11499223982576294
+    },
+    {
+      "ball_bin": "120-149",
+      "n": 90511.0,
+      "brier": 0.10540509437183218
+    },
+    {
+      "ball_bin": "150-179",
+      "n": 79250.0,
+      "brier": 0.10201129687059403
+    },
+    {
+      "ball_bin": "180-209",
+      "n": 66398.0,
+      "brier": 0.0966448841787216
+    },
+    {
+      "ball_bin": "210-239",
+      "n": 50137.0,
+      "brier": 0.09842162447224946
+    },
+    {
+      "ball_bin": "240-269",
+      "n": 31677.0,
+      "brier": 0.09896782678145892
+    },
+    {
+      "ball_bin": "270+",
+      "n": 14952.0,
+      "brier": 0.11164917881865176
+    }
+  ],
+  "top_features": [
+    {
+      "feature": "req_rr",
+      "gain": 5314077.385406494
+    },
+    {
+      "feature": "rr_diff",
+      "gain": 3869284.769958496
+    },
+    {
+      "feature": "target_remaining",
+      "gain": 1362613.091217041
+    },
+    {
+      "feature": "wickets",
+      "gain": 1361019.8061218262
+    },
+    {
+      "feature": "bat_remaining_avg_mean",
+      "gain": 1230294.750366211
+    },
+    {
+      "feature": "bowl_team_avg_mean",
+      "gain": 966399.4483642578
+    },
+    {
+      "feature": "target",
+      "gain": 567185.1057128906
+    },
+    {
+      "feature": "bowl_team_avg_max",
+      "gain": 561323.849395752
+    },
+    {
+      "feature": "bowl_team_sr_mean",
+      "gain": 532142.9039611816
+    },
+    {
+      "feature": "striker_bat_avg_skill",
+      "gain": 394222.5071105957
+    },
+    {
+      "feature": "bowl_team_sr_max",
+      "gain": 344773.34130859375
+    },
+    {
+      "feature": "bowl_team_econ_mean",
+      "gain": 321134.1820373535
+    },
+    {
+      "feature": "ground_overs_avg",
+      "gain": 315649.8403930664
+    },
+    {
+      "feature": "bowl_team_econ_max",
+      "gain": 314167.0718688965
+    },
+    {
+      "feature": "ground_avg_2y",
+      "gain": 298023.49209594727
+    },
+    {
+      "feature": "target_progress",
+      "gain": 283581.62927246094
+    },
+    {
+      "feature": "ground_n_2y",
+      "gain": 236620.62817382812
+    },
+    {
+      "feature": "bat_remaining_avg_min",
+      "gain": 190557.46768188477
+    },
+    {
+      "feature": "bat_remaining_count_real",
+      "gain": 156303.86337280273
+    },
+    {
+      "feature": "ns_bat_avg_skill",
+      "gain": 144532.45922851562
+    }
+  ],
+  "examples": [
+    {
+      "match_id": 5081158,
+      "target": 245,
+      "y_chase_won": 0,
+      "trajectory": [
+        {
+          "balls": 30,
+          "runs": 18,
+          "wickets": 0,
+          "target_remaining": 227,
+          "req_rr": 5.04,
+          "p_chase": 0.469
+        },
+        {
+          "balls": 60,
+          "runs": 30,
+          "wickets": 1,
+          "target_remaining": 215,
+          "req_rr": 5.38,
+          "p_chase": 0.222
+        },
+        {
+          "balls": 90,
+          "runs": 63,
+          "wickets": 1,
+          "target_remaining": 182,
+          "req_rr": 5.2,
+          "p_chase": 0.453
+        },
+        {
+          "balls": 120,
+          "runs": 82,
+          "wickets": 1,
+          "target_remaining": 163,
+          "req_rr": 5.43,
+          "p_chase": 0.437
+        },
+        {
+          "balls": 150,
+          "runs": 107,
+          "wickets": 1,
+          "target_remaining": 138,
+          "req_rr": 5.52,
+          "p_chase": 0.568
+        },
+        {
+          "balls": 180,
+          "runs": 127,
+          "wickets": 2,
+          "target_remaining": 118,
+          "req_rr": 5.9,
+          "p_chase": 0.625
+        },
+        {
+          "balls": 210,
+          "runs": 144,
+          "wickets": 3,
+          "target_remaining": 101,
+          "req_rr": 6.73,
+          "p_chase": 0.453
+        },
+        {
+          "balls": 240,
+          "runs": 170,
+          "wickets": 5,
+          "target_remaining": 75,
+          "req_rr": 7.5,
+          "p_chase": 0.113
+        }
+      ]
+    },
+    {
+      "match_id": 5582138,
+      "target": 290,
+      "y_chase_won": 0,
+      "trajectory": [
+        {
+          "balls": 30,
+          "runs": 7,
+          "wickets": 0,
+          "target_remaining": 283,
+          "req_rr": 6.29,
+          "p_chase": 0.094
+        },
+        {
+          "balls": 60,
+          "runs": 28,
+          "wickets": 1,
+          "target_remaining": 262,
+          "req_rr": 6.55,
+          "p_chase": 0.049
+        },
+        {
+          "balls": 90,
+          "runs": 53,
+          "wickets": 1,
+          "target_remaining": 237,
+          "req_rr": 6.77,
+          "p_chase": 0.061
+        },
+        {
+          "balls": 120,
+          "runs": 93,
+          "wickets": 3,
+          "target_remaining": 197,
+          "req_rr": 6.57,
+          "p_chase": 0.105
+        },
+        {
+          "balls": 150,
+          "runs": 137,
+          "wickets": 3,
+          "target_remaining": 153,
+          "req_rr": 6.12,
+          "p_chase": 0.272
+        },
+        {
+          "balls": 180,
+          "runs": 169,
+          "wickets": 4,
+          "target_remaining": 121,
+          "req_rr": 6.05,
+          "p_chase": 0.434
+        },
+        {
+          "balls": 210,
+          "runs": 190,
+          "wickets": 5,
+          "target_remaining": 100,
+          "req_rr": 6.67,
+          "p_chase": 0.458
+        },
+        {
+          "balls": 240,
+          "runs": 222,
+          "wickets": 7,
+          "target_remaining": 68,
+          "req_rr": 6.8,
+          "p_chase": 0.318
+        }
+      ]
+    },
+    {
+      "match_id": 6243575,
+      "target": 240,
+      "y_chase_won": 0,
+      "trajectory": [
+        {
+          "balls": 30,
+          "runs": 20,
+          "wickets": 1,
+          "target_remaining": 220,
+          "req_rr": 4.89,
+          "p_chase": 0.113
+        },
+        {
+          "balls": 60,
+          "runs": 37,
+          "wickets": 1,
+          "target_remaining": 203,
+          "req_rr": 5.07,
+          "p_chase": 0.109
+        },
+        {
+          "balls": 90,
+          "runs": 48,
+          "wickets": 1,
+          "target_remaining": 192,
+          "req_rr": 5.49,
+          "p_chase": 0.094
+        },
+        {
+          "balls": 120,
+          "runs": 70,
+          "wickets": 1,
+          "target_remaining": 170,
+          "req_rr": 5.67,
+          "p_chase": 0.134
+        },
+        {
+          "balls": 150,
+          "runs": 94,
+          "wickets": 2,
+          "target_remaining": 146,
+          "req_rr": 5.84,
+          "p_chase": 0.142
+        },
+        {
+          "balls": 180,
+          "runs": 109,
+          "wickets": 4,
+          "target_remaining": 131,
+          "req_rr": 6.55,
+          "p_chase": 0.049
+        },
+        {
+          "balls": 210,
+          "runs": 138,
+          "wickets": 4,
+          "target_remaining": 102,
+          "req_rr": 6.8,
+          "p_chase": 0.082
+        },
+        {
+          "balls": 240,
+          "runs": 154,
+          "wickets": 5,
+          "target_remaining": 86,
+          "req_rr": 8.6,
+          "p_chase": 0.046
+        }
+      ]
+    },
+    {
+      "match_id": 5049401,
+      "target": 248,
+      "y_chase_won": 0,
+      "trajectory": [
+        {
+          "balls": 30,
+          "runs": 12,
+          "wickets": 2,
+          "target_remaining": 236,
+          "req_rr": 5.24,
+          "p_chase": 0.161
+        },
+        {
+          "balls": 60,
+          "runs": 36,
+          "wickets": 3,
+          "target_remaining": 212,
+          "req_rr": 5.3,
+          "p_chase": 0.08
+        },
+        {
+          "balls": 90,
+          "runs": 69,
+          "wickets": 4,
+          "target_remaining": 179,
+          "req_rr": 5.11,
+          "p_chase": 0.125
+        },
+        {
+          "balls": 120,
+          "runs": 91,
+          "wickets": 7,
+          "target_remaining": 157,
+          "req_rr": 5.23,
+          "p_chase": 0.03
+        }
+      ]
+    }
+  ]
+}
