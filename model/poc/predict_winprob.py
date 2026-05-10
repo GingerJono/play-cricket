@@ -80,7 +80,8 @@ def _load_balls_for_match(match_id: int, innings_seq: int) -> tuple[pd.DataFrame
     """Mirror the prep done in run_winprob_v0 / chase but for one match."""
     con = sqlite3.connect(DB)
     matches = pd.read_sql(
-        "SELECT match_id, match_date, home_team_id, away_team_id, "
+        "SELECT match_id, match_date, season, "
+        "       home_team_id, away_team_id, "
         "       home_club_id, away_club_id, ground_id "
         "FROM matches WHERE match_id = ?", con, params=[match_id])
     if matches.empty:
@@ -90,9 +91,12 @@ def _load_balls_for_match(match_id: int, innings_seq: int) -> tuple[pd.DataFrame
         lambda s: int(s.split("/")[2]) * 10000 + int(s.split("/")[1]) * 100
                    + int(s.split("/")[0]))
     matches["snap_ym"] = (matches["match_date_yyyymmdd"] // 100).astype("Int64")
+    matches["match_month"] = matches["match_date"].apply(
+        lambda s: int(s.split("/")[1]))
+    matches["season"] = pd.to_numeric(matches["season"], errors="coerce")
 
     balls = pd.read_sql(
-        "SELECT match_id, innings_seq, ball_no, over_no, "
+        "SELECT match_id, innings_seq, ball_no, ball_no_disp, over_no, "
         "       batter_id, non_striker_id, bowler_id, "
         "       team_batting_club_id, team_bowling_club_id, "
         "       runs_bat, runs_extra, extras_type, is_legal_ball, "
@@ -102,7 +106,19 @@ def _load_balls_for_match(match_id: int, innings_seq: int) -> tuple[pd.DataFrame
     if balls.empty:
         con.close()
         return balls, con
+
+    # overs_per_innings — heuristic clamp by ball count (mirrors run_poc_v3d)
+    legal = int(balls["is_legal_ball"].sum())
+    overs_per_innings = (
+        50 if legal > 270 else 45 if legal > 240 else 40 if legal > 210 else 50
+    )
     balls = balls.merge(matches, on="match_id", how="inner")
+    balls["overs_per_innings"] = overs_per_innings
+    balls["bowl_team_side"] = np.where(
+        balls["team_batting_club_id"].astype(str)
+        == balls["home_club_id"].astype(str),
+        "away", "home",
+    )
     return balls, con
 
 
@@ -142,14 +158,22 @@ def winprob_innings2(art: Artefacts, match_id: int) -> pd.DataFrame:
         con.close()
         return pd.DataFrame()
 
-    # innings 2 needs target — read from innings.runs of innings_seq=1
+    # innings 2 needs target — prefer canonical innings.runs, fall back to
+    # BBB SUM(runs_bat + runs_extra) for matches we only have via NV Play.
     inn1 = pd.read_sql(
         "SELECT runs FROM innings WHERE match_id = ? AND innings_seq = 1",
         con, params=[match_id])
-    if inn1.empty:
-        con.close()
-        return pd.DataFrame()
-    target = int(inn1.iloc[0]["runs"]) + 1
+    if not inn1.empty and inn1.iloc[0]["runs"] is not None:
+        target = int(inn1.iloc[0]["runs"]) + 1
+    else:
+        bbb = con.execute(
+            "SELECT COALESCE(SUM(runs_bat),0) + COALESCE(SUM(runs_extra),0) "
+            "FROM balls WHERE match_id = ? AND innings_seq = 1",
+            (match_id,)).fetchone()
+        if not bbb or not bbb[0]:
+            con.close()
+            return pd.DataFrame()
+        target = int(bbb[0]) + 1
     balls["target"] = target
 
     df = add_chase_state(balls)

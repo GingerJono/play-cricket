@@ -207,6 +207,42 @@ def play_cricket_url(slug: str, match_id: int) -> str:
     return f"https://{slug}.play-cricket.com/website/results/{match_id}"
 
 
+_WINPROB_ART = None
+
+
+def winprob_for_match(match_id: int, completed: bool, in_progress: bool) -> dict | None:
+    """Return {at_innings1_end, final, n_balls_inn1, n_balls_inn2} or None."""
+    global _WINPROB_ART
+    if _WINPROB_ART is None:
+        try:
+            sys.path.insert(0, str(ROOT))
+            from model.poc.predict_winprob import load_artefacts
+            _WINPROB_ART = load_artefacts()
+        except Exception as e:
+            print(f"  (winprob disabled: {e})", file=sys.stderr)
+            _WINPROB_ART = False
+    if _WINPROB_ART is False:
+        return None
+    if not (completed or in_progress):
+        return None
+    try:
+        from model.poc.predict_winprob import winprob_trajectory
+        traj = winprob_trajectory(_WINPROB_ART, match_id)
+    except Exception as e:
+        print(f"  winprob {match_id}: {e}", file=sys.stderr)
+        return None
+    n1 = len(traj["innings1"])
+    n2 = len(traj["innings2"])
+    if n1 == 0 and n2 == 0:
+        return None  # no BBB → no chip
+    return {
+        "at_innings1_end": traj["end_of_innings1_p"],
+        "final": traj["final_p"],
+        "n_balls_inn1": n1,
+        "n_balls_inn2": n2,
+    }
+
+
 def build_match_card(m: dict, division: str) -> dict:
     md = fetch_match_detail(m["id"])
     # status — Play-Cricket result codes:
@@ -219,9 +255,12 @@ def build_match_card(m: dict, division: str) -> dict:
 
     innings = [summarise_innings(inn) for inn in (md.get("innings") or [])]
 
+    winprob = winprob_for_match(int(m["id"]), completed, bool(in_progress))
+
     return {
         "match_id": int(m["id"]),
         "division": division,
+        "winprob": winprob,
         "competition_id": int(m.get("competition_id") or 0),
         "match_date": m.get("match_date"),
         "match_time": m.get("match_time"),

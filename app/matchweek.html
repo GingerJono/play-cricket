@@ -29,6 +29,7 @@
   .perf .pill { background: #fff; border: 1px solid #ddd; border-radius: 12px;
                 padding: 1px 8px; line-height: 1.5; }
   .result { font-size: 12px; color: #444; margin-top: 6px; font-style: italic; }
+  .winprob { font-size: 12px; color: #102a43; background: linear-gradient(90deg, #f0f7ff, #f7faff); border-left: 3px solid #1565c0; padding: 6px 10px; margin-top: 6px; border-radius: 4px; font-variant-numeric: tabular-nums; }
   .empty { padding: 20px; text-align: center; color: #888; }
   a.match-link { color: #1565c0; text-decoration: none; font-size: 11px; }
   a.match-link:hover { text-decoration: underline; }
@@ -202,6 +203,24 @@ function inningsBlock(inn) {
     </div>`;
 }
 
+function winprobChip(g) {
+  const wp = g.winprob;
+  if (!wp || wp.at_innings1_end == null) return '';
+  // p_bat_first_wins. Show from POV of the team batting first.
+  // Need to identify which side that is — innings[0].team_batting_name.
+  const batFirst = (g.innings && g.innings[0] && g.innings[0].team_batting_name)
+                   || 'team batting first';
+  const p1 = wp.at_innings1_end;
+  const pf = wp.final;
+  const pct = (p) => `${Math.round(p * 100)}%`;
+  let label = `<b>${batFirst}</b> P(win) at innings break: <b>${pct(p1)}</b>`;
+  if (pf != null) {
+    const arrow = pf > p1 ? '↑' : pf < p1 ? '↓' : '→';
+    label += ` ${arrow} <b>${pct(pf)}</b> at end`;
+  }
+  return `<div class="winprob" title="LightGBM model: innings1 BSS 0.20, chase BSS 0.53, isotonic-calibrated">${label}</div>`;
+}
+
 function gameCard(g) {
   const innings = (g.innings || []).map(inningsBlock).join('');
   const result = g.result_description ? `<div class="result">${g.result_description}</div>` : '';
@@ -215,6 +234,7 @@ function gameCard(g) {
       <div class="ground">${g.ground_name || ''}</div>
       ${innings}
       ${result}
+      ${winprobChip(g)}
       <div style="margin-top:6px;"><a class="match-link" href="${g.play_cricket_url}" target="_blank" rel="noopener">match on Play-Cricket →</a></div>
     </div>`;
 }
