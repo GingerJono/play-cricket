@@ -369,14 +369,18 @@ def main() -> int:
     print(f"  universe match ids: {len(universe_ids):,}")
 
     balls, con = load_innings2(universe_ids)
-    # subsample early
-    MAX_MATCHES = 18000
+    # subsample early — well before the heavy state computation + joins
+    MAX_MATCHES = 14000
     rng = np.random.default_rng(seed=42)
     pre_mids = balls["match_id"].unique()
     if len(pre_mids) > MAX_MATCHES:
         pre_mids = rng.choice(pre_mids, MAX_MATCHES, replace=False)
         balls = balls[balls["match_id"].isin(pre_mids)].reset_index(drop=True)
         print(f"  subsampled to {MAX_MATCHES} matches / {len(balls):,} rows")
+    # downcast int64 ids early to halve RAM
+    for c in ("batter_id", "non_striker_id", "bowler_id", "match_id"):
+        if c in balls.columns:
+            balls[c] = pd.to_numeric(balls[c], errors="coerce").astype("Int32" if c == "match_id" else "Int64")
 
     df = add_chase_state(balls)
     df["ns_runs_so_far"] = np.nan
