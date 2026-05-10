@@ -298,20 +298,15 @@ def join_features(df: pd.DataFrame, con) -> pd.DataFrame:
     print(f"  bat_remaining non-null: {df['bat_remaining_avg_mean'].notna().mean():.1%}")
 
     # bowl team strength (defending team = the one that batted innings 1)
-    mp = pd.read_sql("SELECT match_id, team_id, player_id FROM match_players", con)
+    mp = pd.read_sql(
+        "SELECT match_id, team_side, player_id FROM match_players", con)
     mp["player_id"] = pd.to_numeric(mp["player_id"], errors="coerce").astype("Int64")
-    mp["team_id"] = mp["team_id"].astype(str)
+    mp["team_side"] = mp["team_side"].astype(str).str.lower()
     # bowl team in innings 2 = the side that bowls; from df's bowl_team_side
-    side_id = (df[["match_id", "bowl_team_side"]].drop_duplicates()
-               .merge(pd.read_sql(
-                    "SELECT match_id, home_team_id, away_team_id FROM matches",
-                    con), on="match_id", how="inner"))
-    side_id["bowl_team_id"] = np.where(side_id["bowl_team_side"] == "home",
-                                        side_id["home_team_id"],
-                                        side_id["away_team_id"]).astype(str)
-    side_id = side_id[["match_id", "bowl_team_id"]]
-    bowl_lineup = mp.merge(side_id, left_on=["match_id", "team_id"],
-                           right_on=["match_id", "bowl_team_id"], how="inner")
+    side_id = df[["match_id", "bowl_team_side"]].drop_duplicates()
+    side_id["bowl_team_side"] = side_id["bowl_team_side"].astype(str).str.lower()
+    bowl_lineup = mp.merge(side_id, left_on=["match_id", "team_side"],
+                           right_on=["match_id", "bowl_team_side"], how="inner")
     bowl_lineup = bowl_lineup.merge(match_snap, on="match_id", how="inner")
     bowl_lineup = bowl_lineup.merge(
         skill[["player_id", "snapshot_yyyymm",
