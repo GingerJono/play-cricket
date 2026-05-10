@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Essex League — matchweek</title>
+<link rel="stylesheet" href="static/app.css">
+<style>
+  /* matchweek-specific tweaks on top of app.css */
+  .picker { display: flex; gap: 8px; align-items: center; padding: 12px 16px; }
+  .picker select { flex: 1; padding: 8px; font-size: 16px; border: 1px solid #ccc; border-radius: 6px; background: #fff; }
+  .picker .built { font-size: 11px; color: #888; padding: 0 16px 8px; }
+  .div-h { font-size: 13px; font-weight: 600; color: #555; text-transform: uppercase;
+           letter-spacing: 0.5px; padding: 10px 16px 4px; background: #f4f5f8; }
+  .game { background: #fff; border-bottom: 1px solid #eaeaea; padding: 12px 16px; }
+  .game-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .game-status { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+  .status-completed { background: #e8f5e9; color: #2e7d32; }
+  .status-in_progress { background: #fff3e0; color: #ef6c00; }
+  .status-scheduled { background: #e3f2fd; color: #1565c0; }
+  .status-abandoned { background: #fafafa; color: #999; }
+  .teams { font-weight: 600; font-size: 15px; line-height: 1.3; margin: 4px 0 6px; }
+  .vs { color: #999; font-weight: 400; font-size: 13px; }
+  .ground { font-size: 12px; color: #888; margin-bottom: 6px; }
+  .innings { background: #f9f9fb; border-radius: 6px; padding: 8px 10px; margin-top: 8px; }
+  .innings-h { font-weight: 600; font-size: 13px; display: flex; justify-content: space-between; }
+  .innings-score { font-variant-numeric: tabular-nums; }
+  .perf { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; font-size: 12px; }
+  .perf .pill { background: #fff; border: 1px solid #ddd; border-radius: 12px;
+                padding: 1px 8px; line-height: 1.5; }
+  .result { font-size: 12px; color: #444; margin-top: 6px; font-style: italic; }
+  .empty { padding: 20px; text-align: center; color: #888; }
+  a.match-link { color: #1565c0; text-decoration: none; font-size: 11px; }
+  a.match-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="bc"><a href="index.html">Home</a> · matchweek</div>
+  <h1>Essex League — matchweek</h1>
+  <p class="lead">5 games from each of the top 5 1st-XI divisions.
+  Live scores hit the Play-Cricket API directly; rebuilt hourly via cron.</p>
+</header>
+
+<main>
+  <div class="picker">
+    <label for="mw" style="font-weight:600;">Matchweek:</label>
+    <select id="mw"></select>
+  </div>
+  <div id="built" class="built"></div>
+  <div id="content"></div>
+</main>
+
+<script>
+const DATA_BASE = './data/matchweek';
+
+async function loadJSON(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`fetch ${url} → ${r.status}`);
+  return await r.json();
+}
+
+function fmtDate(iso) {
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+function badge(status) {
+  return `<span class="game-status status-${status}">${status.replace('_',' ')}</span>`;
+}
+
+function inningsBlock(inn) {
+  if (!inn) return '';
+  const score = `${inn.runs ?? '–'}/${inn.wickets ?? '–'} ${inn.overs ? `(${inn.overs} ov)` : ''}`;
+  const battersHTML = (inn.top_batters || []).map(b => {
+    const dot = b.how_out === 'not out' ? '*' : '';
+    return `<span class="pill">${b.name || '?'} ${b.runs ?? 0}${dot}${b.balls ? ` (${b.balls})` : ''}</span>`;
+  }).join('');
+  const bowlersHTML = (inn.top_bowlers || []).filter(w => (w.wickets || 0) > 0).map(w =>
+    `<span class="pill">${w.name || '?'} ${w.wickets}/${w.runs ?? 0}${w.overs ? ` (${w.overs})` : ''}</span>`
+  ).join('');
+  return `
+    <div class="innings">
+      <div class="innings-h">
+        <span>${inn.team_batting_name || ''}</span>
+        <span class="innings-score">${score}</span>
+      </div>
+      ${battersHTML ? `<div class="perf">${battersHTML}</div>` : ''}
+      ${bowlersHTML ? `<div class="perf">${bowlersHTML}</div>` : ''}
+    </div>`;
+}
+
+function gameCard(g) {
+  const innings = (g.innings || []).map(inningsBlock).join('');
+  const result = g.result_description ? `<div class="result">${g.result_description}</div>` : '';
+  return `
+    <div class="game">
+      <div class="game-head">
+        <span style="font-size:12px;color:#666;">${fmtDate(g.match_date.split('/').reverse().join('-')) === g.match_date ? g.match_date : g.match_date} ${g.match_time || ''}</span>
+        ${badge(g.status)}
+      </div>
+      <div class="teams">${g.home_club_name || g.home_team_name} <span class="vs">v</span> ${g.away_club_name || g.away_team_name}</div>
+      <div class="ground">${g.ground_name || ''}</div>
+      ${innings}
+      ${result}
+      <div style="margin-top:6px;"><a class="match-link" href="${g.play_cricket_url}" target="_blank" rel="noopener">match on Play-Cricket →</a></div>
+    </div>`;
+}
+
+function render(data) {
+  const content = document.getElementById('content');
+  const built = document.getElementById('built');
+  built.textContent = `built ${data.built_at} · ${data.n_completed} completed · ${data.n_in_progress} in progress · ${data.n_scheduled} scheduled`;
+
+  if (!data.games || data.games.length === 0) {
+    content.innerHTML = `<div class="empty">No games scheduled / loaded for this matchweek.</div>`;
+    return;
+  }
+
+  // group by division
+  const byDiv = {};
+  for (const g of data.games) {
+    if (!byDiv[g.division]) byDiv[g.division] = [];
+    byDiv[g.division].push(g);
+  }
+  const order = ["1st XI Premier Division", "1st XI Division One",
+                  "1st XI Division Two", "1st XI Division Three",
+                  "1st XI Division Four"];
+  let html = '';
+  for (const div of order) {
+    if (!byDiv[div]) continue;
+    html += `<div class="div-h">${div}</div>`;
+    html += byDiv[div].map(gameCard).join('');
+  }
+  content.innerHTML = html;
+}
+
+async function init() {
+  let index;
+  try {
+    index = await loadJSON(`${DATA_BASE}/index.json`);
+  } catch (e) {
+    document.getElementById('content').innerHTML =
+      `<div class="empty">No matchweek data yet. Run <code>python3 app/build_matchweek.py</code> first.</div>`;
+    return;
+  }
+  const sel = document.getElementById('mw');
+  for (const e of index.matchweeks) {
+    const opt = document.createElement('option');
+    opt.value = e.matchweek;
+    opt.textContent = `${e.matchweek}  (${e.completed} W / ${e.in_progress} P / ${e.scheduled} S)`;
+    sel.appendChild(opt);
+  }
+  // default = today's matchweek per the rule (Thu-Sat: upcoming Sat;
+  // Sun-Wed: previous Sat). Fall back to index.default if not built yet.
+  const today = new Date();
+  const wd = today.getDay();   // Sun=0..Sat=6
+  let delta;
+  if (wd === 0)      delta = -1;            // Sun -> -1
+  else if (wd <= 3)  delta = -(wd + 1);     // Mon..Wed -> -2..-4
+  else               delta = 6 - wd;        // Thu..Sat -> +2..0
+  const target = new Date(today); target.setDate(today.getDate() + delta);
+  const targetISO = target.toISOString().slice(0, 10);
+  const haveIt = Array.from(sel.options).find(o => o.value === targetISO);
+  sel.value = haveIt ? targetISO : index.default;
+  sel.addEventListener('change', async () => {
+    const data = await loadJSON(`${DATA_BASE}/${sel.value}.json`);
+    render(data);
+  });
+  const data = await loadJSON(`${DATA_BASE}/${sel.value}.json`);
+  render(data);
+}
+
+init();
+</script>
+</body>
+</html>
