@@ -132,17 +132,29 @@ def load_balls(universe_ids: set[int]) -> pd.DataFrame:
         print(f"    universe filter: {len(matches):,} of {before:,} matches "
               f"({100*len(matches)/max(1,before):.0f}%)", flush=True)
 
-    # No innings_seq mismatch filter: y comes from ball-stream sum
-    # (which is by definition consistent), and batting team comes from
-    # balls.team_batting_club_id directly. The innings table is unused.
-
-    # y target: sum of all balls in innings_seq=1
-    print("  computing y from ball-stream sum ...", flush=True)
-    y_from_balls = pd.read_sql(
-        "SELECT match_id, "
-        "       SUM(COALESCE(runs_bat,0) + COALESCE(runs_extra,0)) AS y_final_innings_runs "
+    # y target: from `innings` table, joined via batting club id from balls
+    # (sidesteps both the innings_seq mismatch bug AND truncated BBB streams
+    # — using SUM(balls) gave the wrong final when the BBB stream stopped
+    # mid-innings, e.g. match 7016751: balls had only 33 runs, scorecard 214).
+    print("  computing y from innings table joined on team_batting_club_id ...", flush=True)
+    bbb_bat_club = pd.read_sql(
+        "SELECT match_id, team_batting_club_id AS bbb_inn1_club "
         "FROM balls WHERE innings_seq = 1 GROUP BY match_id",
         con,
+    )
+    inns_all = pd.read_sql(
+        "SELECT match_id, team_batting_club_id, runs AS y_final_innings_runs "
+        "FROM innings WHERE runs IS NOT NULL",
+        con,
+    )
+    y_from_balls = bbb_bat_club.merge(
+        inns_all,
+        left_on=["match_id", "bbb_inn1_club"],
+        right_on=["match_id", "team_batting_club_id"],
+        how="inner",
+    )[["match_id", "y_final_innings_runs"]]
+    y_from_balls["y_final_innings_runs"] = pd.to_numeric(
+        y_from_balls["y_final_innings_runs"], errors="coerce"
     )
     print(f"    y rows: {len(y_from_balls):,}")
 
