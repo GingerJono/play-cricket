@@ -113,11 +113,21 @@ def load_balls(universe_ids: set[int]) -> pd.DataFrame:
     matches = pd.read_sql(
         "SELECT match_id, match_date, match_type, "
         "       home_team_id, away_team_id, "
-        "       home_club_id, away_club_id, ground_id "
+        "       home_club_id, away_club_id, ground_id, "
+        "       result, result_description "
         "FROM matches WHERE match_type = 'Limited Overs'",
         con,
     )
     print(f"    {len(matches):,} Limited Overs matches in DB", flush=True)
+    # drop abandoned / cancelled / no-result matches
+    before = len(matches)
+    valid_results = matches["result"].isin(["W", "L", "T", "D"])
+    not_abandoned = ~matches["result_description"].fillna("").str.contains(
+        "Abandon|No Result|No decision|Cancelled", case=False, regex=True
+    )
+    matches = matches[valid_results & not_abandoned]
+    print(f"    after dropping abandoned/cancelled: {len(matches):,} of {before:,} "
+          f"({100*len(matches)/max(1,before):.0f}%)", flush=True)
     matches["match_date_yyyymmdd"] = matches["match_date"].apply(
         lambda s: int(s.split("/")[2]) * 10000 + int(s.split("/")[1]) * 100
                   + int(s.split("/")[0]) if s and "/" in s else 0
