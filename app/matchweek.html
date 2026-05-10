@@ -54,10 +54,122 @@
 <script>
 const DATA_BASE = './data/matchweek';
 
+// LIVE mode: pass ?worker=https://your-worker.workers.dev to fetch direct
+// from the Cloudflare proxy on every page-load. Falls back to static JSON
+// if the worker errors or isn't supplied.
+const WORKER_URL = (new URLSearchParams(location.search)).get('worker') || '';
+const LIVE_MODE = !!WORKER_URL;
+
 async function loadJSON(url) {
   const r = await fetch(url);
   if (!r.ok) throw new Error(`fetch ${url} → ${r.status}`);
   return await r.json();
+}
+
+// Top-5 1st-XI cids (Essex League). Mirrored from app/build_matchweek.py.
+const ESSEX_TOP5 = {
+  2026: { 135282: "1st XI Premier Division", 135283: "1st XI Division One",
+          135296: "1st XI Division Two", 135297: "1st XI Division Three",
+          135298: "1st XI Division Four" },
+  2025: { 125062: "1st XI Premier Division", 125063: "1st XI Division One",
+          125064: "1st XI Division Two", 125065: "1st XI Division Three",
+          125066: "1st XI Division Four" },
+};
+
+function fmtScore(inn) {
+  if (!inn) return '–';
+  return `${inn.runs ?? '–'}/${inn.wickets ?? '–'} ${inn.overs ? `(${inn.overs} ov)` : ''}`;
+}
+
+function topBatters(bat) {
+  if (!bat) return [];
+  return bat
+    .filter(b => !['did not bat', 'absent', ''].includes(b.how_out || ''))
+    .sort((a, b) => (parseInt(b.runs)||0) - (parseInt(a.runs)||0))
+    .slice(0, 3);
+}
+function topBowlers(bowl) {
+  if (!bowl) return [];
+  return bowl
+    .sort((a, b) => (parseInt(b.wickets)||0) - (parseInt(a.wickets)||0))
+    .slice(0, 3);
+}
+
+async function buildLiveCard(matchSummary, division) {
+  // Hit /match_detail.json via the worker
+  const url = `${WORKER_URL}/match_detail.json?match_id=${matchSummary.id}`;
+  const detail = await loadJSON(url);
+  const md = (detail.match_details || [{}])[0];
+  const result = md.result || '';
+  const completed = ['W','L','T','D'].includes(result);
+  const inProgress = !result && (md.innings || []).length > 0;
+  return {
+    match_id: parseInt(matchSummary.id),
+    division,
+    match_date: matchSummary.match_date,
+    match_time: matchSummary.match_time,
+    home_team_name: md.home_team_name,
+    away_team_name: md.away_team_name,
+    home_club_name: md.home_club_name,
+    away_club_name: md.away_club_name,
+    ground_name: md.ground_name,
+    result, result_description: md.result_description,
+    status: completed ? 'completed' : inProgress ? 'in_progress' :
+            ['A','C','NR'].includes(result) ? 'abandoned' : 'scheduled',
+    innings: (md.innings || []).map(inn => ({
+      team_batting_name: inn.team_batting_name,
+      runs: inn.runs, wickets: inn.wickets, overs: inn.overs,
+      top_batters: topBatters(inn.bat).map(b => ({
+        name: b.batsman_name, runs: b.runs, balls: b.balls,
+        how_out: b.how_out,
+      })),
+      top_bowlers: topBowlers(inn.bowl).map(w => ({
+        name: w.bowler_name, runs: w.runs, wickets: w.wickets,
+        overs: w.overs, maidens: w.maidens,
+      })),
+    })),
+    play_cricket_url: `https://essexcl.play-cricket.com/website/results/${matchSummary.id}`,
+  };
+}
+
+async function loadLiveMatchweek(season, dateISO) {
+  const cohort = ESSEX_TOP5[season];
+  if (!cohort) throw new Error(`no cohort cids for season ${season}`);
+  const summaries = await loadJSON(
+    `${WORKER_URL}/matches.json?site_id=7300&season=${season}`
+  );
+  const matches = (summaries.matches || []).filter(m => {
+    const cid = parseInt(m.competition_id);
+    if (!(cid in cohort)) return false;
+    const [d, mo, y] = (m.match_date || '').split('/');
+    const iso = `${y}-${mo}-${d}`;
+    return iso === dateISO;
+  });
+  // group by div, take 5 each
+  const games = [];
+  for (const cid of Object.keys(cohort).map(Number)) {
+    const div = cohort[cid];
+    const inDiv = matches
+      .filter(m => parseInt(m.competition_id) === cid)
+      .sort((a, b) => (a.match_time || '').localeCompare(b.match_time || ''))
+      .slice(0, 5);
+    for (const m of inDiv) {
+      try {
+        games.push(await buildLiveCard(m, div));
+      } catch (e) {
+        console.warn(`failed match_detail for ${m.id}:`, e);
+      }
+    }
+  }
+  return {
+    matchweek: dateISO, season,
+    built_at: new Date().toISOString() + ' (LIVE)',
+    n_games: games.length,
+    n_completed: games.filter(g => g.status === 'completed').length,
+    n_in_progress: games.filter(g => g.status === 'in_progress').length,
+    n_scheduled: games.filter(g => g.status === 'scheduled').length,
+    games,
+  };
 }
 
 function fmtDate(iso) {
@@ -163,12 +275,31 @@ async function init() {
   const targetISO = target.toISOString().slice(0, 10);
   const haveIt = Array.from(sel.options).find(o => o.value === targetISO);
   sel.value = haveIt ? targetISO : index.default;
-  sel.addEventListener('change', async () => {
-    const data = await loadJSON(`${DATA_BASE}/${sel.value}.json`);
+  async function loadAndRender(dateISO) {
+    document.getElementById('content').innerHTML =
+      `<div class="empty">${LIVE_MODE ? 'fetching live ...' : 'loading ...'}</div>`;
+    let data;
+    if (LIVE_MODE) {
+      try {
+        const season = parseInt(dateISO.slice(0, 4));
+        data = await loadLiveMatchweek(season, dateISO);
+      } catch (e) {
+        console.warn('live fetch failed, falling back to static:', e);
+        try { data = await loadJSON(`${DATA_BASE}/${dateISO}.json`); }
+        catch (_) {
+          document.getElementById('content').innerHTML =
+            `<div class="empty">Live fetch failed and no static snapshot for ${dateISO}.</div>`;
+          return;
+        }
+      }
+    } else {
+      data = await loadJSON(`${DATA_BASE}/${dateISO}.json`);
+    }
     render(data);
-  });
-  const data = await loadJSON(`${DATA_BASE}/${sel.value}.json`);
-  render(data);
+  }
+
+  sel.addEventListener('change', () => loadAndRender(sel.value));
+  await loadAndRender(sel.value);
 }
 
 init();
