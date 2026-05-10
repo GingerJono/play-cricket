@@ -49,6 +49,14 @@ def main() -> int:
     print(f"  universe match ids: {len(universe_ids):,}")
 
     balls, con = load_balls(universe_ids)
+    # subsample matches BEFORE the heavy joins to keep memory bounded
+    MAX_MATCHES = 18000
+    rng_pre = np.random.default_rng(seed=42)
+    pre_mids = balls["match_id"].unique()
+    if len(pre_mids) > MAX_MATCHES:
+        pre_mids = rng_pre.choice(pre_mids, MAX_MATCHES, replace=False)
+        balls = balls[balls["match_id"].isin(pre_mids)].reset_index(drop=True)
+        print(f"  subsampled balls to {MAX_MATCHES} matches / {len(balls):,} rows")
     df = add_state(balls)
     df, _ = join_skill(df)
     df = join_ground(df)
