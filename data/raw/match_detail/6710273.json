@@ -1,0 +1,826 @@
+{
+  "match_details": [
+    {
+      "id": 6710273,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "31/03/2026",
+      "league_name": "Greater Manchester Cricket League",
+      "league_id": "11685",
+      "competition_name": "GMCL Premier League 2",
+      "competition_id": "126164",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6710273",
+      "match_date": "05/07/2025",
+      "match_time": "12:30",
+      "ground_name": "Monton Sports Club",
+      "ground_id": "60164",
+      "home_team_name": "1st XI",
+      "home_team_id": "71174",
+      "home_club_name": "Monton CC",
+      "home_club_id": "4405",
+      "away_team_name": "1st XI",
+      "away_team_id": "59149",
+      "away_club_name": "Heaton CC",
+      "away_club_id": "3296",
+      "umpire_1_name": "Shahid Ahmed",
+      "umpire_1_id": "6937126",
+      "umpire_2_name": "Michael Grimes",
+      "umpire_2_id": "6937180",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "Kate Edwards",
+      "scorer_1_id": "4519043",
+      "scorer_2_name": "Janet Wade",
+      "scorer_2_id": "14767",
+      "toss_won_by_team_id": "59149",
+      "toss": "Heaton CC - 1st XI won the toss and elected to bat",
+      "batted_first": "59149",
+      "no_of_overs": "50",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Monton CC - 1st XI - Won",
+      "result_applied_to": "71174",
+      "match_notes": "<b>Heaton CC 1st XI Innings</b><br/>\n16.1 Jake Sandham: 5 wickets (8.1-3-28-5)<br/>18.1 Heaton CC 1st XI: 50 runs in 18.1 overs, 85 minutes, 1 extra\n<br/>\n<br/>\n<b>Monton CC 1st XI Innings</b><br/>\n10.5 Monton CC 1st XI: 50 runs in 10.5 overs, 41 minutes, 5 extras\n<br/>\n",
+      "points": [
+        {
+          "team_id": 71174,
+          "game_points": "5",
+          "penalty_points": "0.0",
+          "bonus_points_together": "1.0",
+          "bonus_points_batting": "1.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 59149,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Monton CC - 1st XI - Won",
+          "1001973#71174"
+        ],
+        [
+          "Heaton CC - 1st XI - Won",
+          "1001973#59149"
+        ],
+        [
+          "Tied",
+          1001979
+        ],
+        [
+          "Cancelled No Play",
+          1001975
+        ],
+        [
+          "Abandoned game started",
+          1001976
+        ],
+        [
+          "Monton CC - 1st XI - Conceded",
+          "1001977#59149"
+        ],
+        [
+          "Heaton CC - 1st XI - Conceded",
+          "1001978#71174"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Thomas Coulson",
+              "player_id": 5834037,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Will Helmke",
+              "player_id": 5467683,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Joe Kershaw",
+              "player_id": 5909969,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 4,
+              "player_name": "Joshua Lenihan",
+              "player_id": 6191514,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Benjy Marsden",
+              "player_id": 5601589,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Will McAvoy",
+              "player_id": 6189462,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Ali Nawaz",
+              "player_id": 6419402,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Aamir Riaz",
+              "player_id": 6563689,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Jake Sandham",
+              "player_id": 6190109,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Usman Tariq Chaudry - PRO",
+              "player_id": 6571221,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Tom Willoughby - OA",
+              "player_id": 5302657,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Matt Ball",
+              "player_id": 4569503,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Hashan Gunathilaka",
+              "player_id": 6443794,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Adi Halai",
+              "player_id": 6194867,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Lee Halliwell",
+              "player_id": 5911737,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Chris Horner",
+              "player_id": 6198701,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Lewis Holley",
+              "player_id": 6198709,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Jiyaad Nazir Magrey",
+              "player_id": 6292884,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Zaid Patel",
+              "player_id": 6199316,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Kishan Patel",
+              "player_id": 6197910,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Rajinda Punchihewa (Pro)",
+              "player_id": 5480119,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Robert Needham",
+              "player_id": 6371667,
+              "captain": false,
+              "wicket_keeper": true
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Heaton CC - 1st XI",
+          "team_batting_id": "59149",
+          "innings_number": 1,
+          "extra_byes": "1",
+          "extra_leg_byes": "0",
+          "extra_wides": "1",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "2",
+          "runs": "69",
+          "wickets": "10",
+          "overs": "26.5",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "44.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Hashan Gunathilaka",
+              "batsman_id": "6443794",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jake Sandham",
+              "bowler_id": "6190109",
+              "runs": "6",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "9"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Jiyaad Nazir Magrey",
+              "batsman_id": "6292884",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jake Sandham",
+              "bowler_id": "6190109",
+              "runs": "20",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "41"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Chris Horner",
+              "batsman_id": "6198701",
+              "how_out": "ct",
+              "fielder_name": "Usman Tariq Chaudry - PRO",
+              "fielder_id": "6571221",
+              "bowler_name": "Jake Sandham",
+              "bowler_id": "6190109",
+              "runs": "5",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "14"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Matt Ball",
+              "batsman_id": "4569503",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Tom Willoughby - OA",
+              "bowler_id": "5302657",
+              "runs": "20",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "47"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Zaid Patel",
+              "batsman_id": "6199316",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jake Sandham",
+              "bowler_id": "6190109",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "3"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Adi Halai",
+              "batsman_id": "6194867",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jake Sandham",
+              "bowler_id": "6190109",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "1"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Lewis Holley",
+              "batsman_id": "6198709",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "14",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "25"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Rajinda Punchihewa (Pro)",
+              "batsman_id": "5480119",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jake Sandham",
+              "bowler_id": "6190109",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "10"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Kishan Patel",
+              "batsman_id": "6197910",
+              "how_out": "ct",
+              "fielder_name": "Benjy Marsden",
+              "fielder_id": "5601589",
+              "bowler_name": "Tom Willoughby - OA",
+              "bowler_id": "5302657",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "5"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Lee Halliwell",
+              "batsman_id": "5911737",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Tom Willoughby - OA",
+              "bowler_id": "5302657",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "2"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Robert Needham",
+              "batsman_id": "6371667",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jake Sandham",
+              "bowler_id": "6190109",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "4"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "6",
+              "wickets": 1,
+              "batsman_out_name": "Hashan Gunathilaka",
+              "batsman_out_id": "6443794",
+              "batsman_in_name": "Jiyaad Nazir Magrey",
+              "batsman_in_id": "6292884",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "25",
+              "wickets": 2,
+              "batsman_out_name": "Chris Horner",
+              "batsman_out_id": "6198701",
+              "batsman_in_name": "Jiyaad Nazir Magrey",
+              "batsman_in_id": "6292884",
+              "batsman_in_runs": "13"
+            },
+            {
+              "runs": "42",
+              "wickets": 3,
+              "batsman_out_name": "Jiyaad Nazir Magrey",
+              "batsman_out_id": "6292884",
+              "batsman_in_name": "Matt Ball",
+              "batsman_in_id": "4569503",
+              "batsman_in_runs": "10"
+            },
+            {
+              "runs": "42",
+              "wickets": 4,
+              "batsman_out_name": "Zaid Patel",
+              "batsman_out_id": "6199316",
+              "batsman_in_name": "Matt Ball",
+              "batsman_in_id": "4569503",
+              "batsman_in_runs": "10"
+            },
+            {
+              "runs": "42",
+              "wickets": 5,
+              "batsman_out_name": "Adi Halai",
+              "batsman_out_id": "6194867",
+              "batsman_in_name": "Matt Ball",
+              "batsman_in_id": "4569503",
+              "batsman_in_runs": "10"
+            },
+            {
+              "runs": "62",
+              "wickets": 6,
+              "batsman_out_name": "Matt Ball",
+              "batsman_out_id": "4569503",
+              "batsman_in_name": "Lewis Holley",
+              "batsman_in_id": "6198709",
+              "batsman_in_runs": "10"
+            },
+            {
+              "runs": "67",
+              "wickets": 7,
+              "batsman_out_name": "Rajinda Punchihewa (Pro)",
+              "batsman_out_id": "5480119",
+              "batsman_in_name": "Lewis Holley",
+              "batsman_in_id": "6198709",
+              "batsman_in_runs": "13"
+            },
+            {
+              "runs": "68",
+              "wickets": 8,
+              "batsman_out_name": "Kishan Patel",
+              "batsman_out_id": "6197910",
+              "batsman_in_name": "Lewis Holley",
+              "batsman_in_id": "6198709",
+              "batsman_in_runs": "13"
+            },
+            {
+              "runs": "68",
+              "wickets": 9,
+              "batsman_out_name": "Lee Halliwell",
+              "batsman_out_id": "5911737",
+              "batsman_in_name": "Lewis Holley",
+              "batsman_in_id": "6198709",
+              "batsman_in_runs": "13"
+            },
+            {
+              "runs": "69",
+              "wickets": 10,
+              "batsman_out_name": "Robert Needham",
+              "batsman_out_id": "6371667",
+              "batsman_in_name": "Lewis Holley",
+              "batsman_in_id": "6198709",
+              "batsman_in_runs": "14"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Jake Sandham",
+              "bowler_id": "6190109",
+              "overs": "13.5",
+              "maidens": "3",
+              "runs": "43",
+              "wides": "0",
+              "wickets": "7",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Will McAvoy",
+              "bowler_id": "6189462",
+              "overs": "10",
+              "maidens": "4",
+              "runs": "25",
+              "wides": "1",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Tom Willoughby - OA",
+              "bowler_id": "5302657",
+              "overs": "3",
+              "maidens": "3",
+              "runs": "0",
+              "wides": "0",
+              "wickets": "3",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Monton CC - 1st XI",
+          "team_batting_id": "71174",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "0",
+          "extra_wides": "2",
+          "extra_no_balls": "3",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "5",
+          "runs": "70",
+          "wickets": "2",
+          "overs": "19",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "70",
+          "revised_target_overs": "44.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Usman Tariq Chaudry - PRO",
+              "batsman_id": "6571221",
+              "how_out": "ct",
+              "fielder_name": "Kishan Patel",
+              "fielder_id": "6197910",
+              "bowler_name": "Zaid Patel",
+              "bowler_id": "6199316",
+              "runs": "29",
+              "fours": "6",
+              "sixes": "0",
+              "balls": "22"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Joe Kershaw",
+              "batsman_id": "5909969",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "21",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "51"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Will Helmke",
+              "batsman_id": "5467683",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Hashan Gunathilaka",
+              "bowler_id": "6443794",
+              "runs": "13",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "32"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Tom Willoughby - OA",
+              "batsman_id": "5302657",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "12"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Joshua Lenihan",
+              "batsman_id": "6191514",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "6",
+              "batsman_name": "Benjy Marsden",
+              "batsman_id": "5601589",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "7",
+              "batsman_name": "Will McAvoy",
+              "batsman_id": "6189462",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "8",
+              "batsman_name": "Ali Nawaz",
+              "batsman_id": "6419402",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Aamir Riaz",
+              "batsman_id": "6563689",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Jake Sandham",
+              "batsman_id": "6190109",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Thomas Coulson",
+              "batsman_id": "5834037",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "38",
+              "wickets": 1,
+              "batsman_out_name": "Usman Tariq Chaudry - PRO",
+              "batsman_out_id": "6571221",
+              "batsman_in_name": "Joe Kershaw",
+              "batsman_in_id": "5909969",
+              "batsman_in_runs": "5"
+            },
+            {
+              "runs": "65",
+              "wickets": 2,
+              "batsman_out_name": "Will Helmke",
+              "batsman_out_id": "5467683",
+              "batsman_in_name": "Joe Kershaw",
+              "batsman_in_id": "5909969",
+              "batsman_in_runs": "18"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Rajinda Punchihewa (Pro)",
+              "bowler_id": "5480119",
+              "overs": "3",
+              "maidens": "0",
+              "runs": "21",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "2"
+            },
+            {
+              "bowler_name": "Lee Halliwell",
+              "bowler_id": "5911737",
+              "overs": "3",
+              "maidens": "0",
+              "runs": "17",
+              "wides": "1",
+              "wickets": "0",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Zaid Patel",
+              "bowler_id": "6199316",
+              "overs": "3",
+              "maidens": "1",
+              "runs": "7",
+              "wides": "1",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Kishan Patel",
+              "bowler_id": "6197910",
+              "overs": "6",
+              "maidens": "0",
+              "runs": "15",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Hashan Gunathilaka",
+              "bowler_id": "6443794",
+              "overs": "4",
+              "maidens": "1",
+              "runs": "10",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

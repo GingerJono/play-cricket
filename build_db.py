@@ -742,6 +742,62 @@ def insert_balls_nvplay(
     return (n_innings, n_balls, n_legal)
 
 
+def realign_balls_innings_seq(cur: sqlite3.Cursor) -> None:
+    """
+    Detect + fix matches where the BBB stream labels innings_seq the opposite
+    way to the scorecard. Symptom: balls.innings_seq=1's team_batting_club_id
+    differs from innings.innings_seq=1's team_batting_club_id.
+
+    Two failure modes both produce this:
+      1. RV/NV streams the chase first when scoring resumes after rain etc.
+      2. The home team batted second but the BBB feed numbered home's innings
+         as #1.
+
+    The fix is a 1:1 swap of innings_seq within the affected matches' balls.
+    Counts the swap rate so we know how often this happens.
+    """
+    rows = cur.execute("""
+        WITH ball_inn AS (
+          SELECT match_id, innings_seq, team_batting_club_id,
+                 ROW_NUMBER() OVER (PARTITION BY match_id, innings_seq
+                                    ORDER BY over_no, ball_no) AS rn
+          FROM balls
+        ),
+        ball_inn1_club AS (
+          SELECT match_id, team_batting_club_id AS bbb_inn1_club
+          FROM ball_inn WHERE innings_seq = 1 AND rn = 1
+        ),
+        card_inn1 AS (
+          SELECT match_id, team_batting_club_id AS card_inn1_club
+          FROM innings WHERE innings_seq = 1
+        )
+        SELECT b.match_id
+        FROM ball_inn1_club b
+        JOIN card_inn1 c ON b.match_id = c.match_id
+        WHERE b.bbb_inn1_club IS NOT NULL
+          AND c.card_inn1_club IS NOT NULL
+          AND b.bbb_inn1_club <> c.card_inn1_club
+    """).fetchall()
+    bad_match_ids = [r[0] for r in rows]
+    if not bad_match_ids:
+        print("  innings_seq alignment: all matches consistent", flush=True)
+        return
+    print(f"  innings_seq alignment: {len(bad_match_ids)} matches transposed; "
+          f"swapping ...", flush=True)
+    # swap innings_seq within affected matches: 1<->2 (and any 3<->4 etc.)
+    # SQLite has no clean swap; do it via a sentinel value.
+    placeholders = ",".join("?" * len(bad_match_ids))
+    cur.execute(f"UPDATE balls SET innings_seq = innings_seq + 1000 "
+                f"WHERE match_id IN ({placeholders})", bad_match_ids)
+    cur.execute(f"UPDATE balls SET innings_seq = "
+                f"  CASE innings_seq "
+                f"    WHEN 1001 THEN 2 WHEN 1002 THEN 1 "
+                f"    WHEN 1003 THEN 4 WHEN 1004 THEN 3 "
+                f"    ELSE innings_seq - 1000 END "
+                f"WHERE match_id IN ({placeholders})", bad_match_ids)
+    print(f"  innings_seq alignment: swap complete", flush=True)
+
+
 def validate_balls(cur: sqlite3.Cursor) -> None:
     """
     Cross-check per-innings ball totals against the scorecard total.
@@ -863,6 +919,8 @@ def main() -> int:
     print(f"Ball-by-ball: {bbb_rv} RV + {bbb_nv} NV = "
           f"{bbb_rv + bbb_nv} matches, {bbb_balls} balls", flush=True)
     if bbb_rv + bbb_nv:
+        realign_balls_innings_seq(cur)
+        conn.commit()
         validate_balls(cur)
 
     cur.execute("SELECT COUNT(*) FROM clubs")

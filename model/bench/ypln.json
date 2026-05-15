@@ -1,0 +1,110 @@
+{
+  "slug": "ypln",
+  "site_id": 8240,
+  "started_at": "2026-05-09T17:34:36Z",
+  "phases": {
+    "p1_summaries_secs": 27.66,
+    "p2_universe_secs": 0.16,
+    "p3_match_detail_secs": 119.97,
+    "p3_counts": {
+      "fetched": 1408,
+      "cached": 0,
+      "failed": 0,
+      "total": 1408
+    },
+    "p4_bbb_secs": 573.1,
+    "p4_counts": {
+      "rv_fetched": 886,
+      "rv_cached": 0,
+      "nv_fetched": 426,
+      "nv_cached": 0,
+      "no_mapping": 0,
+      "no_data": 96,
+      "failed": 0,
+      "balls_total": 660120,
+      "total_matches": 1408
+    },
+    "wall_secs": 720.89
+  },
+  "universe_n": 1408,
+  "bbb_universe_n": 1408,
+  "cohort_keys": [
+    "premier division",
+    "premier division 2",
+    "championship east",
+    "championship west",
+    "championship central"
+  ],
+  "divisions_per_season": {
+    "2017": [],
+    "2018": [],
+    "2019": [],
+    "2020": [],
+    "2021": [],
+    "2022": [
+      {
+        "cid": "101075",
+        "name": "ECB Premier Division",
+        "n": 110
+      }
+    ],
+    "2023": [
+      {
+        "cid": "108766",
+        "name": "ECB Premier Division ",
+        "n": 132
+      },
+      {
+        "cid": "108794",
+        "name": "Championship East",
+        "n": 132
+      },
+      {
+        "cid": "108795",
+        "name": "Championship West",
+        "n": 132
+      }
+    ],
+    "2024": [
+      {
+        "cid": "117622",
+        "name": "ECB Premier Division",
+        "n": 132
+      },
+      {
+        "cid": "117624",
+        "name": "Championship East",
+        "n": 132
+      },
+      {
+        "cid": "117625",
+        "name": "Championship West",
+        "n": 132
+      }
+    ],
+    "2025": [
+      {
+        "cid": "125524",
+        "name": "ECB Premier Division",
+        "n": 110
+      },
+      {
+        "cid": "125526",
+        "name": "ECB Premier Division 2",
+        "n": 132
+      },
+      {
+        "cid": "125532",
+        "name": "Championship East",
+        "n": 132
+      },
+      {
+        "cid": "125533",
+        "name": "Championship West",
+        "n": 132
+      }
+    ],
+    "2026": []
+  },
+  "finished_at": "2026-05-09T17:46:37Z"
+}

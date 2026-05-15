@@ -1,0 +1,871 @@
+{
+  "match_details": [
+    {
+      "id": 5029712,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "03/08/2022",
+      "league_name": "Huddersfield Premier Cricket League",
+      "league_id": "346",
+      "competition_name": "Conference",
+      "competition_id": "101613",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "5029712",
+      "match_date": "16/07/2022",
+      "match_time": "13:00",
+      "ground_name": "Add New Ground",
+      "ground_id": "",
+      "home_team_name": "1st XI",
+      "home_team_id": "117849",
+      "home_club_name": "Almondbury CC",
+      "home_club_id": "677",
+      "away_team_name": "2nd XI",
+      "away_team_id": "19910",
+      "away_club_name": "Hoylandswaine CC",
+      "away_club_id": "3520",
+      "umpire_1_name": "",
+      "umpire_1_id": "",
+      "umpire_2_name": "",
+      "umpire_2_id": "",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "Rebeka Burns",
+      "scorer_1_id": "5329762",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "117849",
+      "toss": "Almondbury CC - 1st XI won the toss and elected to bat",
+      "batted_first": "117849",
+      "no_of_overs": "50",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Hoylandswaine CC - 2nd XI - Won",
+      "result_applied_to": "19910",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 117849,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 19910,
+          "game_points": "6",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Almondbury CC - 1st XI - Won",
+          "816540#117849"
+        ],
+        [
+          "Hoylandswaine CC - 2nd XI - Won",
+          "816540#19910"
+        ],
+        [
+          "Tied",
+          816545
+        ],
+        [
+          "Abandoned",
+          816543
+        ],
+        [
+          "Almondbury CC - 1st XI - Conceded",
+          "816542#19910"
+        ],
+        [
+          "Hoylandswaine CC - 2nd XI - Conceded",
+          "816544#117849"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Bernard Snyman",
+              "player_id": 5328840,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Shivam Panday",
+              "player_id": 4899121,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Liam Hanson",
+              "player_id": 4450820,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Colin Harris",
+              "player_id": 4778665,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Tom Calvert",
+              "player_id": 4422503,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Bilal Ahmad",
+              "player_id": 5323610,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Mohammed Z Aslam",
+              "player_id": 5329709,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Jacob Eustance",
+              "player_id": 5504725,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 9,
+              "player_name": "Jahangir Hussain",
+              "player_id": 5315457,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Ali Raza Afzal",
+              "player_id": 4985022,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Sajad Aslam",
+              "player_id": 4410214,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Luke Potter",
+              "player_id": 4707792,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Ranjith Bandula-Don",
+              "player_id": 7000394,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Shabir Rashid",
+              "player_id": 4113065,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Daniel Hoyle",
+              "player_id": 4726744,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Joshua Ibbotson",
+              "player_id": 3848609,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Ben Potter",
+              "player_id": 559520,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Jack Lockwood",
+              "player_id": 499507,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 8,
+              "player_name": "Josh Holmes",
+              "player_id": 988508,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Faisal Irfan",
+              "player_id": 6143557,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Tawkal Zadran",
+              "player_id": 5554129,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Darren Lockwood",
+              "player_id": 6389254,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Almondbury CC - 1st XI",
+          "team_batting_id": "117849",
+          "innings_number": 1,
+          "extra_byes": "2",
+          "extra_leg_byes": "2",
+          "extra_wides": "22",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "26",
+          "runs": "125",
+          "wickets": "10",
+          "overs": "41.1",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "50.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Shivam Panday",
+              "batsman_id": "4899121",
+              "how_out": "ct",
+              "fielder_name": "Luke Potter",
+              "fielder_id": "4707792",
+              "bowler_name": "Ranjith Bandula-Don",
+              "bowler_id": "7000394",
+              "runs": "8",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "61"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Sajad Aslam",
+              "batsman_id": "4410214",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Tawkal Zadran",
+              "bowler_id": "5554129",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "6"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Jahangir Hussain",
+              "batsman_id": "5315457",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Ranjith Bandula-Don",
+              "bowler_id": "7000394",
+              "runs": "16",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "32"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Bernard Snyman",
+              "batsman_id": "5328840",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Ranjith Bandula-Don",
+              "bowler_id": "7000394",
+              "runs": "15",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "16"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Jacob Eustance",
+              "batsman_id": "5504725",
+              "how_out": "ct",
+              "fielder_name": "Shabir Rashid",
+              "fielder_id": "4113065",
+              "bowler_name": "Ranjith Bandula-Don",
+              "bowler_id": "7000394",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "4"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Liam Hanson",
+              "batsman_id": "4450820",
+              "how_out": "ct",
+              "fielder_name": "Daniel Hoyle",
+              "fielder_id": "4726744",
+              "bowler_name": "Darren Lockwood",
+              "bowler_id": "6389254",
+              "runs": "16",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "62"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Mohammed Z Aslam",
+              "batsman_id": "5329709",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Ranjith Bandula-Don",
+              "bowler_id": "7000394",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "1"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Bilal Ahmad",
+              "batsman_id": "5323610",
+              "how_out": "ct",
+              "fielder_name": "Ranjith Bandula-Don",
+              "fielder_id": "7000394",
+              "bowler_name": "Darren Lockwood",
+              "bowler_id": "6389254",
+              "runs": "14",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "13"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Tom Calvert",
+              "batsman_id": "4422503",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Darren Lockwood",
+              "bowler_id": "6389254",
+              "runs": "17",
+              "fours": "2",
+              "sixes": "1",
+              "balls": "28"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Ali Raza Afzal",
+              "batsman_id": "4985022",
+              "how_out": "ct",
+              "fielder_name": "Ranjith Bandula-Don",
+              "fielder_id": "7000394",
+              "bowler_name": "Darren Lockwood",
+              "bowler_id": "6389254",
+              "runs": "11",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "18"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Colin Harris",
+              "batsman_id": "4778665",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "6"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "9",
+              "wickets": 1,
+              "batsman_out_name": "Sajad Aslam",
+              "batsman_out_id": "4410214",
+              "batsman_in_name": "Shivam Panday",
+              "batsman_in_id": "4899121",
+              "batsman_in_runs": "5"
+            },
+            {
+              "runs": "41",
+              "wickets": 2,
+              "batsman_out_name": "Shivam Panday",
+              "batsman_out_id": "4899121",
+              "batsman_in_name": "Jahangir Hussain",
+              "batsman_in_id": "5315457",
+              "batsman_in_runs": "12"
+            },
+            {
+              "runs": "47",
+              "wickets": 3,
+              "batsman_out_name": "Jahangir Hussain",
+              "batsman_out_id": "5315457",
+              "batsman_in_name": "Bernard Snyman",
+              "batsman_in_id": "5328840",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "47",
+              "wickets": 4,
+              "batsman_out_name": "Jacob Eustance",
+              "batsman_out_id": "5504725",
+              "batsman_in_name": "Bernard Snyman",
+              "batsman_in_id": "5328840",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "70",
+              "wickets": 5,
+              "batsman_out_name": "Bernard Snyman",
+              "batsman_out_id": "5328840",
+              "batsman_in_name": "Liam Hanson",
+              "batsman_in_id": "4450820",
+              "batsman_in_runs": "13"
+            },
+            {
+              "runs": "70",
+              "wickets": 6,
+              "batsman_out_name": "Mohammed Z Aslam",
+              "batsman_out_id": "5329709",
+              "batsman_in_name": "Liam Hanson",
+              "batsman_in_id": "4450820",
+              "batsman_in_runs": "13"
+            },
+            {
+              "runs": "86",
+              "wickets": 7,
+              "batsman_out_name": "Bilal Ahmad",
+              "batsman_out_id": "5323610",
+              "batsman_in_name": "Liam Hanson",
+              "batsman_in_id": "4450820",
+              "batsman_in_runs": "13"
+            },
+            {
+              "runs": "109",
+              "wickets": 8,
+              "batsman_out_name": "Tom Calvert",
+              "batsman_out_id": "4422503",
+              "batsman_in_name": "Liam Hanson",
+              "batsman_in_id": "4450820",
+              "batsman_in_runs": "14"
+            },
+            {
+              "runs": "123",
+              "wickets": 9,
+              "batsman_out_name": "Liam Hanson",
+              "batsman_out_id": "4450820",
+              "batsman_in_name": "Ali Raza Afzal",
+              "batsman_in_id": "4985022",
+              "batsman_in_runs": "10"
+            },
+            {
+              "runs": "125",
+              "wickets": 10,
+              "batsman_out_name": "Ali Raza Afzal",
+              "batsman_out_id": "4985022",
+              "batsman_in_name": "Colin Harris",
+              "batsman_in_id": "4778665",
+              "batsman_in_runs": "0"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Tawkal Zadran",
+              "bowler_id": "5554129",
+              "overs": "6.0",
+              "maidens": "0",
+              "runs": "18",
+              "wides": "10",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Joshua Ibbotson",
+              "bowler_id": "3848609",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "12",
+              "wides": "7",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Ranjith Bandula-Don",
+              "bowler_id": "7000394",
+              "overs": "8.0",
+              "maidens": "3",
+              "runs": "32",
+              "wides": "0",
+              "wickets": "5",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Josh Holmes",
+              "bowler_id": "988508",
+              "overs": "8.0",
+              "maidens": "1",
+              "runs": "20",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Darren Lockwood",
+              "bowler_id": "6389254",
+              "overs": "8.1",
+              "maidens": "2",
+              "runs": "22",
+              "wides": "4",
+              "wickets": "4",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Luke Potter",
+              "bowler_id": "4707792",
+              "overs": "7.0",
+              "maidens": "2",
+              "runs": "17",
+              "wides": "1",
+              "wickets": "0",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Hoylandswaine CC - 2nd XI",
+          "team_batting_id": "19910",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "1",
+          "extra_wides": "12",
+          "extra_no_balls": "2",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "15",
+          "runs": "128",
+          "wickets": "3",
+          "overs": "18.0",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "50.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Darren Lockwood",
+              "batsman_id": "6389254",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Bernard Snyman",
+              "bowler_id": "5328840",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "4"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Shabir Rashid",
+              "batsman_id": "4113065",
+              "how_out": "ct",
+              "fielder_name": "Sajad Aslam",
+              "fielder_id": "4410214",
+              "bowler_name": "Ali Raza Afzal",
+              "bowler_id": "4985022",
+              "runs": "46",
+              "fours": "9",
+              "sixes": "0",
+              "balls": "31"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Daniel Hoyle",
+              "batsman_id": "4726744",
+              "how_out": "ct",
+              "fielder_name": "Liam Hanson",
+              "fielder_id": "4450820",
+              "bowler_name": "Ali Raza Afzal",
+              "bowler_id": "4985022",
+              "runs": "38",
+              "fours": "8",
+              "sixes": "0",
+              "balls": "43"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Faisal Irfan",
+              "batsman_id": "6143557",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "17",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "22"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Luke Potter",
+              "batsman_id": "4707792",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "12",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "10"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Jack Lockwood",
+              "batsman_id": "499507",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "7",
+              "batsman_name": "Ben Potter",
+              "batsman_id": "559520",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "8",
+              "batsman_name": "Joshua Ibbotson",
+              "batsman_id": "3848609",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Josh Holmes",
+              "batsman_id": "988508",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Tawkal Zadran",
+              "batsman_id": "5554129",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Ranjith Bandula-Don",
+              "batsman_id": "7000394",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "0",
+              "wickets": 1,
+              "batsman_out_name": "Darren Lockwood",
+              "batsman_out_id": "6389254",
+              "batsman_in_name": "Shabir Rashid",
+              "batsman_in_id": "4113065",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "77",
+              "wickets": 2,
+              "batsman_out_name": "Shabir Rashid",
+              "batsman_out_id": "4113065",
+              "batsman_in_name": "Daniel Hoyle",
+              "batsman_in_id": "4726744",
+              "batsman_in_runs": "24"
+            },
+            {
+              "runs": "108",
+              "wickets": 3,
+              "batsman_out_name": "Daniel Hoyle",
+              "batsman_out_id": "4726744",
+              "batsman_in_name": "Faisal Irfan",
+              "batsman_in_id": "6143557",
+              "batsman_in_runs": "11"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Bernard Snyman",
+              "bowler_id": "5328840",
+              "overs": "5.0",
+              "maidens": "0",
+              "runs": "25",
+              "wides": "1",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Bilal Ahmad",
+              "bowler_id": "5323610",
+              "overs": "3.0",
+              "maidens": "0",
+              "runs": "14",
+              "wides": "2",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Shivam Panday",
+              "bowler_id": "4899121",
+              "overs": "1.0",
+              "maidens": "0",
+              "runs": "19",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Colin Harris",
+              "bowler_id": "4778665",
+              "overs": "3.0",
+              "maidens": "0",
+              "runs": "20",
+              "wides": "5",
+              "wickets": "0",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Ali Raza Afzal",
+              "bowler_id": "4985022",
+              "overs": "4.0",
+              "maidens": "1",
+              "runs": "30",
+              "wides": "2",
+              "wickets": "2",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Tom Calvert",
+              "bowler_id": "4422503",
+              "overs": "2.0",
+              "maidens": "0",
+              "runs": "19",
+              "wides": "2",
+              "wickets": "0",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

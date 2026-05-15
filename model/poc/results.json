@@ -1,0 +1,87 @@
+{
+  "n_train_matches": 1510,
+  "n_val_matches": 503,
+  "n_train_balls": 351374,
+  "n_val_balls": 121144,
+  "mae_lgbm_p50": 31.50725138700955,
+  "mae_naive": 56.284669563044254,
+  "interval_coverage_80": 0.7251865548438222,
+  "bins": [
+    {
+      "bin": "0-29",
+      "abs_err_lgbm": 41.96445293889165,
+      "abs_err_naive": 99.2287859942186
+    },
+    {
+      "bin": "30-59",
+      "abs_err_lgbm": 39.46810679571097,
+      "abs_err_naive": 64.51262005754585
+    },
+    {
+      "bin": "60-89",
+      "abs_err_lgbm": 38.12105644685492,
+      "abs_err_naive": 58.58647653087528
+    },
+    {
+      "bin": "90-119",
+      "abs_err_lgbm": 36.047336873675434,
+      "abs_err_naive": 55.603202029543915
+    },
+    {
+      "bin": "120-149",
+      "abs_err_lgbm": 33.76074982258545,
+      "abs_err_naive": 54.90598305280535
+    },
+    {
+      "bin": "150-179",
+      "abs_err_lgbm": 30.098172379133857,
+      "abs_err_naive": 51.54074300587499
+    },
+    {
+      "bin": "180-209",
+      "abs_err_lgbm": 25.817464851431914,
+      "abs_err_naive": 46.7639158081817
+    },
+    {
+      "bin": "210-239",
+      "abs_err_lgbm": 20.619813922994457,
+      "abs_err_naive": 41.204134797373
+    },
+    {
+      "bin": "240-269",
+      "abs_err_lgbm": 15.608511129001146,
+      "abs_err_naive": 32.9196266713441
+    },
+    {
+      "bin": "270+",
+      "abs_err_lgbm": 11.149624412773667,
+      "abs_err_naive": 19.93004037733593
+    }
+  ],
+  "examples": [
+    {
+      "match_id": 6741081,
+      "opp": "Cranleigh CC v Walton on Thames CC",
+      "date": "02/08/2025",
+      "actual": 290
+    },
+    {
+      "match_id": 7016695,
+      "opp": "Buckhurst Hill CC v Hutton CC",
+      "date": "26/07/2025",
+      "actual": 230
+    },
+    {
+      "match_id": 7016670,
+      "opp": "Buckhurst Hill CC v Brentwood CC",
+      "date": "21/06/2025",
+      "actual": 255
+    },
+    {
+      "match_id": 6525314,
+      "opp": "Buckhurst Hill CC v Loughton CC",
+      "date": "29/06/2024",
+      "actual": 269
+    }
+  ]
+}

@@ -1,0 +1,756 @@
+{
+  "match_details": [
+    {
+      "id": 6885330,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "11/09/2025",
+      "league_name": "Sussex Cricket League",
+      "league_id": "16378",
+      "competition_name": "Division 3 East",
+      "competition_id": "125938",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6885330",
+      "match_date": "06/09/2025",
+      "match_time": "12:30",
+      "ground_name": "The Vicarage Ground",
+      "ground_id": "34016",
+      "home_team_name": "1st XI",
+      "home_team_id": "100865",
+      "home_club_name": "Bolney CC",
+      "home_club_id": "1250",
+      "away_team_name": "2nd XI",
+      "away_team_id": "12098",
+      "away_club_name": "Cuckfield CC",
+      "away_club_id": "2176",
+      "umpire_1_name": "Zihan Suhood Panel Umpire",
+      "umpire_1_id": "6296145",
+      "umpire_2_name": "Bryan Sumner Panel Umpire",
+      "umpire_2_id": "6200035",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "Khadeeja Nasseri",
+      "scorer_1_id": "6300941",
+      "scorer_2_name": "Adrian Wells",
+      "scorer_2_id": "699835",
+      "toss_won_by_team_id": "12098",
+      "toss": "Cuckfield CC - 2nd XI won the toss and elected to field",
+      "batted_first": "100865",
+      "no_of_overs": "45",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Bolney CC - 1st XI - Won",
+      "result_applied_to": "100865",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 100865,
+          "game_points": "30",
+          "penalty_points": "",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 12098,
+          "game_points": "0",
+          "penalty_points": "",
+          "bonus_points_together": "8.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "8.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Bolney CC - 1st XI - Won",
+          "1000143#100865"
+        ],
+        [
+          "Cuckfield CC - 2nd XI - Won",
+          "1000143#12098"
+        ],
+        [
+          "Tied",
+          1000149
+        ],
+        [
+          "Cancelled",
+          1000145
+        ],
+        [
+          "Abandoned",
+          1000146
+        ],
+        [
+          "Bolney CC - 1st XI - Conceded",
+          "1000147#12098"
+        ],
+        [
+          "Cuckfield CC - 2nd XI - Conceded",
+          "1000148#100865"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Michael Gould",
+              "player_id": 4735733,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Waleed Muhammad",
+              "player_id": 6551429,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Saurabh Wakaskar",
+              "player_id": 6135844,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Mohammed Qasim Nasiri",
+              "player_id": 6565490,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Mohammad Nabizoy",
+              "player_id": 6717833,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Usman Ghani",
+              "player_id": 6741420,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 7,
+              "player_name": "Hameed Ahmadzai",
+              "player_id": 5564004,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Mohammad Zabehulah",
+              "player_id": 5662646,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Yash Tyagi",
+              "player_id": 6743916,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Jigar Parekh",
+              "player_id": 4717819,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Khpalwak Zazai",
+              "player_id": 6667191,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Josh Downey",
+              "player_id": 3482111,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Ben Willsdon",
+              "player_id": 5937911,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Dominic Sear",
+              "player_id": 5611461,
+              "captain": true,
+              "wicket_keeper": true
+            },
+            {
+              "position": 4,
+              "player_name": "Johnny Prior",
+              "player_id": 5953754,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Max Webb",
+              "player_id": 5795222,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Aidan Drew",
+              "player_id": 4888986,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Richard Amer",
+              "player_id": 953504,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Harry Streak",
+              "player_id": 5471687,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Sam Hardwicke",
+              "player_id": 3581766,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Tom Lord",
+              "player_id": 5996501,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Joshua Hayward",
+              "player_id": 5407035,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Bolney CC - 1st XI",
+          "team_batting_id": "100865",
+          "innings_number": 1,
+          "extra_byes": "7",
+          "extra_leg_byes": "6",
+          "extra_wides": "19",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "",
+          "total_extras": "32",
+          "runs": "388",
+          "wickets": "8",
+          "overs": "45",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "45.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Michael Gould",
+              "batsman_id": "4735733",
+              "how_out": "ct",
+              "fielder_name": "Richard Amer",
+              "fielder_id": "953504",
+              "bowler_name": "Dominic Sear",
+              "bowler_id": "5611461",
+              "runs": "110",
+              "fours": "",
+              "sixes": "",
+              "balls": "69"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Waleed Muhammad",
+              "batsman_id": "6551429",
+              "how_out": "ct",
+              "fielder_name": "Ben Willsdon",
+              "fielder_id": "5937911",
+              "bowler_name": "Tom Lord",
+              "bowler_id": "5996501",
+              "runs": "31",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "3",
+              "batsman_name": "Saurabh Wakaskar",
+              "batsman_id": "6135844",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Joshua Hayward",
+              "bowler_id": "5407035",
+              "runs": "48",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "4",
+              "batsman_name": "Mohammed Qasim Nasiri",
+              "batsman_id": "6565490",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Sam Hardwicke",
+              "bowler_id": "3581766",
+              "runs": "17",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "5",
+              "batsman_name": "Mohammad Nabizoy",
+              "batsman_id": "6717833",
+              "how_out": "ct",
+              "fielder_name": "Joshua Hayward",
+              "fielder_id": "5407035",
+              "bowler_name": "Joshua Hayward",
+              "bowler_id": "5407035",
+              "runs": "0",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "6",
+              "batsman_name": "Usman Ghani",
+              "batsman_id": "6741420",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "122",
+              "fours": "",
+              "sixes": "",
+              "balls": "60"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Hameed Ahmadzai",
+              "batsman_id": "5564004",
+              "how_out": "ct",
+              "fielder_name": "Tom Lord",
+              "fielder_id": "5996501",
+              "bowler_name": "Ben Willsdon",
+              "bowler_id": "5937911",
+              "runs": "18",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "8",
+              "batsman_name": "Mohammad Zabehulah",
+              "batsman_id": "5662646",
+              "how_out": "ct",
+              "fielder_name": "Aidan Drew",
+              "fielder_id": "4888986",
+              "bowler_name": "Tom Lord",
+              "bowler_id": "5996501",
+              "runs": "7",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Yash Tyagi",
+              "batsman_id": "6743916",
+              "how_out": "ct",
+              "fielder_name": "Ben Willsdon",
+              "fielder_id": "5937911",
+              "bowler_name": "Tom Lord",
+              "bowler_id": "5996501",
+              "runs": "0",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Jigar Parekh",
+              "batsman_id": "4717819",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "3",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Khpalwak Zazai",
+              "batsman_id": "6667191",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [],
+          "bowl": [
+            {
+              "bowler_name": "Harry Streak",
+              "bowler_id": "5471687",
+              "overs": "6",
+              "maidens": "0",
+              "runs": "59",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Tom Lord",
+              "bowler_id": "5996501",
+              "overs": "9",
+              "maidens": "0",
+              "runs": "92",
+              "wides": "0",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Joshua Hayward",
+              "bowler_id": "5407035",
+              "overs": "9",
+              "maidens": "0",
+              "runs": "71",
+              "wides": "0",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Sam Hardwicke",
+              "bowler_id": "3581766",
+              "overs": "9",
+              "maidens": "0",
+              "runs": "62",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Dominic Sear",
+              "bowler_id": "5611461",
+              "overs": "6",
+              "maidens": "0",
+              "runs": "49",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Ben Willsdon",
+              "bowler_id": "5937911",
+              "overs": "3",
+              "maidens": "0",
+              "runs": "20",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Josh Downey",
+              "bowler_id": "3482111",
+              "overs": "3",
+              "maidens": "0",
+              "runs": "22",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Cuckfield CC - 2nd XI",
+          "team_batting_id": "12098",
+          "innings_number": 1,
+          "extra_byes": "4",
+          "extra_leg_byes": "0",
+          "extra_wides": "6",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "",
+          "total_extras": "10",
+          "runs": "104",
+          "wickets": "9",
+          "overs": "23.2",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "45.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Josh Downey",
+              "batsman_id": "3482111",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Mohammed Qasim Nasiri",
+              "bowler_id": "6565490",
+              "runs": "4",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "2",
+              "batsman_name": "Ben Willsdon",
+              "batsman_id": "5937911",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Mohammad Zabehulah",
+              "bowler_id": "5662646",
+              "runs": "2",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "3",
+              "batsman_name": "Dominic Sear",
+              "batsman_id": "5611461",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "69",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "4",
+              "batsman_name": "Johnny Prior",
+              "batsman_id": "5953754",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Mohammed Qasim Nasiri",
+              "bowler_id": "6565490",
+              "runs": "2",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "5",
+              "batsman_name": "Max Webb",
+              "batsman_id": "5795222",
+              "how_out": "st",
+              "fielder_name": "Michael Gould",
+              "fielder_id": "4735733",
+              "bowler_name": "Yash Tyagi",
+              "bowler_id": "6743916",
+              "runs": "6",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "6",
+              "batsman_name": "Aidan Drew",
+              "batsman_id": "4888986",
+              "how_out": "ct",
+              "fielder_name": "Jigar Parekh",
+              "fielder_id": "4717819",
+              "bowler_name": "Hameed Ahmadzai",
+              "bowler_id": "5564004",
+              "runs": "1",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "7",
+              "batsman_name": "Richard Amer",
+              "batsman_id": "953504",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Hameed Ahmadzai",
+              "bowler_id": "5564004",
+              "runs": "0",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "8",
+              "batsman_name": "Harry Streak",
+              "batsman_id": "5471687",
+              "how_out": "obstructing the field",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "4",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Sam Hardwicke",
+              "batsman_id": "3581766",
+              "how_out": "ct",
+              "fielder_name": "Hameed Ahmadzai",
+              "fielder_id": "5564004",
+              "bowler_name": "Hameed Ahmadzai",
+              "bowler_id": "5564004",
+              "runs": "5",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Tom Lord",
+              "batsman_id": "5996501",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jigar Parekh",
+              "bowler_id": "4717819",
+              "runs": "1",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Joshua Hayward",
+              "batsman_id": "5407035",
+              "how_out": "absent",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [],
+          "bowl": [
+            {
+              "bowler_name": "Mohammed Qasim Nasiri",
+              "bowler_id": "6565490",
+              "overs": "5",
+              "maidens": "1",
+              "runs": "17",
+              "wides": "0",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Mohammad Zabehulah",
+              "bowler_id": "5662646",
+              "overs": "5",
+              "maidens": "1",
+              "runs": "21",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Hameed Ahmadzai",
+              "bowler_id": "5564004",
+              "overs": "6",
+              "maidens": "2",
+              "runs": "20",
+              "wides": "0",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Yash Tyagi",
+              "bowler_id": "6743916",
+              "overs": "3",
+              "maidens": "0",
+              "runs": "15",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Jigar Parekh",
+              "bowler_id": "4717819",
+              "overs": "4.2",
+              "maidens": "1",
+              "runs": "27",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

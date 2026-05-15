@@ -1,0 +1,864 @@
+{
+  "match_details": [
+    {
+      "id": 6710252,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "14/04/2026",
+      "league_name": "Greater Manchester Cricket League",
+      "league_id": "11685",
+      "competition_name": "GMCL Premier League 2",
+      "competition_id": "126164",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6710252",
+      "match_date": "14/06/2025",
+      "match_time": "12:30",
+      "ground_name": "Stand CC",
+      "ground_id": "9059",
+      "home_team_name": "1st XI",
+      "home_team_id": "330358",
+      "home_club_name": "Stand CC",
+      "home_club_id": "5994",
+      "away_team_name": "1st XI",
+      "away_team_id": "38349",
+      "away_club_name": "Woodbank CC",
+      "away_club_id": "7039",
+      "umpire_1_name": "Jon Mayor",
+      "umpire_1_id": "5324351",
+      "umpire_2_name": "Paul Anthony Higgins",
+      "umpire_2_id": "6284129",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "",
+      "scorer_1_id": "",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "38349",
+      "toss": "Woodbank CC - 1st XI won the toss and elected to field",
+      "batted_first": "330358",
+      "no_of_overs": "50",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Woodbank CC - 1st XI - Won",
+      "result_applied_to": "38349",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 330358,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 38349,
+          "game_points": "5",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Stand CC - 1st XI - Won",
+          "1001973#330358"
+        ],
+        [
+          "Woodbank CC - 1st XI - Won",
+          "1001973#38349"
+        ],
+        [
+          "Tied",
+          1001979
+        ],
+        [
+          "Cancelled No Play",
+          1001975
+        ],
+        [
+          "Abandoned game started",
+          1001976
+        ],
+        [
+          "Stand CC - 1st XI - Conceded",
+          "1001977#38349"
+        ],
+        [
+          "Woodbank CC - 1st XI - Conceded",
+          "1001978#330358"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Michael Burns",
+              "player_id": 5454401,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "David Farmer",
+              "player_id": 6090777,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Thomas Hughes",
+              "player_id": 6200587,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Ben Ibson",
+              "player_id": 6196455,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Richard Lyons",
+              "player_id": 5325349,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Majid Majeed",
+              "player_id": 6198210,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Adam McGladdery",
+              "player_id": 6191641,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Laurence Ollerton",
+              "player_id": 5571563,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 9,
+              "player_name": "Joshua Pegg (O.A.)",
+              "player_id": 6511995,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Ben Watkin",
+              "player_id": 5524199,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Luke Solis",
+              "player_id": 5689115,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Harry Dearden",
+              "player_id": 5479880,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Lewis Dove",
+              "player_id": 92853,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Harvey Holt",
+              "player_id": 6189425,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Joe Humphreys",
+              "player_id": 4934717,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Sukitha Manoj (Pro)",
+              "player_id": 6578824,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 6,
+              "player_name": "Hafiz Muhammad Raza",
+              "player_id": 5608611,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Lucas Selby",
+              "player_id": 5896376,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Xander Selby",
+              "player_id": 4844076,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "matt wilkes",
+              "player_id": 6190997,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Ryan Wilkes",
+              "player_id": 6188504,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Stephen Dearden",
+              "player_id": 6192776,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Stand CC - 1st XI",
+          "team_batting_id": "330358",
+          "innings_number": 1,
+          "extra_byes": "8",
+          "extra_leg_byes": "7",
+          "extra_wides": "33",
+          "extra_no_balls": "1",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "49",
+          "runs": "180",
+          "wickets": "10",
+          "overs": "50.0",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "50.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Joshua Pegg (O.A.)",
+              "batsman_id": "6511995",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Harry Dearden",
+              "bowler_id": "5479880",
+              "runs": "24",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "47"
+            },
+            {
+              "position": "2",
+              "batsman_name": "David Farmer",
+              "batsman_id": "6090777",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Ryan Wilkes",
+              "bowler_id": "6188504",
+              "runs": "21",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "48"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Richard Lyons",
+              "batsman_id": "5325349",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Ryan Wilkes",
+              "bowler_id": "6188504",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "10"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Laurence Ollerton",
+              "batsman_id": "5571563",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Harry Dearden",
+              "bowler_id": "5479880",
+              "runs": "4",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "22"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Majid Majeed",
+              "batsman_id": "6198210",
+              "how_out": "ct",
+              "fielder_name": "Hafiz Muhammad Raza",
+              "fielder_id": "5608611",
+              "bowler_name": "Xander Selby",
+              "bowler_id": "4844076",
+              "runs": "25",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "38"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Michael Burns",
+              "batsman_id": "5454401",
+              "how_out": "ct",
+              "fielder_name": "Hafiz Muhammad Raza",
+              "fielder_id": "5608611",
+              "bowler_name": "Xander Selby",
+              "bowler_id": "4844076",
+              "runs": "23",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "48"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Ben Watkin",
+              "batsman_id": "5524199",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Xander Selby",
+              "bowler_id": "4844076",
+              "runs": "21",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "53"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Thomas Hughes",
+              "batsman_id": "6200587",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "7",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "18"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Ben Ibson",
+              "batsman_id": "6196455",
+              "how_out": "st",
+              "fielder_name": "Sukitha Manoj (Pro)",
+              "fielder_id": "6578824",
+              "bowler_name": "Xander Selby",
+              "bowler_id": "4844076",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "4"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Luke Solis",
+              "batsman_id": "5689115",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "matt wilkes",
+              "bowler_id": "6190997",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "6"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Adam McGladdery",
+              "batsman_id": "6191641",
+              "how_out": "run out",
+              "fielder_name": "Sukitha Manoj (Pro)",
+              "fielder_id": "6578824",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "7"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "63",
+              "wickets": 1,
+              "batsman_out_name": "Joshua Pegg (O.A.)",
+              "batsman_out_id": "6511995",
+              "batsman_in_name": "David Farmer",
+              "batsman_in_id": "6090777",
+              "batsman_in_runs": "15"
+            },
+            {
+              "runs": "66",
+              "wickets": 2,
+              "batsman_out_name": "Richard Lyons",
+              "batsman_out_id": "5325349",
+              "batsman_in_name": "David Farmer",
+              "batsman_in_id": "6090777",
+              "batsman_in_runs": "15"
+            },
+            {
+              "runs": "79",
+              "wickets": 3,
+              "batsman_out_name": "David Farmer",
+              "batsman_out_id": "6090777",
+              "batsman_in_name": "Laurence Ollerton",
+              "batsman_in_id": "5571563",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "91",
+              "wickets": 4,
+              "batsman_out_name": "Laurence Ollerton",
+              "batsman_out_id": "5571563",
+              "batsman_in_name": "Majid Majeed",
+              "batsman_in_id": "6198210",
+              "batsman_in_runs": "7"
+            },
+            {
+              "runs": "116",
+              "wickets": 5,
+              "batsman_out_name": "Majid Majeed",
+              "batsman_out_id": "6198210",
+              "batsman_in_name": "Michael Burns",
+              "batsman_in_id": "5454401",
+              "batsman_in_runs": "5"
+            },
+            {
+              "runs": "162",
+              "wickets": 6,
+              "batsman_out_name": "Michael Burns",
+              "batsman_out_id": "5454401",
+              "batsman_in_name": "Ben Watkin",
+              "batsman_in_id": "5524199",
+              "batsman_in_runs": "16"
+            },
+            {
+              "runs": "173",
+              "wickets": 7,
+              "batsman_out_name": "Ben Watkin",
+              "batsman_out_id": "5524199",
+              "batsman_in_name": "Thomas Hughes",
+              "batsman_in_id": "6200587",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "173",
+              "wickets": 8,
+              "batsman_out_name": "Ben Ibson",
+              "batsman_out_id": "6196455",
+              "batsman_in_name": "Thomas Hughes",
+              "batsman_in_id": "6200587",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "176",
+              "wickets": 9,
+              "batsman_out_name": "Luke Solis",
+              "batsman_out_id": "5689115",
+              "batsman_in_name": "Thomas Hughes",
+              "batsman_in_id": "6200587",
+              "batsman_in_runs": "5"
+            },
+            {
+              "runs": "180",
+              "wickets": 10,
+              "batsman_out_name": "Adam McGladdery",
+              "batsman_out_id": "6191641",
+              "batsman_in_name": "Thomas Hughes",
+              "batsman_in_id": "6200587",
+              "batsman_in_runs": "7"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Harry Dearden",
+              "bowler_id": "5479880",
+              "overs": "12.0",
+              "maidens": "1",
+              "runs": "52",
+              "wides": "20",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Hafiz Muhammad Raza",
+              "bowler_id": "5608611",
+              "overs": "4.0",
+              "maidens": "1",
+              "runs": "11",
+              "wides": "3",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "matt wilkes",
+              "bowler_id": "6190997",
+              "overs": "7.0",
+              "maidens": "0",
+              "runs": "25",
+              "wides": "5",
+              "wickets": "1",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Ryan Wilkes",
+              "bowler_id": "6188504",
+              "overs": "15.0",
+              "maidens": "1",
+              "runs": "45",
+              "wides": "3",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Xander Selby",
+              "bowler_id": "4844076",
+              "overs": "12.0",
+              "maidens": "2",
+              "runs": "32",
+              "wides": "2",
+              "wickets": "4",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Woodbank CC - 1st XI",
+          "team_batting_id": "38349",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "10",
+          "extra_wides": "9",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "19",
+          "runs": "182",
+          "wickets": "4",
+          "overs": "41.5",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "50.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Stephen Dearden",
+              "batsman_id": "6192776",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Michael Burns",
+              "bowler_id": "5454401",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "3"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Joe Humphreys",
+              "batsman_id": "4934717",
+              "how_out": "ct",
+              "fielder_name": "Ben Watkin",
+              "fielder_id": "5524199",
+              "bowler_name": "Adam McGladdery",
+              "bowler_id": "6191641",
+              "runs": "16",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "25"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Harvey Holt",
+              "batsman_id": "6189425",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Michael Burns",
+              "bowler_id": "5454401",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "16"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Sukitha Manoj (Pro)",
+              "batsman_id": "6578824",
+              "how_out": "ct",
+              "fielder_name": "David Farmer",
+              "fielder_id": "6090777",
+              "bowler_name": "Michael Burns",
+              "bowler_id": "5454401",
+              "runs": "61",
+              "fours": "6",
+              "sixes": "1",
+              "balls": "95"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Harry Dearden",
+              "batsman_id": "5479880",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "62",
+              "fours": "9",
+              "sixes": "0",
+              "balls": "88"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Lucas Selby",
+              "batsman_id": "5896376",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "21",
+              "fours": "2",
+              "sixes": "2",
+              "balls": "24"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Lewis Dove",
+              "batsman_id": "92853",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "8",
+              "batsman_name": "Xander Selby",
+              "batsman_id": "4844076",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Ryan Wilkes",
+              "batsman_id": "6188504",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "matt wilkes",
+              "batsman_id": "6190997",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Hafiz Muhammad Raza",
+              "batsman_id": "5608611",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "0",
+              "wickets": 1,
+              "batsman_out_name": "Stephen Dearden",
+              "batsman_out_id": "6192776",
+              "batsman_in_name": "Joe Humphreys",
+              "batsman_in_id": "4934717",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "8",
+              "wickets": 2,
+              "batsman_out_name": "Harvey Holt",
+              "batsman_out_id": "6189425",
+              "batsman_in_name": "Joe Humphreys",
+              "batsman_in_id": "4934717",
+              "batsman_in_runs": "3"
+            },
+            {
+              "runs": "38",
+              "wickets": 3,
+              "batsman_out_name": "Joe Humphreys",
+              "batsman_out_id": "4934717",
+              "batsman_in_name": "Sukitha Manoj (Pro)",
+              "batsman_in_id": "6578824",
+              "batsman_in_runs": "17"
+            },
+            {
+              "runs": "143",
+              "wickets": 4,
+              "batsman_out_name": "Sukitha Manoj (Pro)",
+              "batsman_out_id": "6578824",
+              "batsman_in_name": "Harry Dearden",
+              "batsman_in_id": "5479880",
+              "batsman_in_runs": "45"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Michael Burns",
+              "bowler_id": "5454401",
+              "overs": "11.0",
+              "maidens": "2",
+              "runs": "47",
+              "wides": "1",
+              "wickets": "3",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Adam McGladdery",
+              "bowler_id": "6191641",
+              "overs": "8.5",
+              "maidens": "2",
+              "runs": "35",
+              "wides": "3",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Majid Majeed",
+              "bowler_id": "6198210",
+              "overs": "7.0",
+              "maidens": "0",
+              "runs": "31",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Joshua Pegg (O.A.)",
+              "bowler_id": "6511995",
+              "overs": "11.0",
+              "maidens": "1",
+              "runs": "38",
+              "wides": "1",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Luke Solis",
+              "bowler_id": "5689115",
+              "overs": "3.0",
+              "maidens": "0",
+              "runs": "20",
+              "wides": "4",
+              "wickets": "0",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

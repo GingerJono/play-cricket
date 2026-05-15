@@ -1,0 +1,844 @@
+{
+  "match_details": [
+    {
+      "id": 6509561,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "01/04/2026",
+      "league_name": "Greater Manchester Cricket League",
+      "league_id": "11685",
+      "competition_name": "GMCL Championship",
+      "competition_id": "119488",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6509561",
+      "match_date": "25/05/2024",
+      "match_time": "12:30",
+      "ground_name": "Add New Ground",
+      "ground_id": "",
+      "home_team_name": "1st XI",
+      "home_team_id": "352646",
+      "home_club_name": "Saddleworth CC",
+      "home_club_id": "5475",
+      "away_team_name": "1st XI",
+      "away_team_id": "361505",
+      "away_club_name": "Glodwick CC",
+      "away_club_id": "2911",
+      "umpire_1_name": "Mike Hill",
+      "umpire_1_id": "25271",
+      "umpire_2_name": "Behzad Khan",
+      "umpire_2_id": "6579846",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "",
+      "scorer_1_id": "",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "361505",
+      "toss": "Glodwick CC - 1st XI won the toss and elected to bat",
+      "batted_first": "361505",
+      "no_of_overs": "50",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Saddleworth CC - 1st XI - Won",
+      "result_applied_to": "352646",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 352646,
+          "game_points": "5",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 361505,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Saddleworth CC - 1st XI - Won",
+          "952575#352646"
+        ],
+        [
+          "Glodwick CC - 1st XI - Won",
+          "952575#361505"
+        ],
+        [
+          "Tied",
+          952581
+        ],
+        [
+          "Cancelled",
+          952577
+        ],
+        [
+          "Abandoned in Play",
+          952578
+        ],
+        [
+          "Abandoned No Play",
+          952583
+        ],
+        [
+          "Saddleworth CC - 1st XI - Conceded",
+          "952579#361505"
+        ],
+        [
+          "Glodwick CC - 1st XI - Conceded",
+          "952580#352646"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Jack Boyle",
+              "player_id": 6195273,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "mohammed kamran",
+              "player_id": 5379609,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Iftikhar Naseer",
+              "player_id": 6196609,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Luca Pemberton",
+              "player_id": 6186777,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 5,
+              "player_name": "Zak Pemberton",
+              "player_id": 5418739,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Daniel Poole",
+              "player_id": 6193396,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Saqib Javed",
+              "player_id": 6223073,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Elliot Lawrence",
+              "player_id": 5384916,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Muhammad Shakir",
+              "player_id": 6186816,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Steven Howard",
+              "player_id": 5500552,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Thomas Parker",
+              "player_id": 5876833,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Sufyaan Ali",
+              "player_id": 6204814,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "James Chadwick",
+              "player_id": 5074891,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 3,
+              "player_name": "Bradley Heap",
+              "player_id": 6197819,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Ali Khan",
+              "player_id": 6186597,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Zeeshan Khan",
+              "player_id": 6186586,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Ahsan Khan (Oa)",
+              "player_id": 6193763,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Zaheeb Mirza",
+              "player_id": 6331127,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Rehan Rafiq",
+              "player_id": 6201614,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Farukh Shaghir",
+              "player_id": 6159217,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Zain Tahir",
+              "player_id": 6222446,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Arkam Zeer",
+              "player_id": 6199196,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Glodwick CC - 1st XI",
+          "team_batting_id": "361505",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "3",
+          "extra_wides": "8",
+          "extra_no_balls": "1",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "12",
+          "runs": "81",
+          "wickets": "10",
+          "overs": "37.3",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "50.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Zain Tahir",
+              "batsman_id": "6222446",
+              "how_out": "ct",
+              "fielder_name": "mohammed kamran",
+              "fielder_id": "5379609",
+              "bowler_name": "Steven Howard",
+              "bowler_id": "5500552",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "13"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Farukh Shaghir",
+              "batsman_id": "6159217",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Muhammad Shakir",
+              "bowler_id": "6186816",
+              "runs": "5",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "33"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Rehan Rafiq",
+              "batsman_id": "6201614",
+              "how_out": "ct",
+              "fielder_name": "Luca Pemberton",
+              "fielder_id": "6186777",
+              "bowler_name": "mohammed kamran",
+              "bowler_id": "5379609",
+              "runs": "8",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "47"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Ali Khan",
+              "batsman_id": "6186597",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Muhammad Shakir",
+              "bowler_id": "6186816",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "1"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Zeeshan Khan",
+              "batsman_id": "6186586",
+              "how_out": "ct",
+              "fielder_name": "Zak Pemberton",
+              "fielder_id": "5418739",
+              "bowler_name": "Iftikhar Naseer",
+              "bowler_id": "6196609",
+              "runs": "30",
+              "fours": "3",
+              "sixes": "1",
+              "balls": "67"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Bradley Heap",
+              "batsman_id": "6197819",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "mohammed kamran",
+              "bowler_id": "5379609",
+              "runs": "12",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "9"
+            },
+            {
+              "position": "7",
+              "batsman_name": "James Chadwick",
+              "batsman_id": "5074891",
+              "how_out": "ct",
+              "fielder_name": "Iftikhar Naseer",
+              "fielder_id": "6196609",
+              "bowler_name": "Iftikhar Naseer",
+              "bowler_id": "6196609",
+              "runs": "8",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "31"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Arkam Zeer",
+              "batsman_id": "6199196",
+              "how_out": "ct",
+              "fielder_name": "Unsure",
+              "fielder_id": "",
+              "bowler_name": "Iftikhar Naseer",
+              "bowler_id": "6196609",
+              "runs": "1",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "9"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Zaheeb Mirza",
+              "batsman_id": "6331127",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "4",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "8"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Ahsan Khan (Oa)",
+              "batsman_id": "6193763",
+              "how_out": "run out",
+              "fielder_name": "Steven Howard",
+              "fielder_id": "5500552",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "1",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "2"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Sufyaan Ali",
+              "batsman_id": "6204814",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Iftikhar Naseer",
+              "bowler_id": "6196609",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "6"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "1",
+              "wickets": 1,
+              "batsman_out_name": "Zain Tahir",
+              "batsman_out_id": "6222446",
+              "batsman_in_name": "Farukh Shaghir",
+              "batsman_in_id": "6159217",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "9",
+              "wickets": 2,
+              "batsman_out_name": "Farukh Shaghir",
+              "batsman_out_id": "6159217",
+              "batsman_in_name": "Rehan Rafiq",
+              "batsman_in_id": "6201614",
+              "batsman_in_runs": "2"
+            },
+            {
+              "runs": "9",
+              "wickets": 3,
+              "batsman_out_name": "Ali Khan",
+              "batsman_out_id": "6186597",
+              "batsman_in_name": "Rehan Rafiq",
+              "batsman_in_id": "6201614",
+              "batsman_in_runs": "2"
+            },
+            {
+              "runs": "23",
+              "wickets": 4,
+              "batsman_out_name": "Rehan Rafiq",
+              "batsman_out_id": "6201614",
+              "batsman_in_name": "Zeeshan Khan",
+              "batsman_in_id": "6186586",
+              "batsman_in_runs": "7"
+            },
+            {
+              "runs": "38",
+              "wickets": 5,
+              "batsman_out_name": "Bradley Heap",
+              "batsman_out_id": "6197819",
+              "batsman_in_name": "Zeeshan Khan",
+              "batsman_in_id": "6186586",
+              "batsman_in_runs": "8"
+            },
+            {
+              "runs": "72",
+              "wickets": 6,
+              "batsman_out_name": "James Chadwick",
+              "batsman_out_id": "5074891",
+              "batsman_in_name": "Zeeshan Khan",
+              "batsman_in_id": "6186586",
+              "batsman_in_runs": "29"
+            },
+            {
+              "runs": "75",
+              "wickets": 7,
+              "batsman_out_name": "Arkam Zeer",
+              "batsman_out_id": "6199196",
+              "batsman_in_name": "Zeeshan Khan",
+              "batsman_in_id": "6186586",
+              "batsman_in_runs": "30"
+            },
+            {
+              "runs": "77",
+              "wickets": 8,
+              "batsman_out_name": "Zeeshan Khan",
+              "batsman_out_id": "6186586",
+              "batsman_in_name": "Zaheeb Mirza",
+              "batsman_in_id": "6331127",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "79",
+              "wickets": 9,
+              "batsman_out_name": "Ahsan Khan (Oa)",
+              "batsman_out_id": "6193763",
+              "batsman_in_name": "Ahsan Khan (Oa)",
+              "batsman_in_id": "6193763",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "81",
+              "wickets": 10,
+              "batsman_out_name": "Sufyaan Ali",
+              "batsman_out_id": "6204814",
+              "batsman_in_name": "Zaheeb Mirza",
+              "batsman_in_id": "6331127",
+              "batsman_in_runs": "4"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Muhammad Shakir",
+              "bowler_id": "6186816",
+              "overs": "11.0",
+              "maidens": "8",
+              "runs": "7",
+              "wides": "0",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Steven Howard",
+              "bowler_id": "5500552",
+              "overs": "11.0",
+              "maidens": "2",
+              "runs": "16",
+              "wides": "2",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "mohammed kamran",
+              "bowler_id": "5379609",
+              "overs": "5.0",
+              "maidens": "0",
+              "runs": "23",
+              "wides": "1",
+              "wickets": "2",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Jack Boyle",
+              "bowler_id": "6195273",
+              "overs": "2.0",
+              "maidens": "0",
+              "runs": "11",
+              "wides": "2",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Elliot Lawrence",
+              "bowler_id": "5384916",
+              "overs": "4.0",
+              "maidens": "0",
+              "runs": "14",
+              "wides": "2",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Iftikhar Naseer",
+              "bowler_id": "6196609",
+              "overs": "4.3",
+              "maidens": "1",
+              "runs": "7",
+              "wides": "1",
+              "wickets": "4",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Saddleworth CC - 1st XI",
+          "team_batting_id": "352646",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "0",
+          "extra_wides": "8",
+          "extra_no_balls": "2",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "10",
+          "runs": "82",
+          "wickets": "4",
+          "overs": "21.2",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "50.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Zak Pemberton",
+              "batsman_id": "5418739",
+              "how_out": "ct",
+              "fielder_name": "James Chadwick",
+              "fielder_id": "5074891",
+              "bowler_name": "Arkam Zeer",
+              "bowler_id": "6199196",
+              "runs": "8",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "4"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Daniel Poole",
+              "batsman_id": "6193396",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Arkam Zeer",
+              "bowler_id": "6199196",
+              "runs": "23",
+              "fours": "3",
+              "sixes": "0",
+              "balls": "55"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Elliot Lawrence",
+              "batsman_id": "5384916",
+              "how_out": "ct",
+              "fielder_name": "Arkam Zeer",
+              "fielder_id": "6199196",
+              "bowler_name": "Arkam Zeer",
+              "bowler_id": "6199196",
+              "runs": "7",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "30"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Iftikhar Naseer",
+              "batsman_id": "6196609",
+              "how_out": "ct",
+              "fielder_name": "Ali Khan",
+              "fielder_id": "6186597",
+              "bowler_name": "Arkam Zeer",
+              "bowler_id": "6199196",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "3"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Saqib Javed",
+              "batsman_id": "6223073",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "33",
+              "fours": "3",
+              "sixes": "2",
+              "balls": "29"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Luca Pemberton",
+              "batsman_id": "6186777",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "1",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "9"
+            },
+            {
+              "position": "7",
+              "batsman_name": "mohammed kamran",
+              "batsman_id": "5379609",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "8",
+              "batsman_name": "Steven Howard",
+              "batsman_id": "5500552",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Muhammad Shakir",
+              "batsman_id": "6186816",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Jack Boyle",
+              "batsman_id": "6195273",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "8",
+              "wickets": 1,
+              "batsman_out_name": "Zak Pemberton",
+              "batsman_out_id": "5418739",
+              "batsman_in_name": "Daniel Poole",
+              "batsman_in_id": "6193396",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "34",
+              "wickets": 2,
+              "batsman_out_name": "Elliot Lawrence",
+              "batsman_out_id": "5384916",
+              "batsman_in_name": "Daniel Poole",
+              "batsman_in_id": "6193396",
+              "batsman_in_runs": "13"
+            },
+            {
+              "runs": "34",
+              "wickets": 3,
+              "batsman_out_name": "Iftikhar Naseer",
+              "batsman_out_id": "6196609",
+              "batsman_in_name": "Daniel Poole",
+              "batsman_in_id": "6193396",
+              "batsman_in_runs": "13"
+            },
+            {
+              "runs": "64",
+              "wickets": 4,
+              "batsman_out_name": "Daniel Poole",
+              "batsman_out_id": "6193396",
+              "batsman_in_name": "Saqib Javed",
+              "batsman_in_id": "6223073",
+              "batsman_in_runs": "17"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Ahsan Khan (Oa)",
+              "bowler_id": "6193763",
+              "overs": "2.2",
+              "maidens": "0",
+              "runs": "15",
+              "wides": "1",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Arkam Zeer",
+              "bowler_id": "6199196",
+              "overs": "11.0",
+              "maidens": "3",
+              "runs": "38",
+              "wides": "1",
+              "wickets": "4",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Sufyaan Ali",
+              "bowler_id": "6204814",
+              "overs": "8.0",
+              "maidens": "0",
+              "runs": "29",
+              "wides": "6",
+              "wickets": "0",
+              "no_balls": "2"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,874 @@
+{
+  "match_details": [
+    {
+      "id": 6885180,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "21/06/2025",
+      "league_name": "Sussex Cricket League",
+      "league_id": "16378",
+      "competition_name": "Division 3 West",
+      "competition_id": "125937",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6885180",
+      "match_date": "14/06/2025",
+      "match_time": "12:30",
+      "ground_name": "St Johns Park, Burgess Hill, Sussex",
+      "ground_id": "5031",
+      "home_team_name": "1st XI",
+      "home_team_id": "56580",
+      "home_club_name": "Burgess Hill CC",
+      "home_club_id": "1539",
+      "away_team_name": "1st XI",
+      "away_team_id": "16753",
+      "away_club_name": "Steyning CC",
+      "away_club_id": "6042",
+      "umpire_1_name": "Ernest Nighy Panel Umpire",
+      "umpire_1_id": "4066573",
+      "umpire_2_name": "David Smith Panel Umpire",
+      "umpire_2_id": "6556681",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "Sarah Plimmer",
+      "scorer_1_id": "5168500",
+      "scorer_2_name": "Jackie Holmes",
+      "scorer_2_id": "23299",
+      "toss_won_by_team_id": "16753",
+      "toss": "Steyning CC - 1st XI won the toss and elected to bat",
+      "batted_first": "16753",
+      "no_of_overs": "45",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Steyning CC - 1st XI - Won",
+      "result_applied_to": "16753",
+      "match_notes": "",
+      "points": [
+        {
+          "team_id": 56580,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "8.0",
+          "bonus_points_batting": "4.0",
+          "bonus_points_bowling": "4.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 16753,
+          "game_points": "30",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Burgess Hill CC - 1st XI - Won",
+          "1000136#56580"
+        ],
+        [
+          "Steyning CC - 1st XI - Won",
+          "1000136#16753"
+        ],
+        [
+          "Tied",
+          1000142
+        ],
+        [
+          "Cancelled",
+          1000138
+        ],
+        [
+          "Abandoned",
+          1000139
+        ],
+        [
+          "Burgess Hill CC - 1st XI - Conceded",
+          "1000140#16753"
+        ],
+        [
+          "Steyning CC - 1st XI - Conceded",
+          "1000141#56580"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Tom Trowbridge",
+              "player_id": 40210,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Hayden Wickwar",
+              "player_id": 5443164,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Savindu Thuppahige",
+              "player_id": 6621002,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Conor Ward",
+              "player_id": 5938047,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Lewis Mamoany",
+              "player_id": 5447093,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Andrew Davies",
+              "player_id": 40211,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Ajaz Noorzai",
+              "player_id": 6324775,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Wilf Tunley-Lo",
+              "player_id": 6564926,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "James Plimmer",
+              "player_id": 6253065,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Billy Fuller",
+              "player_id": 3579857,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Dan Austin",
+              "player_id": 1534738,
+              "captain": false,
+              "wicket_keeper": true
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Aden-Jay Wood",
+              "player_id": 6550322,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Hywel Jones",
+              "player_id": 742222,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Harvey King",
+              "player_id": 5438442,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Christopher Barnett",
+              "player_id": 5858349,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Dylan Mares",
+              "player_id": 6155829,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Ben Buckley",
+              "player_id": 224961,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "William Crees",
+              "player_id": 4717940,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Gus Simon",
+              "player_id": 4152666,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 9,
+              "player_name": "Jake Martin",
+              "player_id": 4744364,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "James Johnson",
+              "player_id": 5512939,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Robson Piper",
+              "player_id": 4909510,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Steyning CC - 1st XI",
+          "team_batting_id": "16753",
+          "innings_number": 1,
+          "extra_byes": "5",
+          "extra_leg_byes": "2",
+          "extra_wides": "35",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "42",
+          "runs": "306",
+          "wickets": "4",
+          "overs": "45.0",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "45.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Aden-Jay Wood",
+              "batsman_id": "6550322",
+              "how_out": "ct",
+              "fielder_name": "Dan Austin",
+              "fielder_id": "1534738",
+              "bowler_name": "Wilf Tunley-Lo",
+              "bowler_id": "6564926",
+              "runs": "12",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "18"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Hywel Jones",
+              "batsman_id": "742222",
+              "how_out": "ct",
+              "fielder_name": "Dan Austin",
+              "fielder_id": "1534738",
+              "bowler_name": "Wilf Tunley-Lo",
+              "bowler_id": "6564926",
+              "runs": "6",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "9"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Harvey King",
+              "batsman_id": "5438442",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "118",
+              "fours": "12",
+              "sixes": "3",
+              "balls": "115"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Dylan Mares",
+              "batsman_id": "6155829",
+              "how_out": "run out",
+              "fielder_name": "Lewis Mamoany",
+              "fielder_id": "5447093",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "50",
+              "fours": "7",
+              "sixes": "0",
+              "balls": "65"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Christopher Barnett",
+              "batsman_id": "5858349",
+              "how_out": "ct",
+              "fielder_name": "Lewis Mamoany",
+              "fielder_id": "5447093",
+              "bowler_name": "Savindu Thuppahige",
+              "bowler_id": "6621002",
+              "runs": "61",
+              "fours": "8",
+              "sixes": "3",
+              "balls": "45"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Ben Buckley",
+              "batsman_id": "224961",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "17",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "18"
+            },
+            {
+              "position": "7",
+              "batsman_name": "William Crees",
+              "batsman_id": "4717940",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "8",
+              "batsman_name": "Gus Simon",
+              "batsman_id": "4152666",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Jake Martin",
+              "batsman_id": "4744364",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "James Johnson",
+              "batsman_id": "5512939",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Robson Piper",
+              "batsman_id": "4909510",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "24",
+              "wickets": 1,
+              "batsman_out_name": "Hywel Jones",
+              "batsman_out_id": "742222",
+              "batsman_in_name": "Aden-Jay Wood",
+              "batsman_in_id": "6550322",
+              "batsman_in_runs": "12"
+            },
+            {
+              "runs": "26",
+              "wickets": 2,
+              "batsman_out_name": "Aden-Jay Wood",
+              "batsman_out_id": "6550322",
+              "batsman_in_name": "Harvey King",
+              "batsman_in_id": "5438442",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "121",
+              "wickets": 3,
+              "batsman_out_name": "Dylan Mares",
+              "batsman_out_id": "6155829",
+              "batsman_in_name": "Harvey King",
+              "batsman_in_id": "5438442",
+              "batsman_in_runs": "32"
+            },
+            {
+              "runs": "213",
+              "wickets": 4,
+              "batsman_out_name": "Christopher Barnett",
+              "batsman_out_id": "5858349",
+              "batsman_in_name": "Harvey King",
+              "batsman_in_id": "5438442",
+              "batsman_in_runs": "59"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Wilf Tunley-Lo",
+              "bowler_id": "6564926",
+              "overs": "7.0",
+              "maidens": "0",
+              "runs": "68",
+              "wides": "16",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Savindu Thuppahige",
+              "bowler_id": "6621002",
+              "overs": "9.0",
+              "maidens": "1",
+              "runs": "47",
+              "wides": "6",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Ajaz Noorzai",
+              "bowler_id": "6324775",
+              "overs": "9.0",
+              "maidens": "0",
+              "runs": "74",
+              "wides": "8",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Hayden Wickwar",
+              "bowler_id": "5443164",
+              "overs": "9.0",
+              "maidens": "0",
+              "runs": "34",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Lewis Mamoany",
+              "bowler_id": "5447093",
+              "overs": "9.0",
+              "maidens": "0",
+              "runs": "54",
+              "wides": "5",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Conor Ward",
+              "bowler_id": "5938047",
+              "overs": "2.0",
+              "maidens": "0",
+              "runs": "22",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Burgess Hill CC - 1st XI",
+          "team_batting_id": "56580",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "4",
+          "extra_wides": "18",
+          "extra_no_balls": "0",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "22",
+          "runs": "188",
+          "wickets": "10",
+          "overs": "37.0",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "45.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Tom Trowbridge",
+              "batsman_id": "40210",
+              "how_out": "ct",
+              "fielder_name": "Gus Simon",
+              "fielder_id": "4152666",
+              "bowler_name": "Jake Martin",
+              "bowler_id": "4744364",
+              "runs": "21",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "34"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Hayden Wickwar",
+              "batsman_id": "5443164",
+              "how_out": "ct",
+              "fielder_name": "Gus Simon",
+              "fielder_id": "4152666",
+              "bowler_name": "Jake Martin",
+              "bowler_id": "4744364",
+              "runs": "5",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "12"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Savindu Thuppahige",
+              "batsman_id": "6621002",
+              "how_out": "ct",
+              "fielder_name": "Hywel Jones",
+              "fielder_id": "742222",
+              "bowler_name": "Jake Martin",
+              "bowler_id": "4744364",
+              "runs": "20",
+              "fours": "3",
+              "sixes": "1",
+              "balls": "33"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Conor Ward",
+              "batsman_id": "5938047",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Jake Martin",
+              "bowler_id": "4744364",
+              "runs": "10",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "14"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Andrew Davies",
+              "batsman_id": "40211",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Hywel Jones",
+              "bowler_id": "742222",
+              "runs": "14",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "33"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Lewis Mamoany",
+              "batsman_id": "5447093",
+              "how_out": "ct",
+              "fielder_name": "Hywel Jones",
+              "fielder_id": "742222",
+              "bowler_name": "Hywel Jones",
+              "bowler_id": "742222",
+              "runs": "54",
+              "fours": "7",
+              "sixes": "1",
+              "balls": "40"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Wilf Tunley-Lo",
+              "batsman_id": "6564926",
+              "how_out": "ct",
+              "fielder_name": "Aden-Jay Wood",
+              "fielder_id": "6550322",
+              "bowler_name": "William Crees",
+              "bowler_id": "4717940",
+              "runs": "22",
+              "fours": "1",
+              "sixes": "1",
+              "balls": "25"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Ajaz Noorzai",
+              "batsman_id": "6324775",
+              "how_out": "ct",
+              "fielder_name": "Jake Martin",
+              "fielder_id": "4744364",
+              "bowler_name": "Hywel Jones",
+              "bowler_id": "742222",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "4"
+            },
+            {
+              "position": "9",
+              "batsman_name": "James Plimmer",
+              "batsman_id": "6253065",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "William Crees",
+              "bowler_id": "4717940",
+              "runs": "12",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "16"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Billy Fuller",
+              "batsman_id": "3579857",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Robson Piper",
+              "bowler_id": "4909510",
+              "runs": "6",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "11"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Dan Austin",
+              "batsman_id": "1534738",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "0"
+            }
+          ],
+          "fow": [
+            {
+              "runs": "21",
+              "wickets": 1,
+              "batsman_out_name": "Hayden Wickwar",
+              "batsman_out_id": "5443164",
+              "batsman_in_name": "Tom Trowbridge",
+              "batsman_in_id": "40210",
+              "batsman_in_runs": "12"
+            },
+            {
+              "runs": "64",
+              "wickets": 2,
+              "batsman_out_name": "Savindu Thuppahige",
+              "batsman_out_id": "6621002",
+              "batsman_in_name": "Tom Trowbridge",
+              "batsman_in_id": "40210",
+              "batsman_in_runs": "20"
+            },
+            {
+              "runs": "69",
+              "wickets": 3,
+              "batsman_out_name": "Tom Trowbridge",
+              "batsman_out_id": "40210",
+              "batsman_in_name": "Conor Ward",
+              "batsman_in_id": "5938047",
+              "batsman_in_runs": "4"
+            },
+            {
+              "runs": "76",
+              "wickets": 4,
+              "batsman_out_name": "Conor Ward",
+              "batsman_out_id": "5938047",
+              "batsman_in_name": "Andrew Davies",
+              "batsman_in_id": "40211",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "131",
+              "wickets": 5,
+              "batsman_out_name": "Andrew Davies",
+              "batsman_out_id": "40211",
+              "batsman_in_name": "Lewis Mamoany",
+              "batsman_in_id": "5447093",
+              "batsman_in_runs": "40"
+            },
+            {
+              "runs": "149",
+              "wickets": 6,
+              "batsman_out_name": "Lewis Mamoany",
+              "batsman_out_id": "5447093",
+              "batsman_in_name": "Wilf Tunley-Lo",
+              "batsman_in_id": "6564926",
+              "batsman_in_runs": "3"
+            },
+            {
+              "runs": "161",
+              "wickets": 7,
+              "batsman_out_name": "Ajaz Noorzai",
+              "batsman_out_id": "6324775",
+              "batsman_in_name": "Wilf Tunley-Lo",
+              "batsman_in_id": "6564926",
+              "batsman_in_runs": "13"
+            },
+            {
+              "runs": "173",
+              "wickets": 8,
+              "batsman_out_name": "Wilf Tunley-Lo",
+              "batsman_out_id": "6564926",
+              "batsman_in_name": "James Plimmer",
+              "batsman_in_id": "6253065",
+              "batsman_in_runs": "3"
+            },
+            {
+              "runs": "188",
+              "wickets": 9,
+              "batsman_out_name": "James Plimmer",
+              "batsman_out_id": "6253065",
+              "batsman_in_name": "Billy Fuller",
+              "batsman_in_id": "3579857",
+              "batsman_in_runs": "6"
+            },
+            {
+              "runs": "188",
+              "wickets": 10,
+              "batsman_out_name": "Billy Fuller",
+              "batsman_out_id": "3579857",
+              "batsman_in_name": "Dan Austin",
+              "batsman_in_id": "1534738",
+              "batsman_in_runs": "0"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Jake Martin",
+              "bowler_id": "4744364",
+              "overs": "9.0",
+              "maidens": "1",
+              "runs": "35",
+              "wides": "5",
+              "wickets": "4",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Robson Piper",
+              "bowler_id": "4909510",
+              "overs": "5.0",
+              "maidens": "1",
+              "runs": "21",
+              "wides": "2",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "William Crees",
+              "bowler_id": "4717940",
+              "overs": "5.0",
+              "maidens": "0",
+              "runs": "43",
+              "wides": "9",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "James Johnson",
+              "bowler_id": "5512939",
+              "overs": "9.0",
+              "maidens": "0",
+              "runs": "48",
+              "wides": "1",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Hywel Jones",
+              "bowler_id": "742222",
+              "overs": "9.0",
+              "maidens": "0",
+              "runs": "37",
+              "wides": "1",
+              "wickets": "3",
+              "no_balls": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

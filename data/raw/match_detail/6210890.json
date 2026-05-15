@@ -1,0 +1,828 @@
+{
+  "match_details": [
+    {
+      "id": 6210890,
+      "status": "New",
+      "published": "Yes",
+      "last_updated": "23/05/2025",
+      "league_name": "Cheshire County Cricket League",
+      "league_id": "7246",
+      "competition_name": "1st XI Division 1",
+      "competition_id": "117130",
+      "competition_type": "League",
+      "match_type": "Limited Overs",
+      "game_type": "Standard",
+      "countdown_cricket": "no",
+      "match_id": "6210890",
+      "match_date": "15/06/2024",
+      "match_time": "12:00",
+      "ground_name": "Sale Cricket Ground",
+      "ground_id": "12064",
+      "home_team_name": "1st XI",
+      "home_team_id": "22538",
+      "home_club_name": "Sale CC",
+      "home_club_id": "7659",
+      "away_team_name": "1st XI",
+      "away_team_id": "15020",
+      "away_club_name": "Marple CC",
+      "away_club_id": "4235",
+      "umpire_1_name": "",
+      "umpire_1_id": "",
+      "umpire_2_name": "",
+      "umpire_2_id": "",
+      "umpire_3_name": "",
+      "umpire_3_id": "",
+      "referee_name": "",
+      "referee_id": "",
+      "scorer_1_name": "Emilia Maddison",
+      "scorer_1_id": "6424139",
+      "scorer_2_name": "",
+      "scorer_2_id": "",
+      "toss_won_by_team_id": "22538",
+      "toss": "Sale CC - 1st XI won the toss and elected to bat",
+      "batted_first": "22538",
+      "no_of_overs": "50",
+      "balls_per_innings": "",
+      "no_of_innings": "1",
+      "no_of_days": "1",
+      "no_of_players": "11",
+      "no_of_reserves": "1",
+      "result": "W",
+      "result_description": "Marple CC - 1st XI - Won",
+      "result_applied_to": "15020",
+      "match_notes": "<b>Sale CC 1st XI Innings</b><br/>\n15.1 Sale CC 1st XI: 50 runs in 15.1 overs, 71 minutes, 5 extras<br/>33.1 Sale CC 1st XI: 100 runs in 33.1 overs, 133 minutes, 7 extras<br/>36.6 George Walker: 50 runs in 90 balls, 112 minutes (5x4, 1x6)<br/>41.1 8th Wicket: 50 runs in 52 balls, 34 minutes, George Walker 20 (27), Ali Barrowman 28 (25), 2 extras<br/>41.4 Sale CC 1st XI: 150 runs in 41.4 overs, 168 minutes, 8 extras\n<br/>\n<br/>\n<b>Marple CC 1st XI Innings</b><br/>\n9.1 Marple CC 1st XI: 50 runs in 9.1 overs, 42 minutes, 3 extras<br/>16.6 Marple CC 1st XI: 100 runs in 17.0 overs, 71 minutes, 5 extras\n<br/>\n",
+      "points": [
+        {
+          "team_id": 22538,
+          "game_points": "0",
+          "penalty_points": "0.0",
+          "bonus_points_together": "3.0",
+          "bonus_points_batting": "2.0",
+          "bonus_points_bowling": "1.0",
+          "bonus_points_2nd_innings_together": ""
+        },
+        {
+          "team_id": 15020,
+          "game_points": "20",
+          "penalty_points": "0.0",
+          "bonus_points_together": "0.0",
+          "bonus_points_batting": "0.0",
+          "bonus_points_bowling": "0.0",
+          "bonus_points_2nd_innings_together": ""
+        }
+      ],
+      "match_result_types": [
+        [
+          "Sale CC - 1st XI - Won",
+          "961567#22538"
+        ],
+        [
+          "Marple CC - 1st XI - Won",
+          "961567#15020"
+        ],
+        [
+          "Tied",
+          933847
+        ],
+        [
+          "Cancelled",
+          933843
+        ],
+        [
+          "Abandoned",
+          933844
+        ],
+        [
+          "Sale CC - 1st XI - Conceded",
+          "933845#15020"
+        ],
+        [
+          "Marple CC - 1st XI - Conceded",
+          "933846#22538"
+        ],
+        [
+          "Match In Progress",
+          14
+        ]
+      ],
+      "players": [
+        {
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Mathew Spells",
+              "player_id": 3384012,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "James Dodds",
+              "player_id": 1650170,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Tyrone Lawrence",
+              "player_id": 709702,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "George Walker",
+              "player_id": 5786393,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Jonathan Davidson",
+              "player_id": 5359524,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Mike Bishop",
+              "player_id": 4444944,
+              "captain": true,
+              "wicket_keeper": true
+            },
+            {
+              "position": 7,
+              "player_name": "Amlyn Layton",
+              "player_id": 5328576,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Ali Barrowman",
+              "player_id": 5969699,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Max Bishop",
+              "player_id": 4446860,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Thomas Brassell",
+              "player_id": 5858443,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Luke Hajdu",
+              "player_id": 6207813,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        },
+        {
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Andrew Hall",
+              "player_id": 5328929,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Andrew Wild",
+              "player_id": 5327547,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 3,
+              "player_name": "James Crisall",
+              "player_id": 5327303,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Conor Ramsay",
+              "player_id": 5323157,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Max Fitzgerald",
+              "player_id": 5055964,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Mark Makin",
+              "player_id": 5473006,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Jack Grundy",
+              "player_id": 4118357,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Joel Greasley",
+              "player_id": 5619281,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 9,
+              "player_name": "Joe Cash",
+              "player_id": 5321664,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 10,
+              "player_name": "Edward Saxelby",
+              "player_id": 5557697,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 11,
+              "player_name": "Zac Phair",
+              "player_id": 6194025,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
+        }
+      ],
+      "innings": [
+        {
+          "team_batting_name": "Sale CC - 1st XI",
+          "team_batting_id": "22538",
+          "innings_number": 1,
+          "extra_byes": "0",
+          "extra_leg_byes": "1",
+          "extra_wides": "5",
+          "extra_no_balls": "2",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "8",
+          "runs": "160",
+          "wickets": "8",
+          "overs": "43.2",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "",
+          "revised_target_overs": "47.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "Mathew Spells",
+              "batsman_id": "3384012",
+              "how_out": "ct",
+              "fielder_name": "Mark Makin",
+              "fielder_id": "5473006",
+              "bowler_name": "Jack Grundy",
+              "bowler_id": "4118357",
+              "runs": "5",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "19"
+            },
+            {
+              "position": "2",
+              "batsman_name": "James Dodds",
+              "batsman_id": "1650170",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Edward Saxelby",
+              "bowler_id": "5557697",
+              "runs": "13",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "21"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Tyrone Lawrence",
+              "batsman_id": "709702",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Edward Saxelby",
+              "bowler_id": "5557697",
+              "runs": "5",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "9"
+            },
+            {
+              "position": "4",
+              "batsman_name": "George Walker",
+              "batsman_id": "5786393",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "68",
+              "fours": "7",
+              "sixes": "1",
+              "balls": "107"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Jonathan Davidson",
+              "batsman_id": "5359524",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Edward Saxelby",
+              "bowler_id": "5557697",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "4"
+            },
+            {
+              "position": "6",
+              "batsman_name": "Mike Bishop",
+              "batsman_id": "4444944",
+              "how_out": "ct",
+              "fielder_name": "Jack Grundy",
+              "fielder_id": "4118357",
+              "bowler_name": "Joe Cash",
+              "bowler_id": "5321664",
+              "runs": "19",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "26"
+            },
+            {
+              "position": "7",
+              "batsman_name": "Amlyn Layton",
+              "batsman_id": "5328576",
+              "how_out": "b",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Mark Makin",
+              "bowler_id": "5473006",
+              "runs": "11",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "39"
+            },
+            {
+              "position": "8",
+              "batsman_name": "Max Bishop",
+              "batsman_id": "4446860",
+              "how_out": "lbw",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "Mark Makin",
+              "bowler_id": "5473006",
+              "runs": "0",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "3"
+            },
+            {
+              "position": "9",
+              "batsman_name": "Ali Barrowman",
+              "batsman_id": "5969699",
+              "how_out": "ct",
+              "fielder_name": "Andrew Wild",
+              "fielder_id": "5327547",
+              "bowler_name": "Jack Grundy",
+              "bowler_id": "4118357",
+              "runs": "29",
+              "fours": "2",
+              "sixes": "1",
+              "balls": "30"
+            },
+            {
+              "position": "10",
+              "batsman_name": "Luke Hajdu",
+              "batsman_id": "6207813",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "2",
+              "fours": "0",
+              "sixes": "0",
+              "balls": "4"
+            },
+            {
+              "position": "11",
+              "batsman_name": "Thomas Brassell",
+              "batsman_id": "5858443",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "19",
+              "wickets": 1,
+              "batsman_out_name": "James Dodds",
+              "batsman_out_id": "1650170",
+              "batsman_in_name": "Mathew Spells",
+              "batsman_in_id": "3384012",
+              "batsman_in_runs": "5"
+            },
+            {
+              "runs": "19",
+              "wickets": 2,
+              "batsman_out_name": "Mathew Spells",
+              "batsman_out_id": "3384012",
+              "batsman_in_name": "Tyrone Lawrence",
+              "batsman_in_id": "709702",
+              "batsman_in_runs": "0"
+            },
+            {
+              "runs": "26",
+              "wickets": 3,
+              "batsman_out_name": "Tyrone Lawrence",
+              "batsman_out_id": "709702",
+              "batsman_in_name": "George Walker",
+              "batsman_in_id": "5786393",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "26",
+              "wickets": 4,
+              "batsman_out_name": "Jonathan Davidson",
+              "batsman_out_id": "5359524",
+              "batsman_in_name": "George Walker",
+              "batsman_in_id": "5786393",
+              "batsman_in_runs": "1"
+            },
+            {
+              "runs": "64",
+              "wickets": 5,
+              "batsman_out_name": "Mike Bishop",
+              "batsman_out_id": "4444944",
+              "batsman_in_name": "George Walker",
+              "batsman_in_id": "5786393",
+              "batsman_in_runs": "16"
+            },
+            {
+              "runs": "99",
+              "wickets": 6,
+              "batsman_out_name": "Amlyn Layton",
+              "batsman_out_id": "5328576",
+              "batsman_in_name": "George Walker",
+              "batsman_in_id": "5786393",
+              "batsman_in_runs": "40"
+            },
+            {
+              "runs": "99",
+              "wickets": 7,
+              "batsman_out_name": "Max Bishop",
+              "batsman_out_id": "4446860",
+              "batsman_in_name": "George Walker",
+              "batsman_in_id": "5786393",
+              "batsman_in_runs": "40"
+            },
+            {
+              "runs": "154",
+              "wickets": 8,
+              "batsman_out_name": "Ali Barrowman",
+              "batsman_out_id": "5969699",
+              "batsman_in_name": "George Walker",
+              "batsman_in_id": "5786393",
+              "batsman_in_runs": "64"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Jack Grundy",
+              "bowler_id": "4118357",
+              "overs": "9",
+              "maidens": "1",
+              "runs": "30",
+              "wides": "2",
+              "wickets": "2",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Edward Saxelby",
+              "bowler_id": "5557697",
+              "overs": "10",
+              "maidens": "2",
+              "runs": "30",
+              "wides": "1",
+              "wickets": "3",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Joe Cash",
+              "bowler_id": "5321664",
+              "overs": "9.2",
+              "maidens": "4",
+              "runs": "31",
+              "wides": "0",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Zac Phair",
+              "bowler_id": "6194025",
+              "overs": "8",
+              "maidens": "1",
+              "runs": "38",
+              "wides": "2",
+              "wickets": "0",
+              "no_balls": "1"
+            },
+            {
+              "bowler_name": "Mark Makin",
+              "bowler_id": "5473006",
+              "overs": "7",
+              "maidens": "1",
+              "runs": "30",
+              "wides": "0",
+              "wickets": "2",
+              "no_balls": "0"
+            }
+          ]
+        },
+        {
+          "team_batting_name": "Marple CC - 1st XI",
+          "team_batting_id": "15020",
+          "innings_number": 1,
+          "extra_byes": "1",
+          "extra_leg_byes": "0",
+          "extra_wides": "3",
+          "extra_no_balls": "1",
+          "extra_penalty_runs": "0",
+          "penalties_runs_awarded_in_other_innings": "0",
+          "total_extras": "5",
+          "runs": "105",
+          "wickets": "2",
+          "overs": "17.3",
+          "balls": "",
+          "declared": false,
+          "forfeited_innings": false,
+          "revised_target_runs": "105",
+          "revised_target_overs": "20.0",
+          "revised_target_balls": "",
+          "bat": [
+            {
+              "position": "1",
+              "batsman_name": "James Crisall",
+              "batsman_id": "5327303",
+              "how_out": "run out",
+              "fielder_name": "Amlyn Layton",
+              "fielder_id": "5328576",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "33",
+              "fours": "4",
+              "sixes": "0",
+              "balls": "32"
+            },
+            {
+              "position": "2",
+              "batsman_name": "Conor Ramsay",
+              "batsman_id": "5323157",
+              "how_out": "ct",
+              "fielder_name": "Mike Bishop",
+              "fielder_id": "4444944",
+              "bowler_name": "Luke Hajdu",
+              "bowler_id": "6207813",
+              "runs": "8",
+              "fours": "1",
+              "sixes": "0",
+              "balls": "15"
+            },
+            {
+              "position": "3",
+              "batsman_name": "Zac Phair",
+              "batsman_id": "6194025",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "33",
+              "fours": "2",
+              "sixes": "0",
+              "balls": "41"
+            },
+            {
+              "position": "4",
+              "batsman_name": "Max Fitzgerald",
+              "batsman_id": "5055964",
+              "how_out": "not out",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "26",
+              "fours": "1",
+              "sixes": "2",
+              "balls": "18"
+            },
+            {
+              "position": "5",
+              "batsman_name": "Andrew Wild",
+              "batsman_id": "5327547",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "6",
+              "batsman_name": "Andrew Hall",
+              "batsman_id": "5328929",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "7",
+              "batsman_name": "Mark Makin",
+              "batsman_id": "5473006",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "8",
+              "batsman_name": "Jack Grundy",
+              "batsman_id": "4118357",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "9",
+              "batsman_name": "Joel Greasley",
+              "batsman_id": "5619281",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "10",
+              "batsman_name": "Joe Cash",
+              "batsman_id": "5321664",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            },
+            {
+              "position": "11",
+              "batsman_name": "Edward Saxelby",
+              "batsman_id": "5557697",
+              "how_out": "did not bat",
+              "fielder_name": "",
+              "fielder_id": "",
+              "bowler_name": "",
+              "bowler_id": "",
+              "runs": "",
+              "fours": "",
+              "sixes": "",
+              "balls": ""
+            }
+          ],
+          "fow": [
+            {
+              "runs": "24",
+              "wickets": 1,
+              "batsman_out_name": "Conor Ramsay",
+              "batsman_out_id": "5323157",
+              "batsman_in_name": "James Crisall",
+              "batsman_in_id": "5327303",
+              "batsman_in_runs": "14"
+            },
+            {
+              "runs": "64",
+              "wickets": 2,
+              "batsman_out_name": "James Crisall",
+              "batsman_out_id": "5327303",
+              "batsman_in_name": "Zac Phair",
+              "batsman_in_id": "6194025",
+              "batsman_in_runs": "20"
+            }
+          ],
+          "bowl": [
+            {
+              "bowler_name": "Luke Hajdu",
+              "bowler_id": "6207813",
+              "overs": "4",
+              "maidens": "0",
+              "runs": "18",
+              "wides": "3",
+              "wickets": "1",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Tyrone Lawrence",
+              "bowler_id": "709702",
+              "overs": "3",
+              "maidens": "0",
+              "runs": "16",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Amlyn Layton",
+              "bowler_id": "5328576",
+              "overs": "3",
+              "maidens": "0",
+              "runs": "23",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "Ali Barrowman",
+              "bowler_id": "5969699",
+              "overs": "4",
+              "maidens": "0",
+              "runs": "17",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "0"
+            },
+            {
+              "bowler_name": "James Dodds",
+              "bowler_id": "1650170",
+              "overs": "3.3",
+              "maidens": "0",
+              "runs": "30",
+              "wides": "0",
+              "wickets": "0",
+              "no_balls": "1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
