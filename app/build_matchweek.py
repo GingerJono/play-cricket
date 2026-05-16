@@ -80,6 +80,19 @@ ESSEX_TOP5_BY_SEASON = {
 
 USER_AGENT = "rainham-cc-stats/matchweek (+https://github.com/gingerjono/play-cricket)"
 
+# Extra teams to surface beyond the top-5 1st-XI divisions. Each is fetched
+# from its own club site (site_id) and matched on team_id. Grouped on the
+# page under one "Selected teams" heading.
+WATCHED_DIVISION = "Selected teams"
+WATCHED_TEAMS = [
+    {"team_id": 51208,  "site_id": 5251, "label": "Rainham 2nd XI"},
+    {"team_id": 23961,  "site_id": 4848, "label": "Old Southendian 4th XI"},
+    {"team_id": 134369, "site_id": 4848, "label": "Old Southendian 5th XI"},
+    {"team_id": 25529,  "site_id": 5999, "label": "Stanford Le Hope 2nd XI"},
+    {"team_id": 14066,  "site_id": 214,  "label": "Shenfield 2nd XI"},
+    {"team_id": 171,    "site_id": 164,  "label": "Gidea Park & Romford 2nd XI"},
+]
+
 
 def http_get_json(url: str, attempts: int = 3) -> dict:
     backoff = 1.0
@@ -307,6 +320,40 @@ def build_index() -> None:
     }, indent=2))
 
 
+def select_watched(season: int, target: date) -> list[tuple[str, dict]]:
+    """Find each WATCHED_TEAMS entry's match on the target Saturday.
+
+    Returns (label, match_summary) pairs. Each club site is fetched once.
+    """
+    site_cache: dict[int, list[dict]] = {}
+    out: list[tuple[str, dict]] = []
+    seen_match_ids: set[int] = set()
+    for w in WATCHED_TEAMS:
+        sid = w["site_id"]
+        if sid not in site_cache:
+            try:
+                site_cache[sid] = fetch_season_matches(sid, season)
+            except Exception as e:
+                print(f"  watched: site {sid} fetch failed: {e}", flush=True)
+                site_cache[sid] = []
+        for m in site_cache[sid]:
+            try:
+                if parse_match_date(m.get("match_date") or "") != target:
+                    continue
+            except Exception:
+                continue
+            tid = w["team_id"]
+            if str(m.get("home_team_id")) != str(tid) and \
+               str(m.get("away_team_id")) != str(tid):
+                continue
+            mid = int(m["id"])
+            if mid in seen_match_ids:
+                continue
+            seen_match_ids.add(mid)
+            out.append((w["label"], m))
+    return out
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--date", help="ISO matchweek Saturday (default: per rule)")
@@ -349,6 +396,13 @@ def main() -> int:
             selected.append((cid, div_name, m))
     print(f"selected {len(selected)} matches across {len(cohort)} divisions", flush=True)
 
+    print("fetching watched-team fixtures ...", flush=True)
+    watched = select_watched(season, target)
+    watched_label_by_mid = {int(m["id"]): label for label, m in watched}
+    for label, m in watched:
+        selected.append((0, WATCHED_DIVISION, m))
+    print(f"selected {len(watched)} watched-team matches", flush=True)
+
     if not selected:
         out_path = DATA_DIR / f"{target.isoformat()}.json"
         out_path.write_text(json.dumps({
@@ -368,11 +422,22 @@ def main() -> int:
         for fut in as_completed(futs):
             cid, div, m = futs[fut]
             try:
-                games.append(fut.result())
+                card = fut.result()
+                label = watched_label_by_mid.get(int(m["id"]))
+                if label:
+                    card["watched_label"] = label
+                games.append(card)
             except Exception as e:
                 print(f"  failed {m['id']}: {e}", flush=True)
 
-    games.sort(key=lambda g: (g["division"], g.get("match_time") or ""))
+    # Sort: top-5 divisions first (their names start with "1st XI"),
+    # the "Selected teams" group last; watched cards ordered by label.
+    games.sort(key=lambda g: (
+        g["division"] == WATCHED_DIVISION,
+        g["division"],
+        g.get("watched_label") or "",
+        g.get("match_time") or "",
+    ))
 
     out = {
         "matchweek": target.isoformat(),
