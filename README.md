@@ -64,6 +64,69 @@ no toolchain beyond stock Python.
 
 ---
 
+## Application components
+
+The project has grown from a reporting script into four layers. Each is
+independently runnable; later layers consume the SQLite DB built by the
+first.
+
+### 1. Data layer — fetch + cache + DB
+
+| Component | Role |
+| -- | -- |
+| `fetch.py` | Pulls Play-Cricket JSON (`matches`, `match_detail`, `league_table`) for any `site_id`. Idempotent — only downloads what's missing. |
+| `fetch_balls.py` | Pulls **ball-by-ball** from two backends — ResultsVault (PCS-scored matches) and NV Play (live-streamed). Not part of the public API; see `BALL_BY_BALL.md`. |
+| `build_db.py` | Loads all cached JSON into `data/rainham.db` (SQLite), including a `balls` table for BBB. Club-agnostic schema — every row carries `team_*_club_id`. |
+| `data/rainham.db` | The committed SQLite DB. Schema cheat-sheet in `data/README.md`, full spec in `PLAN.md`. |
+
+### 2. Reports — Markdown + mobile HTML/PNG (`reports/`)
+
+| Component | Output |
+| -- | -- |
+| `scout.py` | Opposition scouting report for any club — league table, finishing positions, top scorers/wicket-takers, head-to-head, patterns, verified videos. Emits `md` / `html` / long-PNG into a dated, versioned folder. |
+| `top_run_scorers.py`, `streaks_and_fifties.py`, `oneill_vs_hothi.py` | Ad-hoc Rainham reports (top scorers, 50+/duck streaks, head-to-head). |
+| `build_index.py` | Scans `reports/` and rewrites `reports/index.html` — the category-grouped overview. Auto-called by the report generators. |
+
+### 3. Static web app — GitHub Pages (`app/`)
+
+Pure HTML + vanilla JS, no build step. Mobile-first (`max-width: 540px`).
+`_app_lib.py` holds the shared CSS, page chrome and universe filter.
+
+| Builder | Page(s) |
+| -- | -- |
+| `build_data_repo.py` | `app/index.html` — 10-year 1st-XI game list with BBB + coverage columns. |
+| `build_metadata.py` | `app/metadata/` — browse opposition clubs / per-club rosters / per-player metadata pages, with a `mailto:` / WhatsApp submission form (no backend). |
+| `build_rcc_dashboard.py` + `build_rcc_js.py` | `app/rcc/` — RCC player-stats dashboard. Per-player batting/bowling tabs with season splits, home/away, position, BBB phase/spell slicers, and a **"Last 20 innings / spells"** visual bar exhibit. |
+| `build_matchweek.py` | `app/matchweek.html` — **live fixture view**: 25 Essex 1st-XI matches (5 per top-5 division) for a Saturday, with scores, top performers, result, and a **win-probability chip** on games that have ball-by-ball data. |
+
+### 4. Win-probability models (`model/`)
+
+LightGBM ball-by-ball win-probability models, isotonic-calibrated.
+
+| Component | Role |
+| -- | -- |
+| `model/poc/run_winprob_combined.py` | Trains two models — innings 1 (`P(team batting first wins)`, Brier 0.20) and the innings-2 chase (`P(chase succeeds)`, Brier 0.12). Fits isotonic calibration on a held-out split. Saves artefacts to `model/poc/winprob/`. |
+| `model/poc/predict_winprob.py` | Inference — loads the saved models + calibrators and produces a per-ball win-prob trajectory for any match with BBB coverage. Consumed by `build_matchweek.py`. |
+
+### Live data — Cloudflare Worker (`cf_worker/`)
+
+`app/matchweek.html` defaults to **static JSON snapshots** committed under
+`app/data/matchweek/`. Browsers can't call the Play-Cricket API directly
+(CORS + a `403` on unknown origins), so for **truly-live** scores there's
+a Cloudflare Worker (`cf_worker/`) that proxies the API, injects the token
+server-side, adds CORS headers and a 60s edge cache. Append
+`?worker=<worker-url>` to the matchweek URL to enable live mode. See
+`cf_worker/README.md` for deployment.
+
+### Deployment
+
+`.github/workflows/static.yml` publishes the site to GitHub Pages on
+**push to `main`** only. It stages just `app/` + `reports/` (the 18 GB
+committed `data/` cache is excluded, and the `reports/scouting/.../latest`
+symlinks are dereferenced) so the artefact stays under the 10 GB Pages cap.
+
+---
+
 ## Updating the Rainham CC database with new data
 
 The cache is **idempotent** — running a fetch only downloads matches it
