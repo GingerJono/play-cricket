@@ -568,6 +568,7 @@
         root.appendChild(playerInningsCard());
         root.appendChild(vsBowlerTypeCard());
       }
+      root.appendChild(last20BattingCard());
       root.appendChild(bestBattingCard());
     } else {
       // Bowling comparisons
@@ -591,6 +592,7 @@
         root.appendChild(spellCard());
         root.appendChild(vsBatterHandCard());
       }
+      root.appendChild(last20BowlingCard());
       root.appendChild(bestBowlingCard());
     }
   }
@@ -1112,6 +1114,127 @@
       ]));
     });
     tab.appendChild(tb); card.appendChild(tab);
+    return card;
+  }
+
+  // ----- last-20 exhibit (visual form bars) ----------------------------
+  function shortDate(s) {
+    // 'dd/mm/yyyy' -> 'dd Mon'
+    const p = (s || '').split('/');
+    if (p.length !== 3) return s || '';
+    const MON = ['','Jan','Feb','Mar','Apr','May','Jun',
+                 'Jul','Aug','Sep','Oct','Nov','Dec'];
+    return p[0] + ' ' + (MON[parseInt(p[1], 10)] || '');
+  }
+  function l20Row(meta1, detail, barClass, fillPct, valText) {
+    const bar = el('div', {class:'l20-bar ' + barClass}, [
+      el('span', {style:'width:' + Math.max(0, Math.min(100, fillPct)) + '%'}),
+    ]);
+    return el('div', {class:'l20-row'}, [
+      el('div', {class:'l20-meta'}, meta1),
+      el('div', {class:'l20-detail'}, [detail]),
+      el('div', {class:'l20-bar-wrap'}, [
+        bar, el('span', {class:'l20-val'}, [valText]),
+      ]),
+    ]);
+  }
+
+  function last20BattingCard() {
+    const rows = filteredBatting().slice()
+      .map(r => {
+        const m = DATA.matches.find(x => x.match_id === r.match_id);
+        return m ? {r: r, m: m, key: date_yyyymmdd(m.match_date)} : null;
+      })
+      .filter(x => x)
+      .sort((a, b) => b.key.localeCompare(a.key) ||
+                       (b.r.innings_seq || 0) - (a.r.innings_seq || 0))
+      .slice(0, 20);
+    const card = el('div', {class:'card'},
+      [el('h2', null, ['Last 20 innings'])]);
+    if (!rows.length) return emptyCard(card,
+      'No innings under the current filters.');
+    card.appendChild(el('p', {class:'note'},
+      ['Most recent first. Bar length ∝ runs scored.']));
+    const maxRuns = Math.max.apply(null,
+      rows.map(x => x.r.runs || 0).concat([1]));
+    const wrap = el('div', {class:'l20'});
+    rows.forEach(x => {
+      const r = x.r, m = x.m;
+      const runs = r.runs || 0;
+      let cls = 'low';
+      if (runs >= 100) cls = 'hundred';
+      else if (runs >= 50) cls = 'fifty';
+      else if (runs === 0 && !r.not_out) cls = 'duck';
+      const venue = m.home_away === 'home' ? 'H' : 'A';
+      const meta1 = [
+        el('span', {class:'l20-date'}, [shortDate(m.match_date)]),
+        el('span', {class:'l20-opp'}, ['v ' + (m.opp_club_name || '?')]),
+        el('span', {class:'l20-venue'}, [venue]),
+      ];
+      if (m.result) meta1.push(
+        el('span', {class:'pill ' + m.result}, [m.result]));
+      const bits = [];
+      bits.push((r.balls != null ? r.balls : '?') + 'b');
+      if (r.balls) bits.push('SR ' + (runs / r.balls * 100).toFixed(0));
+      if (r.fours) bits.push(r.fours + '×4');
+      if (r.sixes) bits.push(r.sixes + '×6');
+      if (r.how_out && !r.not_out) bits.push(r.how_out);
+      const detail = (m.ground_name ? m.ground_name + ' · ' : '')
+                     + bits.join(' · ');
+      wrap.appendChild(l20Row(
+        meta1, detail, cls, runs / maxRuns * 100,
+        runs + (r.not_out ? '*' : '')));
+    });
+    card.appendChild(wrap);
+    return card;
+  }
+
+  function last20BowlingCard() {
+    const rows = filteredBowling().slice()
+      .map(r => {
+        const m = DATA.matches.find(x => x.match_id === r.match_id);
+        return m ? {r: r, m: m, key: date_yyyymmdd(m.match_date)} : null;
+      })
+      .filter(x => x)
+      .sort((a, b) => b.key.localeCompare(a.key) ||
+                       (b.r.innings_seq || 0) - (a.r.innings_seq || 0))
+      .slice(0, 20);
+    const card = el('div', {class:'card'},
+      [el('h2', null, ['Last 20 bowling spells'])]);
+    if (!rows.length) return emptyCard(card,
+      'No spells under the current filters.');
+    card.appendChild(el('p', {class:'note'},
+      ['Most recent first. Bar length ∝ wickets taken.']));
+    const maxWkts = Math.max.apply(null,
+      rows.map(x => x.r.wickets || 0).concat([1]));
+    const wrap = el('div', {class:'l20'});
+    rows.forEach(x => {
+      const r = x.r, m = x.m;
+      const wkts = r.wickets || 0;
+      let cls = 'low';
+      if (wkts >= 5) cls = 'hundred';
+      else if (wkts >= 3) cls = 'fifty';
+      else if (wkts === 0) cls = 'duck';
+      const venue = m.home_away === 'home' ? 'H' : 'A';
+      const meta1 = [
+        el('span', {class:'l20-date'}, [shortDate(m.match_date)]),
+        el('span', {class:'l20-opp'}, ['v ' + (m.opp_club_name || '?')]),
+        el('span', {class:'l20-venue'}, [venue]),
+      ];
+      if (m.result) meta1.push(
+        el('span', {class:'pill ' + m.result}, [m.result]));
+      const econ = r.legal_balls
+        ? (r.runs / r.legal_balls * 6).toFixed(2) : '—';
+      const bits = [(r.overs || '0') + ' ov'];
+      if (r.maidens) bits.push(r.maidens + ' mdn');
+      bits.push('econ ' + econ);
+      const detail = (m.ground_name ? m.ground_name + ' · ' : '')
+                     + bits.join(' · ');
+      wrap.appendChild(l20Row(
+        meta1, detail, cls, wkts / maxWkts * 100,
+        wkts + '/' + (r.runs || 0)));
+    });
+    card.appendChild(wrap);
     return card;
   }
 
