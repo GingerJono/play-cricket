@@ -31,6 +31,7 @@
                 padding: 1px 8px; line-height: 1.5; }
   .result { font-size: 12px; color: #444; margin-top: 6px; font-style: italic; }
   .winprob { font-size: 12px; color: #102a43; background: linear-gradient(90deg, #f0f7ff, #f7faff); border-left: 3px solid #1565c0; padding: 6px 10px; margin-top: 6px; border-radius: 4px; font-variant-numeric: tabular-nums; }
+  .watched-tag { display: inline-block; font-size: 11px; font-weight: 600; color: #0d7a52; background: #dcefe4; border: 1px solid #0d7a52; border-radius: 10px; padding: 1px 8px; margin-top: 6px; }
   .empty { padding: 20px; text-align: center; color: #888; }
   a.match-link { color: #1565c0; text-decoration: none; font-size: 11px; }
   a.match-link:hover { text-decoration: underline; }
@@ -231,6 +232,7 @@ function gameCard(g) {
         <span style="font-size:12px;color:#666;">${fmtDate(g.match_date.split('/').reverse().join('-')) === g.match_date ? g.match_date : g.match_date} ${g.match_time || ''}</span>
         ${badge(g.status)}
       </div>
+      ${g.watched_label ? `<div class="watched-tag">${g.watched_label}</div>` : ''}
       <div class="teams">${g.home_club_name || g.home_team_name} <span class="vs">v</span> ${g.away_club_name || g.away_team_name}</div>
       <div class="ground">${g.ground_name || ''}</div>
       ${innings}
@@ -259,6 +261,10 @@ function render(data) {
   const order = ["1st XI Premier Division", "1st XI Division One",
                   "1st XI Division Two", "1st XI Division Three",
                   "1st XI Division Four"];
+  // Any other group (e.g. "Selected teams") renders after the divisions.
+  for (const d of Object.keys(byDiv)) {
+    if (order.indexOf(d) < 0) order.push(d);
+  }
   let html = '';
   for (const div of order) {
     if (!byDiv[div]) continue;
