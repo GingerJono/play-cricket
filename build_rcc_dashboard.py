@@ -124,6 +124,7 @@ def match_meta(conn, mids: list[int]) -> dict[int, dict]:
             "season":          int(m["season"] or 0),
             "opp_club_id":     opp_club_id or "",
             "opp_club_name":   opp_club_nm or "",
+            "ground_name":     m.get("ground_name") or "",
             "home_away":       "home" if rainham_is_home else "away",
             "result":          result_letter(m),
             "competition":     m.get("competition_type") or "",

@@ -575,3 +575,48 @@ input[type="search"]{
   color:var(--muted);font-size:13px;
   padding:10px 0;font-family:"IBM Plex Sans",sans-serif;
 }
+
+/* last-20 innings / spells exhibit ------------------------------------ */
+.l20{display:flex;flex-direction:column;margin-top:8px}
+.l20-row{
+  display:flex;flex-direction:column;gap:3px;
+  padding:7px 2px;border-bottom:1px solid var(--rule);
+}
+.l20-row:last-child{border-bottom:none}
+.l20-row:hover{background:var(--surface-2)}
+.l20-meta{display:flex;align-items:baseline;gap:6px;font-size:12px}
+.l20-date{
+  flex:0 0 auto;font-family:"IBM Plex Mono",monospace;
+  font-weight:600;color:var(--ink-2);font-size:11px;
+}
+.l20-opp{
+  flex:1 1 auto;color:var(--ink);font-weight:600;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.l20-venue{
+  flex:0 0 auto;color:var(--muted);font-size:10px;font-weight:600;
+}
+.l20-detail{
+  font-size:10px;color:var(--muted);
+  font-family:"IBM Plex Mono",monospace;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.l20-bar-wrap{display:flex;align-items:center;gap:8px;margin-top:1px}
+.l20-bar{
+  flex:1;height:14px;background:var(--surface-2);
+  border:1px solid var(--rule);border-radius:2px;overflow:hidden;
+}
+.l20-bar > span{
+  display:block;height:100%;min-width:2px;background:var(--accent);
+  transition:width .35s cubic-bezier(.2,.8,.2,1);
+}
+.l20-bar.duck > span{background:var(--warn)}
+.l20-bar.fifty > span{background:var(--bar-2)}
+.l20-bar.hundred > span{
+  background:linear-gradient(90deg,var(--bar-2),var(--accent));
+}
+.l20-val{
+  flex:0 0 48px;text-align:right;font-weight:700;
+  font-family:"IBM Plex Mono",monospace;font-size:12.5px;
+  font-variant-numeric:tabular-nums;
+}
