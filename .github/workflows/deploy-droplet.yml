@@ -1,0 +1,60 @@
+# Deploys the static site to the DigitalOcean droplet.
+#
+# Fires only on pushes to `main` (i.e. when a feature branch is merged).
+# Runs alongside the GitHub Pages deploy in static.yml — both publish the
+# same staged `_site` tree.
+#
+# The droplet never gets a git clone (the repo's .git is ~12 GB and
+# data/ has 255k files). We stage app/ + reports/ + a redirect index on
+# the runner, then rsync ONLY that (~18 MB) over SSH.
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#   DROPLET_HOST     134.122.55.238
+#   DROPLET_USER     deploy
+#   DROPLET_SSH_KEY  the private half of the deploy keypair (full PEM)
+name: Deploy to droplet
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: "droplet"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Stage site content
+        # Same staging as static.yml: only the real site dirs, with
+        # `cp -rL` to dereference the reports/scouting/.../latest symlinks.
+        run: |
+          mkdir -p _site
+          cp -rL app _site/app
+          cp -rL reports _site/reports
+          cat > _site/index.html <<'EOF'
+          <!doctype html><meta charset="utf-8">
+          <title>Rainham CC — Play-Cricket</title>
+          <meta http-equiv="refresh" content="0; url=app/index.html">
+          <a href="app/index.html">Rainham CC data repository</a>
+          EOF
+          echo "Staged site contents:"; du -sh _site
+
+      - name: Install deploy SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DROPLET_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.DROPLET_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Rsync site to droplet
+        run: |
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
+            _site/ \
+            "${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:/var/www/play-cricket/"
