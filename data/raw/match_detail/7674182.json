@@ -4,7 +4,7 @@
       "id": 7674182,
       "status": "New",
       "published": "Yes",
-      "last_updated": "28/04/2026",
+      "last_updated": "17/05/2026",
       "league_name": "Havering Cricket League",
       "league_id": "24874",
       "competition_name": "Havering Under 11 League",
@@ -47,15 +47,15 @@
       "no_of_days": "1",
       "no_of_players": "",
       "no_of_reserves": "",
-      "result": "",
-      "result_description": "",
+      "result": "M",
+      "result_description": "Match In Progress",
       "result_applied_to": "",
       "match_notes": "",
       "points": [
         {
           "team_id": 69866,
           "game_points": "0",
-          "penalty_points": "",
+          "penalty_points": "0.0",
           "bonus_points_together": "0.0",
           "bonus_points_batting": "0.0",
           "bonus_points_bowling": "0.0",
@@ -64,7 +64,7 @@
         {
           "team_id": 192720,
           "game_points": "0",
-          "penalty_points": "",
+          "penalty_points": "0.0",
           "bonus_points_together": "0.0",
           "bonus_points_batting": "0.0",
           "bonus_points_bowling": "0.0",
@@ -109,10 +109,124 @@
       "dismissal_penalty": "5",
       "players": [
         {
-          "home_team": []
+          "home_team": [
+            {
+              "position": 1,
+              "player_name": "Jacob Dye",
+              "player_id": 6669239,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Sebastian Barron",
+              "player_id": 5394049,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Deen Islam",
+              "player_id": 6647358,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 4,
+              "player_name": "Sahib Bhangu",
+              "player_id": 6900972,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Dylan Burns",
+              "player_id": 6340060,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Oliver McWilliams",
+              "player_id": 5630899,
+              "captain": true,
+              "wicket_keeper": true
+            },
+            {
+              "position": 7,
+              "player_name": "Ronel Dsouza",
+              "player_id": 6008273,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Nivedh Sreeraj",
+              "player_id": 6295382,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
         },
         {
-          "away_team": []
+          "away_team": [
+            {
+              "position": 1,
+              "player_name": "Shahzamaan Ali",
+              "player_id": 6703030,
+              "captain": true,
+              "wicket_keeper": false
+            },
+            {
+              "position": 2,
+              "player_name": "Jiyaan Shah",
+              "player_id": 6969876,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 3,
+              "player_name": "Leo Deadman",
+              "player_id": 6969873,
+              "captain": false,
+              "wicket_keeper": true
+            },
+            {
+              "position": 4,
+              "player_name": "George Ross",
+              "player_id": 6167196,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 5,
+              "player_name": "Kaveer Joshin",
+              "player_id": 6167195,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 6,
+              "player_name": "Aariz Zafar",
+              "player_id": 6969882,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 7,
+              "player_name": "Saarim Khan Swati",
+              "player_id": 6378983,
+              "captain": false,
+              "wicket_keeper": false
+            },
+            {
+              "position": 8,
+              "player_name": "Arham Bahi",
+              "player_id": 7042553,
+              "captain": false,
+              "wicket_keeper": false
+            }
+          ]
         }
       ],
       "innings": []
